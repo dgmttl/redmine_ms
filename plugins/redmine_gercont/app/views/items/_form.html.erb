@@ -1,0 +1,15 @@
+<% if User.current.allowed_to_globally?(:manage_contract) %> 
+
+    <% if @item %>
+        <%= error_messages_for 'item' %>
+        <fieldset class="box tabular">
+            <p><%= f.text_field :name, :required => true, :size => 40, label: :field_name %></p>
+            <p><%= f.text_field :description, :required => true, :size => 40, label: :field_description  %></p>
+            <p><%= f.text_field :unit_measure, :required => true, label: :field_unit_measure %></p>
+            <p><%= f.text_field :unit_value, required: true, pattern: '\d+(\,\d{1,2})?', inputmode: 'decimal', label: :field_unit_value %></p>
+        </fieldset>
+        <%= submit_tag l(@item.new_record? ? :button_create : :button_save) %>
+    <% end %>
+<% else %>
+    <p class="nodata"><%= l(:label_no_data) %></p>
+<% end %>

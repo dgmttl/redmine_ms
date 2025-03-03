@@ -1,0 +1,59 @@
+<%= render 'head' %>
+
+<%= title l(:label_assessments) %>
+
+<%= logger.info " \n @assessments.any? #{@assessments.any?}" %>
+<%= logger.info "@assessments.inspect #{@assessments.inspect} \n\n" %>
+
+<% if @assessments.any? %>
+
+    <div id="content">
+
+        <table class="list issues sort-by" id="assessmentTable">
+            <thead>
+                <tr>
+                    <th> <%= l(:field_project) %> </th> 
+                    <th> <%= l(:label_tracker_for_demand) %> </th>
+                    <th> <%= l(:label_assesse) %> </th>
+                    <th> <%= l(:field_attendance) %> </th>
+                    <th> <%= l(:field_technical_expertise) %> </th>
+                    <th> <%= l(:field_conduct) %> </th>
+                    <th> <%= l(:field_measured_value) %> </th>
+                    <% if User.current.allowed_to_globally?(:manage_contract) %>
+                        <th></th>
+                    <% end %>
+                </tr>
+            </thead>
+            <tbody>
+                <% @assessments.each do |asses| %>
+                <tr>
+                    <td><%= link_to asses.project.name, project_path(asses.project) %></td>
+                    <td><%= link_to asses.issue.subject, issue_path(asses.issue) %></td>                   
+                    <td><%= link_to asses.user.name, user_path(asses.user) %></td>
+                    <td><%= I18n.t("answers.#{Assessment::ANSWERS[asses.attendance]}") %></td>
+                    <td><%= I18n.t("answers.#{Assessment::ANSWERS[asses.technical_expertise]}")  %></td>
+                    <td><%= I18n.t("answers.#{Assessment::ANSWERS[asses.conduct]}")  %></td>
+                    <td><%= asses.measured_value %></td>
+                    <% if User.current.allowed_to_globally?(:manage_assessment) %>
+                        <td>
+                            <%= link_to l(:button_edit), 
+                                edit_assessment_path(asses), 
+                                class: 'icon icon-edit'
+                            %>
+                            <%= link_to l(:button_delete), 
+                                assessment_path(asses), 
+                                method: :delete,
+                                data: { confirm: 'Tem certeza que deseja excluir?' }, 
+                                class: 'icon icon-del'
+                            %>
+                        </td>
+                    <% end %>
+                </tr>
+                <% end %>
+            </tbody>
+        </table>
+    </div>
+        <% else %>
+        <p class="nodata"><%= l(:label_no_data) %></p>
+        <% end %>
+

@@ -1,0 +1,6 @@
+<%= sla_title @sla %>
+
+
+<%= labelled_form_for @sla, :html => {:multipart => true} do |f| %>
+    <%= render :partial => 'form', :locals => { :f => f } %>
+<% end %>

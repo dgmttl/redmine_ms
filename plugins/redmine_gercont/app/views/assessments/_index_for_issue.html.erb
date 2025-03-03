@@ -1,0 +1,31 @@
+<% if @assessments.any? %>
+
+    <div id="content">
+
+        <table class="list issues sort-by" id="assessmentTable">
+            <thead>
+                <tr>
+                    <th> <%= l(:label_assesse) %> </th>
+                    <th> <%= l(:field_attendance) %> </th>
+                    <th> <%= l(:field_technical_expertise) %> </th>
+                    <th> <%= l(:field_conduct) %> </th>
+                    <th> <%= l(:field_measured_value) %> </th>
+                </tr>
+            </thead>
+            <tbody>
+                <% @assessments.each do |asses| %>
+                <tr>
+                    <td><%= link_to asses.user.name, user_path(asses.user) %></td>
+                    <td><%= I18n.t("answers.#{Assessment::ANSWERS[asses.attendance]}") %></td>
+                    <td><%= I18n.t("answers.#{Assessment::ANSWERS[asses.technical_expertise]}")  %></td>
+                    <td><%= I18n.t("answers.#{Assessment::ANSWERS[asses.conduct]}")  %></td>
+                    <td><%= asses.measured_value %></td>
+                </tr>
+                <% end %>
+            </tbody>
+        </table>
+    </div>
+        <% else %>
+        <p class="nodata"><%= l(:label_no_data) %></p>
+        <% end %>
+

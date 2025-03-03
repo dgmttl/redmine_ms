@@ -1,0 +1,12 @@
+<% if @assessment %>
+    <%= error_messages_for 'assessment' %>
+    <fieldset class="box tabular">
+      <p><%= f.select :sla_event_id, options_for_select(work_order_options)%></p>
+      <p><%= f.select :user_id, options_for_select(assesse_options)%></p>
+      <p><%= f.select :attendance, options_for_select(Assessment.answers_options) %></p>
+      <p><%= f.select :technical_expertise, options_for_select(Assessment.answers_options) %></p>
+      <p><%= f.select :conduct, options_for_select(Assessment.answers_options) %></p>
+    </fieldset>
+
+    <%= submit_tag l(@assessment.new_record? ? :button_create : :button_save) %></p>
+<% end %>

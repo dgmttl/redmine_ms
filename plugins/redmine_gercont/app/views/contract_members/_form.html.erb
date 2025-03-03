@@ -1,0 +1,41 @@
+<% if User.current.allowed_to_globally?(:manage_contract) %> 
+
+  <% if @contract_member.errors.any? %>
+    <%= error_messages_for @contract_member %>
+  <% end %>
+
+  <% if @contract_member %>
+    <fieldset class="box tabular">
+      <% if @contract_member.new_record? %>
+        <%= hidden_field_tag "contract_member[profile]", 'contract member' %>
+        <p><%= f.select :user_id, options_for_select(member_options), required: true %></p>
+        <% role_options.each do |role| %>
+          <p>
+            <%= check_box_tag "contract_member[role_ids][]", role.id, @contract_member.role_ids.include?(role.id) %>
+            <%= label_tag "contract_member_role_ids_#{role.id}", role.name %>
+          </p>
+        <% end %>
+
+      <% else %>
+        <%= hidden_field_tag "contract_member[user_id]", @contract_member.user_id %>
+        <% if @contract_member.profile == 'contract member' %>
+          <% role_options.each do |role| %>
+            <p>
+              <%= check_box_tag "contract_member[role_ids][]", role.id, @contract_member.role_ids.include?(role.id) %>
+              <%= label_tag "contract_member_role_ids_#{role.id}", role.name %>
+            </p>
+          <% end %>
+
+        <% else %>
+          <p><%= f.select :profile, options_for_select(ContractMember.profile_options), required: true %></p>
+        <% end %>
+      
+      <% end %>
+
+      
+    </fieldset>
+  <%= submit_tag l(@contract_member.new_record? ? :button_create : :button_save) %>
+<% end %>
+
+
+<% end %>

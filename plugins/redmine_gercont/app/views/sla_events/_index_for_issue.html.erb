@@ -1,0 +1,31 @@
+<% if @sla_events.any? %>
+
+    <div id="content">
+
+        <table class="list issues sort-by" id="sla_eventsTable">
+            <thead>
+                <tr>
+                    <th> <%= l(:label_sla_short) %> </th>                 
+                    <th> <%= l(:field_description) %> </th> 
+                    <th> <%= l(:field_status) %> </th>
+                    <th> <%= l(:field_target) %> </th>
+                    <th> <%= l(:field_measured_value) %> </th>
+                </tr>
+            </thead>
+            <tbody>
+                <% @sla_events.each do |slae| %>
+                <tr>
+                    <td><%= slae.sla.acronym %></td>
+                    <td><%= slae.sla.description %></td>
+                    <td><%= I18n.t("statuses.sla_events.#{slae.status}") %></td>
+                    <td><%= slae.sla.target %></td>
+                    <td><%= slae.measured_value %></td>
+                </tr>
+                <% end %>
+            </tbody>
+        </table>
+    </div>
+<% else %>
+    <p class="nodata"><%= l(:label_no_data) %></p>
+<% end %>
+

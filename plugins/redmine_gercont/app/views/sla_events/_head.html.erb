@@ -1,0 +1,12 @@
+<% if @project.present? && @project.contracts.any?%>
+    <div class="contextual">
+        <%= link_to l(:label_new_sla),
+                new_project_sla_event_path(@project, @sla_event),
+                class: 'icon icon-add'
+        %>
+    </div>
+<% elsif @project.present? && @project.contracts.empty? %>
+    <div class="flash error">
+        <%= l(:warning_need_contract) %>
+    </div>
+<% end %>

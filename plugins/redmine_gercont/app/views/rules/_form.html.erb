@@ -1,0 +1,27 @@
+<% if User.current.allowed_to_globally?(:manage_contract) %> 
+
+    <% if @rule %>
+        <%= error_messages_for 'rule' %>
+        <fieldset class="box tabular">
+            <%= labelled_fields_for :custom_workflow, @rule.custom_workflow do |cw| %>
+                <p><%= cw.text_field :name, required: true %></p>
+                <p><%= cw.select :observable,CustomWorkflow::OBSERVABLES.collect { |o| [l("custom_workflow_observable_#{o}"), o] }, {}, disabled: !@rule.new_record? %> </p>
+                <p> <% unless @rule.new_record? %>
+                        <%= labelled_fields_for :custom_workflow, @rule.custom_workflow do |workflow| %>
+                            <% if @rule.custom_workflow.observable == 'shared' %>
+                                <%= workflow.text_area :shared_code, :label => :label_sla_script , rows: 15%>
+                            <% else %>
+                                <%= workflow.text_area :before_save, :label => :label_sla_script , rows: 15%>
+                            <% end %>
+                        <% end %>
+                    <% end %>
+                </p>
+            <% end %>
+            <p><%= f.select :tracker_id, options_for_select(tracker_options, [@rule.tracker&.name, @rule.tracker&.id]), required: true %></p>
+            <p><%= f.select :action, options_for_select(Rule.action_options, @rule.action), required: true %></p>            
+        </fieldset>
+        <%= submit_tag l(@rule.new_record? ? :button_create : :button_save) %>
+    <% end %>
+<% else %>
+    <p class="nodata"><%= l(:label_no_data) %></p>
+<% end %>

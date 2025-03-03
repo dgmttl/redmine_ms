@@ -1,0 +1,4 @@
+<%= labelled_form_for @contract, html: { multipart: true } do |f| %>
+  <%= render partial: 'contract_fields', locals: { f: f } %>
+<% end %>
+

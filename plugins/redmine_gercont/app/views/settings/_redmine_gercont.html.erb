@@ -1,0 +1,67 @@
+<div class="box tabular settings">
+  <h2> <%= l(:label_settings) %> </h2>
+  <p>
+    <%= content_tag(:label, l(:label_tracker_for_demand)) %>
+    <%= select_tag('settings[demand]', 
+               options_for_select(Tracker.all.map { |trk| [trk.name, trk.id] }, @settings['demand'].to_i)) %>
+  </p>
+
+  <p>
+    <%= content_tag(:label, l(:label_role_for_contract_manager)) %>
+    <%= select_tag('settings[role_for_contract_manager]', 
+               options_for_select(Role.all.map { |role| [role.name, role.id] }, @settings['role_for_contract_manager'].to_i)) %>
+  </p>
+
+  <p>
+    <%= content_tag(:label, l(:label_role_for_technical_inspector)) %>
+    <%= select_tag('settings[role_for_technical_inspector]', 
+               options_for_select(Role.all.map { |role| [role.name, role.id] }, @settings['role_for_technical_inspector'].to_i)) %>
+  </p>
+
+  <p>
+    <%= content_tag(:label, l(:label_role_for_administrative_inspector)) %>
+    <%= select_tag('settings[role_for_administrative_inspector]', 
+               options_for_select(Role.all.map { |role| [role.name, role.id] }, @settings['role_for_administrative_inspector'].to_i)) %>
+  </p>
+
+  <p>
+    <%= content_tag(:label, l(:label_role_for_agent)) %>
+    <%= select_tag('settings[role_for_agent]', 
+               options_for_select(Role.all.map { |role| [role.name, role.id] }, @settings['role_for_agent'].to_i)) %>
+  </p>
+
+  <p>
+    <%= content_tag(:label, l(:label_role_for_product_owner)) %>
+    <%= select_tag('settings[role_for_product_owner]', 
+               options_for_select(Role.all.map { |role| [role.name, role.id] }, @settings['role_for_product_owner'].to_i)) %>
+  </p>
+
+  <p>
+    <%= content_tag(:label, l(:label_roles_for_assessment)) %>
+    <div class="tabular">
+      <% Role.all.each do |role| %>
+        <div class="checkbox">
+          <p>
+            <%= check_box_tag 'settings[roles_for_assessment][]', role.id, @settings['roles_for_assessment']&.include?(role.id.to_s) %>
+            <%= role.name %>
+          </p>
+        </div>
+      <% end %>
+    </div>
+  </p>
+
+  <p>
+    <%= content_tag(:label, l(:label_statuses_for_edit_assessment)) %>
+    <div class="tabular">
+      <% IssueStatus.all.each do |status| %>
+        <div class="checkbox">
+          <p>
+            <%= check_box_tag 'settings[statuses_for_edit_assessment][]', status.id, @settings['statuses_for_edit_assessment']&.include?(status.id.to_s) %>
+            <%= status.name %>
+          </p>
+        </div>
+      <% end %>
+    </div>
+  </p>
+
+</div>

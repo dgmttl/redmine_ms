@@ -1,0 +1,6 @@
+<%= item_title @item %>
+
+
+<%= labelled_form_for [@contract, @item], :html => {:multipart => true} do |f| %>
+    <%= render :partial => 'form', :locals => { :f => f } %>
+<% end %>

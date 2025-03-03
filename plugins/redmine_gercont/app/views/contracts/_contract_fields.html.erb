@@ -1,0 +1,61 @@
+<% if User.current.allowed_to_globally?(:manage_contract) %> 
+
+    <% if @contract %>
+
+            <%= error_messages_for 'contract' %>
+
+            <%= title l(:label_contract_data) %>
+
+            <div class="splitcontent">
+                <div class="splitcontentleft">
+                    <fieldset class="box tabular">
+                        <p><%= f.text_field :name, :required => true, :size => 40, label: :field_name %></p>
+                        <p><%= f.text_field :terms_reference, :required => true, :size => 40, label: :field_terms_reference %></p>
+                        <p><%= f.text_area :object, :required => true, :rows => 10, label: :field_contracts_object %></p>
+                        <p><%= f.date_field :terms_start, :required => true, label: :field_terms_start  %></p>
+                        <p><%= f.date_field :terms_end, :required => true, label: :field_terms_end %></p>
+                        <p><%= f.text_field :contractor, :required => true, :size => 40, label: :field_contractor %></p>
+                        <p><%= f.text_field :cnpj, :required => true, label: :field_cnpj %></p>
+                        <p><%= f.select :status, options_for_select(Contract.status_options, @contract.status), :required => true, label: :field_status %></p>
+                    </fieldset>
+                    
+                    <fieldset class="box tabular" id="contract_tracker_ids">
+                        <legend>
+                            <%= toggle_checkboxes_link('#contract_tracker_ids input[type=checkbox]') %>
+                            <%= l(:label_tracker_plural)%>
+                        </legend>
+                        <% if @trackers.any? %>
+                            <% @trackers.each do |tracker| %>
+                                <label class="floating">
+                                    <%= check_box_tag 'contract[tracker_ids][]', tracker.id, @contract.trackers.to_a.include?(tracker), :id => nil %>
+                                    <%= tracker_name_tag tracker %>
+                                </label>
+                            <% end %>
+                            <%= hidden_field_tag 'contract[tracker_ids][]', '' %>
+                        <% end %>
+                    </fieldset>
+
+                    
+                    <%= submit_tag l(@contract.new_record? ? :button_create : :button_save) %>
+                </div>
+
+                <div class="splitcontentright">
+                    <fieldset class="box" id="contract_project_ids">
+                        <legend>
+                            <%= toggle_checkboxes_link("#contract_project_ids input[type=checkbox]") %>
+                            <%= l(:label_project_plural) %>
+                        </legend>
+                        <% if @projects.any? %>    
+                            <% project_ids = @contract.project_ids.to_a %>
+                            <%= render_project_nested_lists(@projects) do |p|
+                                content_tag('label', check_box_tag('contract[project_ids][]', p.id, project_ids.include?(p.id), :id => nil) + ' ' + h(p))
+                            end %>
+                            <%= hidden_field_tag('contract[project_ids][]', '', :id => nil) %>
+                        <% end %>
+                    </fieldset>
+                </div>
+            </div>
+    <% end %>
+<% else %>
+    <h3>Não existem registros.</h3>
+<% end %>

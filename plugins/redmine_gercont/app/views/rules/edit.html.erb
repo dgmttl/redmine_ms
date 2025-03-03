@@ -1,0 +1,6 @@
+<%= rule_title @rule %>
+
+
+<%= labelled_form_for @rule, :html => {:multipart => true} do |f| %>
+    <%= render :partial => 'form', :locals => { :f => f } %>
+<% end %>

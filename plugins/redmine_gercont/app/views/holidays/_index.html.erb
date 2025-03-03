@@ -1,0 +1,50 @@
+<div class="contextual">
+    <% if User.current.allowed_to_globally?(:manage_contract) %>
+        <%= link_to l(:label_new_holiday),
+            new_contract_holiday_path(@contract, @holiday),
+            class: 'icon icon-add'
+        %>
+    <% end %> 
+</div>
+
+<%= title l(:label_holidays) %>
+
+<% if @holidays.any? %>
+  <table class="list" id="holidayTable">
+    <thead>
+      <tr>
+        <th> <%= l(:field_date) %> </th>
+        <th> <%= l(:label_week_day) %> </th>
+        <th> <%= l(:field_description) %> </th>
+        <% if User.current.allowed_to_globally?(:manage_contract) %>
+          <th></th>
+        <% end %>
+      </tr>
+    </thead>
+    <tbody>
+      <% @holidays.each do |holiday| %>
+      <tr>                        
+        <td><%= holiday.date.strftime("%d/%m/%Y") %></td>
+        <td><%= day_name(holiday.date.wday % 7) %></td>
+        <td><%= holiday.description %></td>
+        <% if User.current.allowed_to_globally?(:manage_contract) %>
+        <td>    
+          <%= link_to l(:button_edit), 
+            edit_holiday_path(holiday), 
+            class: 'icon icon-edit'
+          %>
+          <%= link_to l(:button_delete), 
+            holiday_path(holiday), 
+            method: :delete, 
+            class: 'icon icon-del'
+          %>
+        </td>
+        <% end %>
+      </tr>
+      <% end %>
+    </tbody>
+  </table>
+<% else %>
+    <p class="nodata"><%= l(:label_no_data) %></p>
+<% end %>
+

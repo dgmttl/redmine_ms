@@ -1,0 +1,5 @@
+<%= title l(:label_new_assessment) %>
+
+<%= labelled_form_for [@project, @assessment], :html => {:multipart => true} do |f| %>
+    <%= render :partial => 'form', :locals => { :f => f } %>
+<% end %>

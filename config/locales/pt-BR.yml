@@ -249,13 +249,13 @@ pt-BR:
   field_due_date: Data prevista
   field_assigned_to: Atribuído para
   field_priority: Prioridade
-  field_fixed_version: Versão
+  field_fixed_version: Release
   field_user: Usuário
   field_role: Cargo
   field_homepage: Página do projeto
   field_is_public: Público
   field_parent: Subprojeto de
-  field_is_in_roadmap: Exibir no planejamento
+  field_is_in_roadmap: Exibir no roadmap
   field_login: Usuário
   field_mail_notification: Notificações por e-mail
   field_admin: Administrador
@@ -265,7 +265,7 @@ pt-BR:
   field_password: Senha
   field_new_password: Nova senha
   field_password_confirmation: Confirmação
-  field_version: Versão
+  field_version: Release
   field_type: Tipo
   field_host: Servidor
   field_port: Porta
@@ -445,9 +445,9 @@ pt-BR:
   label_news_added: Notícia adicionada
   label_settings: Configurações
   label_overview: Visão geral
-  label_version: Versão
-  label_version_new: Nova versão
-  label_version_plural: Versões
+  label_version: Release
+  label_version_new: Nova release
+  label_version_plural: Releases
   label_confirmation: Confirmação
   label_export_to: Exportar para
   label_read: Ler...
@@ -528,10 +528,10 @@ pt-BR:
   label_latest_revision_plural: Últimas revisões
   label_view_revisions: Ver revisões
   label_max_size: Tamanho máximo
-  label_roadmap: Planejamento
+  label_roadmap: Roadmap
   label_roadmap_due_in: "Previsto para %{value}"
   label_roadmap_overdue: "%{value} atrasado"
-  label_roadmap_no_issues: Sem tarefas para esta versão
+  label_roadmap_no_issues: Sem tarefas para esta release
   label_search: Busca
   label_result_plural: Resultados
   label_all_words: Todas as palavras
@@ -542,7 +542,7 @@ pt-BR:
   label_wiki_page_plural: páginas Wiki
   label_index_by_title: Índice por título
   label_index_by_date: Índice por data
-  label_current_version: Versão atual
+  label_current_version: Release atual
   label_preview: Pré-visualizar
   label_feed_plural: Feeds
   label_changes_details: Detalhes de todas as alterações
@@ -576,7 +576,7 @@ pt-BR:
   label_follows: segue
   label_stay_logged_in: Permanecer logado
   label_disabled: desabilitado
-  label_show_completed_versions: Exibir versões completas
+  label_show_completed_versions: Exibir releases completas
   label_me: mim
   label_board: Fórum
   label_board_new: Novo fórum
@@ -619,7 +619,7 @@ pt-BR:
   label_age: Idade
   label_change_properties: Alterar propriedades
   label_general: Geral
-  label_scm: 'Controle de versão:'
+  label_scm: 'Controle de release:'
   label_plugins: Plugins
   label_ldap_authentication: Autenticação LDAP
   label_downloads_abbr: D/L
@@ -656,7 +656,7 @@ pt-BR:
   button_activate: Ativar
   button_sort: Ordenar
   button_log_time: Tempo de trabalho
-  button_rollback: Voltar para esta versão
+  button_rollback: Voltar para esta release
   button_watch: Observar
   button_unwatch: Parar de observar
   button_reply: Responder
@@ -741,7 +741,7 @@ pt-BR:
   enumeration_issue_priorities: Prioridade das tarefas
   enumeration_doc_categories: Categorias de documento
   enumeration_activities: Atividades (registro de horas)
-  notice_unable_delete_version: Não foi possível excluir a versão
+  notice_unable_delete_version: Não foi possível excluir a release
   label_renamed: renomeado
   label_copied: copiado
   setting_plain_text_mail: Usar mensagem sem formatação HTML
@@ -753,7 +753,7 @@ pt-BR:
   permission_log_time: Adicionar tempo gasto
   permission_view_changesets: Ver conjunto de alterações
   permission_view_time_entries: Ver tempo gasto
-  permission_manage_versions: Gerenciar versões
+  permission_manage_versions: Gerenciar releases
   permission_manage_wiki: Gerenciar wiki
   permission_manage_categories: Gerenciar categorias de tarefas
   permission_protect_wiki_pages: Proteger páginas wiki
@@ -844,7 +844,7 @@ pt-BR:
   version_status_closed: fechado
   version_status_locked: bloqueado
   version_status_open: aberto
-  error_can_not_reopen_issue_on_closed_version: Uma tarefa atribuída a uma versão fechada não pode ser reaberta
+  error_can_not_reopen_issue_on_closed_version: Uma tarefa atribuída a uma release fechada não pode ser reaberta
   label_user_anonymous: Anônimo
   button_move_and_follow: Mover e seguir
   setting_default_projects_modules: Módulos habilitados por padrão para novos projetos
@@ -888,7 +888,7 @@ pt-BR:
   text_own_membership_delete_confirmation: |-
     Você irá excluir algumas de suas próprias permissões e não estará mais apto a editar este projeto após esta operação.
     Você tem certeza que deseja continuar?
-  label_close_versions: Fechar versões concluídas
+  label_close_versions: Fechar releases concluídas
   label_board_sticky: Marcado
   label_board_locked: Bloqueado
   permission_export_wiki_pages: Exportar páginas wiki
@@ -960,7 +960,7 @@ pt-BR:
   field_cvsroot: CVSROOT
   text_mercurial_repository_note: "Repositório local (ex.: /hgrepo, c:\\hgrepo)"
   text_scm_command: Comando
-  text_scm_command_version: Versão
+  text_scm_command_version: Release
   label_git_report_last_commit: Relatar última alteração para arquivos e diretórios
   text_scm_config: Você pode configurar seus comandos de versionamento em config/configurations.yml. Por favor reinicie a aplicação após alterá-lo.
   text_scm_command_not_available: Comando de versionamento não disponível. Por favor verifique as configurações no painel de administração.
@@ -1003,7 +1003,7 @@ pt-BR:
   field_repository_is_default: Repositório principal
   label_copy_attachments: Copiar anexos
   label_item_position: "%{position}/%{count}"
-  label_completed_versions: Versões concluídas
+  label_completed_versions: Releases concluídas
   text_project_identifier_info: Somente letras minúsculas (a-z), números, traços e sublinhados são permitidos. <br /> Uma vez salvo, o identificador não pode ser alterado.
   field_multiple: Múltiplos valores
   setting_commit_cross_project_ref: Permitir que tarefas de todos os outros projetos sejam refenciadas e resolvidas
@@ -1046,7 +1046,7 @@ pt-BR:
   label_attribute_of_project: "Projeto %{name}"
   label_attribute_of_author: "autor %{name}"
   label_attribute_of_assigned_to: "atribuído a %{name}"
-  label_attribute_of_fixed_version: "versão %{name}"
+  label_attribute_of_fixed_version: "release %{name}"
   label_copy_subtasks: Copiar subtarefas
   label_copied_to: copiada
   label_copied_from: copiado
@@ -1104,7 +1104,7 @@ pt-BR:
     é para ser anexado
   label_issue_assigned_to_updated: Atribuição atualizada
   label_check_for_updates: Verificar atualizações
-  label_latest_compatible_version: Última versão compatível
+  label_latest_compatible_version: Última release compatível
   label_unknown_plugin: Plugin desconhecido
   label_radio_buttons: botões radio
   label_group_anonymous: Usuários anônimos
@@ -1171,7 +1171,7 @@ pt-BR:
   label_assigned_issues: Tarefas atribuídas
   label_field_format_enumeration: Chave/Lista de valores
   label_f_hour_short: '%{value} h'
-  field_default_version: Versão padrão
+  field_default_version: Release padrão
   error_attachment_extension_not_allowed: Extensão anexada %{extension} não é permitida
   setting_attachment_extensions_allowed: Permitir extensões
   setting_attachment_extensions_denied: Negar extensões
@@ -1242,7 +1242,7 @@ pt-BR:
   label_login_required_no: Não, permitir acesso anônimo a projetos públicos
   text_project_is_public_non_member: Projetos públicos e seus conteúdos estão disponíveis para todos os usuários logados.
   text_project_is_public_anonymous: Projetos públicos e seus conteúdos estão disponíveis abertamente na rede.
-  label_version_and_files: Versão (%{count}) e Arquivos
+  label_version_and_files: Release (%{count}) e Arquivos
   label_ldap: LDAP
   label_ldaps_verify_none: LDAPS (sem verificação de certificado)
   label_ldaps_verify_peer: LDAPS
@@ -1298,7 +1298,7 @@ pt-BR:
   text_characters_must_contain: Precisa conter %{character_classes}.
   label_starts_with: começando com
   label_ends_with: terminando com
-  label_issue_fixed_version_updated: Versão atualizada
+  label_issue_fixed_version_updated: Release atualizada
   setting_project_list_defaults: Padrão da lista de projetos
   label_display_type: Exibir resultados como
   label_display_type_list: Lista

@@ -1,0 +1,5 @@
+<%= title [l(:label_contracts), contracts_path], l(:label_new_contract) %>
+
+<%= labelled_form_for @contract, :html => {:multipart => true} do |f| %>
+    <%= render :partial => 'form', :locals => { :f => f } %>
+<% end %>

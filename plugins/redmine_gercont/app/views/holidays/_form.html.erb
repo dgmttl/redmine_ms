@@ -1,0 +1,13 @@
+<% if User.current.allowed_to_globally?(:manage_contract) %> 
+
+    <% if @holiday %>
+        <%= error_messages_for 'holiday' %>
+        <fieldset class="box tabular">
+            <p><%= f.date_field :date, required: true, label: :field_date %></p>
+            <p><%= f.text_field :description, required: true, label: :field_description %></p>
+        </fieldset>
+        <%= submit_tag l(@holiday.new_record? ? :button_create : :button_save) %>
+    <% end %>
+<% else %>
+    <p class="nodata"><%= l(:label_no_data) %></p>
+<% end %>

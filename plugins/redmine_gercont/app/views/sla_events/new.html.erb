@@ -1,0 +1,6 @@
+<%= title l(:label_new_sla) %>
+
+
+<%= labelled_form_for [@project, @sla_event], :html => {:multipart => true} do |f| %>
+    <%= render :partial => 'form', :locals => { :f => f } %>
+<% end %>

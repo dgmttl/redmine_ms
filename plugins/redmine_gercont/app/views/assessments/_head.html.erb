@@ -1,0 +1,17 @@
+<% if @project.present? && @project.contracts.empty? %>
+    <div class="flash error">
+        <%= l(:warning_need_contract) %>
+    </div>
+<% elsif @project.present? && @project.contracts.any? && @project.sla_events.empty? %>
+    <div class="flash error">
+        <%= l(:warning_need_sla) %>
+    </div>
+
+<% elsif @project.present? && @project.contracts.any?%>
+    <div class="contextual">
+        <%= link_to l(:label_new_assessment),
+                new_project_assessment_path(@project, @assessment),
+                class: 'icon icon-add'
+        %>
+    </div>
+<% end %>

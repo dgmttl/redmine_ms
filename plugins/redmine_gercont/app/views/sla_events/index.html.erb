@@ -1,0 +1,53 @@
+    <%= render "head" %>
+
+    <%= title l(:label_slas) %>
+
+    <% if @sla_events.any? %>
+
+        <div id="content">
+
+            <table class="list issues sort-by" id="sla_eventsTable">
+                <thead>
+                    <tr>
+                        <th> <%= l(:label_sla_short) %> </th>                 
+                        <th> <%= l(:field_project) %> </th> 
+                        <th> <%= l(:label_tracker_for_demand) %> </th>
+                        <th> <%= l(:field_status) %> </th>
+                        <th> <%= l(:field_measured_value) %> </th>
+                        <% if User.current.allowed_to_globally?(:manage_sla_event) %>
+                            <th></th>
+                            <th></th>
+                        <% end %>
+                    </tr>
+                </thead>
+                <tbody>
+                    <% @sla_events.each do |slae| %>
+                    <tr>
+                        <td><%= slae.sla.acronym %></td>
+                        <td><%= link_to slae.project.name, project_path(slae.project) %></td>
+                        <td><%= link_to slae.issue.subject, issue_path(slae.issue) %></td>
+                        <td><%= I18n.t("statuses.sla_events.#{slae.status}") %></td>
+                        <td><%= slae.measured_value %></td>
+                        <% if User.current.allowed_to_globally?(:manage_sla_event) %>
+                            <td>
+                                <%= link_to l(:button_edit), 
+                                    edit_sla_event_path(slae), 
+                                    class: 'icon icon-edit'
+                                %>
+                                <%= link_to l(:button_delete), 
+                                    sla_event_path(slae), 
+                                    method: :delete, 
+                                    data: { confirm: 'Tem certeza que deseja excluir?' }, 
+                                    class: 'icon icon-del'
+                                %>
+                            </td>
+                        <% end %>
+                    </tr>
+                    <% end %>
+                </tbody>
+            </table>
+        </div>
+    <% else %>
+        <p class="nodata"><%= l(:label_no_data) %></p>
+    <% end %>
+

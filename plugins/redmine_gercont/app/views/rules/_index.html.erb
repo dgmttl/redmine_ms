@@ -1,0 +1,65 @@
+<div class="contextual">
+    <% if User.current.allowed_to_globally?(:manage_contract) %>
+        <%= link_to l(:label_new_rule), 
+            new_contract_rule_path(@contract), 
+            class: 'icon icon-add' 
+        %>
+    <% end %> 
+</div>
+
+<%= title l(:label_custom_workflow_plural) %>
+
+<div class="autoscroll">
+  <% if @rules.any? %>
+    <table class="custom-workflows list" data-hascontextmenu="true">
+      <thead>
+      <tr>
+        <th><%= l(:field_tracker) %></th>
+        <th><%= l(:field_observable) %></th>
+        <th><%= l(:field_action) %></th>
+        <th><%= l(:field_name) %></th>
+        <th></th>
+      </tr>
+      </thead>
+      <tbody>
+      <% @rules.each do |rule| %>
+        <% workflow = rule.custom_workflow %>
+        <tr class="<%= cycle('odd', 'even') %> <%= 'disabled' unless workflow.active? %>">
+          <td><%= rule.tracker.name %></td>
+          <td><%= workflow.observable %></td>
+          <td><%= I18n.t("actions.#{rule.action}") %></td>
+          <td><%= link_to workflow.name.split('_').last, edit_custom_workflow_path(workflow) %></td>
+          
+          <td class="buttons">
+            <%= reorder_handle workflow, url: url_for(controller: 'rules', action: 'reorder', id: workflow) %>
+            <% if workflow.active? %>
+              <%= link_to l(:button_custom_workflow_deactivate), rule_status_path(workflow, active: false),
+                          class: 'icon icon-lock', method: :post %>
+            <% else %>
+              <%= link_to l(:button_activate), rule_status_path(workflow, active: true),
+                          class: 'icon icon-unlock', method: :post %>
+            <% end %>
+            <%= link_to l(:button_delete), rule,
+                class: 'icon icon-del', 
+                data: { confirm: l(:text_are_you_sure) },
+                method: :delete %>
+            <%= link_to l(:button_edit), 
+                edit_rule_path(rule), 
+                class: 'icon icon-edit'
+            %>
+          </td>
+        </tr>
+      <% end %>
+      </tbody>
+    </table>
+  <% else %>
+    <p class="nodata"><%= l(:label_no_data) %></p>
+  <% end %>
+</div>
+
+
+<%= javascript_tag do %>
+  $(function() {
+      $("table.custom-workflows tbody").positionedItems();
+  });
+<% end %>

@@ -1,0 +1,88 @@
+<div class="contextual">
+    <% if User.current.allowed_to_globally?(:manage_contract) %>
+        <%= link_to l(:label_new_contract_member),
+            new_contract_contract_member_path(@contract, @contract_member),
+            class: 'icon icon-add'
+        %>
+    <% end %> 
+</div>
+
+<%= title l(:label_contract_members) %>
+
+<% if @contract_members.any? %>
+  <table class="list contract_members">
+    <thead>
+      <tr>
+        <th> <%= l(:label_user) %> </th>        
+        <th> <%= l(:field_profile) %> </th>
+        <th> <%= l(:label_role_plural) %> </th>
+        <th></th>
+      </tr>
+    </thead>
+    <tbody>
+      <% @contract_members.each do |member| %>
+        <% next if member.new_record? %>
+        <tr >
+          <td><%= link_to_user member.user %></td>
+          <td><%= member.profile ? l("profiles.#{member.profile}") : "<span style='color: red;'>#{l(:label_not_registred)}</span>".html_safe %></td>
+          <td><%= member.roles.sort.collect(&:to_s).join(', ') %></td>
+          
+          <td>
+            <%= link_to l(:button_edit), 
+              edit_contract_member_path(member), 
+              class: 'icon icon-edit'
+            %>
+            <%= link_to l(:button_delete), 
+              contract_member_path(member), 
+              method: :delete, 
+              class: 'icon icon-del'
+            %>
+          </td>
+        </tr>
+      <% end %>
+    </tbody>
+  </table>
+<% else %>
+  <p class="nodata"><%= l(:label_no_data) %></p>
+<% end %>
+  
+<br><br><br><br><br><br><br>
+
+<%= title l(:label_project_members) %>
+
+<% if @project_members.any? %>
+
+  <table class="list project_members">
+    <thead>
+      <tr>
+        <th><%= l(:label_user) %></th>
+        <th><%= l(:field_profile) %></th>
+        <th><%= l(:label_role_plural) %></th>
+        <th></th>
+      </tr>
+    </thead>
+    <tbody>
+      <% @project_members.each do |member| %>
+        <% next if member.new_record? %>
+        <tr class="member">
+          <td><%= link_to_user member.user %></td>
+          <td><%= member.profile ? l("profiles.#{member.profile}") : "<span style='color: red;'>#{l(:label_not_registred)}</span>".html_safe %></td>
+          <td><%= member.roles.sort.collect(&:to_s).join(', ') %></td>            
+          <td>
+            <%= link_to l(:button_edit), 
+              edit_contract_member_path(member), 
+              class: 'icon icon-edit'
+            %>
+            <%= link_to l(:button_delete), 
+              contract_member_path(member), 
+              method: :delete, 
+              class: 'icon icon-del'
+            %>
+          </td>
+        </tr>
+      <% end %>
+    </tbody>
+  </table>
+<% else %>
+<p class="nodata"><%= l(:label_no_data) %></p>
+<% end %>

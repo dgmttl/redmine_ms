@@ -1,0 +1,15 @@
+<% if User.current.allowed_to_globally?(:manage_sla_event) %> 
+
+    <% if @sla_event %>
+        <%= error_messages_for 'sla_event' %>
+        <fieldset class="box tabular">
+                <p><%= f.select :sla_id, options_for_select(Sla.all.map { |sla| [sla.acronym, sla.id] }) %></p>
+                <p><%= f.select :issue_id, options_for_select(work_orders) %></p>
+                <p><%= f.select :status, options_for_select(SlaEvent.status_options) %></p>
+                <p><%= f.text_field :measured_value, pattern: '\d+(\,\d{1,2})?', inputmode: 'decimal' %></p>
+        </fieldset>
+        <%= submit_tag l(@sla_event.new_record? ? :button_create : :button_save) %>
+    <% end %>
+<% else %>
+    <p class="nodata"><%= l(:label_no_data) %></p>
+<% end %>

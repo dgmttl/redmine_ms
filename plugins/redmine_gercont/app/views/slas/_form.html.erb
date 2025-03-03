@@ -1,0 +1,23 @@
+<% if User.current.allowed_to_globally?(:manage_contract) %> 
+
+    <% if @sla %>
+        <%= error_messages_for 'sla' %>
+        <fieldset class="box tabular">
+            <p><%= f.text_field :acronym, :required => true, label: :field_acronym %></p>
+            <p><%= f.text_field :name, :required => true, label: :field_name %></p>
+            <p><%= f.text_area :description, rows: 10, :required => true, label: :field_description %></p>
+            <p><%= f.text_field :frequency, :required => true, label: :field_frequency %></p>
+            <p><%= f.check_box :assessments, label: :field_assessments %></p>
+            <p><%= f.text_field :target, required: true, pattern: '\d+(\,\d{1,2})?', inputmode: 'decimal', label: :field_target %></p>
+            <p> <% unless @sla.new_record? %>
+                    <%= labelled_fields_for :custom_workflow, @sla.custom_workflow do |workflow| %>
+                        <%= workflow.text_area :before_save, :label => :label_sla_script , rows: 15%>
+                    <% end %>
+                <% end %>
+            </p>
+        </fieldset>
+        <%= submit_tag l(@sla.new_record? ? :button_create : :button_save) %>
+    <% end %>
+<% else %>
+    <p class="nodata"><%= l(:label_no_data) %></p>
+<% end %>

@@ -1,0 +1,53 @@
+    <div class="contextual">
+        <% if User.current.allowed_to_globally?(:manage_contract) %>
+            <%= link_to l(:label_new_item),
+                new_contract_item_path(@contract, @item),
+                class: 'icon icon-add'
+            %>
+        <% end %> 
+    </div>
+
+<%= title l(:label_catalog_items) %>
+
+<% if @items.any? %>
+    
+    <table class="list issues sort-by" id="catalogTable">
+        <thead>
+            <tr>
+                <th> <%= l(:field_item) %> </th>
+                <th> <%= l(:field_description) %> </th>
+                <th> <%= l(:field_unit_measure) %> </th>
+                <th> <%= l(:field_unit_value) %> </th>
+                <% if User.current.allowed_to_globally?(:manage_contract) %>
+                    <th></th>
+                <% end %>
+            </tr>
+        </thead>
+        <tbody>
+            <% @items.each do |item| %>
+            <tr>                        
+                <td><%= link_to item.name, edit_item_path(item)  %></td>
+                <td><%= item.description %></td>
+                <td><%= item.unit_measure %></td>
+                <td><%= number_to_currency(item.unit_value) %></td>
+                <% if User.current.allowed_to_globally?(:manage_contract) %>
+                    <td>
+                        <%= link_to l(:button_edit), 
+                            edit_item_path(item), 
+                            class: 'icon icon-edit'
+                        %>
+                        <%= link_to l(:button_delete), 
+                            item_path(item), 
+                            method: :delete, 
+                            class: 'icon icon-del'
+                        %>
+                    </td>
+                <% end %>
+            </tr>
+            <% end %>
+        </tbody>
+    </table>
+<% else %>
+    <p class="nodata"><%= l(:label_no_data) %></p>
+<% end %>
+

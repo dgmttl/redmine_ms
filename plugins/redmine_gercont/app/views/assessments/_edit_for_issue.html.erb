@@ -1,0 +1,42 @@
+<% if @assessments.any? %>
+  <div id="content">
+    <%= form_with(model: @issue, url: update_assessments_by_issue_path, method: :put, local: true) do |f| %>
+    <%= hidden_field_tag :issue_id, @issue.id %>
+        <table class="list issues sort-by" id="assessmentTable">
+        <thead>
+          <tr>
+            <th><%= l(:label_assesse) %></th>
+            <th><%= l(:field_attendance) %></th>
+            <th><%= l(:field_technical_expertise) %></th>
+            <th><%= l(:field_conduct) %></th>
+          </tr>
+        </thead>
+        <tbody>
+          <% @assessments.each do |assessment| %>
+            <tr>
+              <td><%= link_to assessment.user.name, user_path(assessment.user) %></td>
+              <td>
+                <%= f.select "assessments[#{assessment.id}][attendance]", options_for_select(Assessment.answers_options, assessment.attendance) %>
+                <a href="#" class="repeat-value">&#187;</a>
+            </td>
+              <td><%= f.select "assessments[#{assessment.id}][technical_expertise]", options_for_select(Assessment.answers_options, assessment.technical_expertise) %></td>
+              <td><%= f.select "assessments[#{assessment.id}][conduct]", options_for_select(Assessment.answers_options, assessment.conduct) %></td>
+            </tr>
+          <% end %>
+        </tbody>
+      </table>
+      <%= submit_tag l(:button_save) %>
+    <% end %>
+  </div>
+<% else %>
+  <p class="nodata"><%= l(:label_no_data) %></p>
+<% end %>
+
+<%= javascript_tag do %>
+$("a.repeat-value").click(function(e){
+  e.preventDefault();
+  var td = $(this).closest('td');
+  var selected = td.find("select").find(":selected").val();
+  td.nextAll('td').find("select").val(selected);
+});
+<% end %>
