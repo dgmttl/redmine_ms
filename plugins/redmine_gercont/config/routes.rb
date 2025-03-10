@@ -13,10 +13,12 @@ resources :projects, shallow: true do
   resources :sla_events
   resources :assessments
   resources :work_plans
+  resources :work_orders
 end
 
 get 'sla_events', to: 'sla_events#index', as: 'sla_events'
 get 'assessments', to: 'assessments#index', as: 'assessments'
+get 'work_plans', to: 'work_plans#index', as: 'work_plans'
 post '/rules/:id/change_status', to: 'rules#change_status', as: 'rule_status'
 put '/rules/:id/reorder', to: 'rules#reorder'
 post '/sla/:id/change_status', to: 'slas#change_status', as: 'sla_status'
