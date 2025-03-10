@@ -17,21 +17,4 @@ module ContractMembersHelper
         User.where(status: 1, admin: false).map { |user| [user.name, user.id] }
     end      
 
-    def role_options
-        roles = []
-        
-        cm_id = Setting.plugin_redmine_gercont["role_for_contract_manager"].to_i
-        ti_id = Setting.plugin_redmine_gercont["role_for_technical_inspector"].to_i
-        ai_id = Setting.plugin_redmine_gercont["role_for_administrative_inspector"].to_i
-        ag_id = Setting.plugin_redmine_gercont["role_for_agent"].to_i
-      
-        roles << Role.find(cm_id)
-        roles << Role.find(ti_id)
-        roles << Role.find(ai_id)
-        roles << Role.find(ag_id)
-        
-        roles
-    end
-      
-      
 end

@@ -5,6 +5,8 @@ module RedmineGercont
                 base.class_eval do
                     
                     alias_method :original_issue_history_tabs, :issue_history_tabs
+                    alias_method :original_trackers_for_select, :trackers_for_select                    
+                    
                     def issue_history_tabs
                         tabs = original_issue_history_tabs
                         if @issue.assessments.any?
@@ -26,14 +28,15 @@ module RedmineGercont
                         tabs
                     end
 
-                    alias_method :original_trackers_for_select, :trackers_for_select
+
                     def trackers_for_select(issue)
                         trackers = original_trackers_for_select(issue)
-                        if User.current.roles_for_project(Project.first).include?(Role.find(Setting.plugin_redmine_gercont['role_for_product_owner'].to_i))
+                        if User.current.roles_for_project(Project.first).include?(Role.find(Setting.plugin_redmine_gercont['role_for_requester'].to_i))
                             trackers = trackers.reject { |tracker| Setting.plugin_scrum['pbi_tracker_ids'].first.to_i == tracker.id }
                         end
                         trackers
                     end
+
                     
                 end
             end

@@ -1,0 +1,278 @@
+<div class="contextual">
+  <% if can_manage_versions?(@project)  %>
+    <%= link_to(sprite_icon('add', l(:label_version_new)), new_project_version_path(@project),
+                class: 'icon icon-add') %>
+  <% end %>
+
+  <%= actions_dropdown do %>
+    <%= link_to_if_authorized sprite_icon('settings', l(:label_settings)),
+                              {controller: 'projects', action: 'settings', id: @project, tab: 'versions'},
+                              class: 'icon icon-settings' %>
+  <% end %>
+</div>
+
+<h2><%= l(:label_roadmap) %>
+  <span class="badge <%= plan_status_classes(@versions) %>">
+    <%= l("plan_status_#{Version.plan_status(@versions)}") %>
+  </span>
+</h2>
+
+<% if @versions.empty? %>
+  <p class="nodata"><%= l(:label_no_data) %></p>
+<% else %>
+<fieldset>
+  <legend><%= l(:label_resume) %></legend>
+  <div style="display: flex; gap: 20px;">
+    <div style="flex: 1;">
+      <p><strong><%= l(:label_estimated_count) %>:</strong>
+        <span id="estimated-count"><%= number_with_precision(sum_estimated_counts(@versions), delimiter: '.', separator: ',', precision: 2) %></span>
+      </p>
+      <p><strong><%= l(:label_estimated_duration) %>:</strong>
+        <span id="estimated-duration"><%= sum_estimated_durations(@versions).to_i %></span> <%= l(:label_calendar_days) %>
+      </p>
+      <p><strong><%= l(:label_estimated_cost) %>:</strong>
+        <span id="estimated-cost"><%= number_to_currency(sum_estimated_costs(@versions)) %></span>
+      </p>
+    </div>
+
+    <div style="flex: 1;">
+      <p><strong><%= l(:label_version_plural) %>:</strong>
+        <span id="total-versions"><%= @versions.size %></span>
+      </p>
+      <p><strong><%= l(:label_story_plural) %>:</strong>
+        <span id="total-stories"><%= sum_related_stories(@versions) %></span>
+      </p>
+    </div>
+  </div>
+
+  <% if (@project.versions.any? { |version| ['planning', 'rejected'].include?(version.status) }  &&
+         User.current.allowed_to?(:ask_for_plan_approval, @project)  ) || User.current.admin? %>
+      <%= button_to l(:button_ask_for_approval),
+                    ask_for_plan_approval_path(id: @project.identifier),
+                    method: :post %>
+  <% end %>
+  
+  <% if can_approve_plan?(@versions) %>
+    <div>
+      <%= button_tag l(:label_approve_plan), type: "button", class: "btn btn-primary", id: "approve-work_plan" %>
+    </div>
+  <% end %>
+</fieldset>
+
+
+<br>
+<br>
+
+<div id="roadmap">
+  <% @versions.each do |version| %>
+  <script type="application/json" id="version-data-<%= version.id %>">
+    {
+      "estimated_count": <%= sum_estimated_counts([version]) %>,
+      "estimated_duration": <%= sum_estimated_durations([version]) %>,
+      "estimated_cost": <%= sum_estimated_costs([version]) %>,
+      "total_stories": <%= sum_related_stories([version]) %>,
+      "status": "<%= version.status %>"
+    }
+  </script>
+  <% next if version.status == 'closed' %>
+  <article class="version-article <%= version.css_classes %>">
+    <div class="contextual">
+      <% if can_manage_versions?(@project)  %>   
+        <%= link_to sprite_icon('edit', l(:button_edit)), edit_version_path(version), 
+                    title: l(:button_edit), class: 'icon-only icon-edit' %>
+      <% end %>
+      
+      <% if can_approve_plan?(@versions) %>
+        <!-- Renderiza o checkbox -->
+        <div>
+          <%= check_box_tag "approve_version_#{version.id}", version.id, version.status == 'rejected' ? false : true, class: "approve-version", data: { version_id: version.id } %>
+          <label for="approve_version_<%= version.id %>"><%= l(:button_approve) %></label>
+          <script type="application/json" id="version-data-<%= version.id %>">
+            {
+              "estimated_count": <%= sum_estimated_counts([version]) %>,
+              "estimated_duration": <%= sum_estimated_durations([version]) %>,
+              "estimated_cost": <%= sum_estimated_costs([version]) %>,
+              "total_stories": <%= sum_related_stories([version]) %>,
+              "status": "<%= version.status %>"
+            }
+          </script>
+        </div>
+      <% else %>
+        <!-- Não renderiza checkbox; apenas fornece os dados -->
+        <script type="application/json" id="version-data-<%= version.id %>">
+          {
+            "estimated_count": <%= sum_estimated_counts([version]) %>,
+            "estimated_duration": <%= sum_estimated_durations([version]) %>,
+            "estimated_cost": <%= sum_estimated_costs([version]) %>,
+            "total_stories": <%= sum_related_stories([version]) %>,
+            "status": "<%= version.status %>"
+          }
+        </script>
+      <% end %>
+
+    
+    </div>
+
+    <header>
+      <h3 class="icon icon-package version inline-flex">
+        <%= sprite_icon 'package' %>
+        <%= link_to_version version, :name => version_anchor(version) %>
+      </h3>
+      <span class="badge badge-status-<%= version.status %>"><%= l("version_status_#{version.status}") %></span>
+      <br><%= link_to_demand(version) %>
+    </header>
+    
+
+    <%= render :partial => 'versions/overview', :locals => {:version => version} %>
+    <%= render(:partial => "wiki/content",
+               :locals => {:content => version.wiki_page.content}) if version.wiki_page %>
+    <% if (issues = @issues_by_version[version]) && issues.size > 0 %>
+      <%= form_tag({}, :data => {:cm_url => issues_context_menu_path}) do -%>
+        <table class="list related-issues">
+        <caption><%= l(:label_related_issues) %></caption>
+        <% issues.each do |issue| -%>
+          <tr class="hascontextmenu <%= issue.css_classes %>">
+            <td class="checkbox"><%= check_box_tag 'ids[]', issue.id, false, :id => nil %></td>
+            <td class="assigned_to"><%= assignee_avatar(issue.assigned_to, :size => 16) %></td>
+            <td class="subject"><%= link_to_issue(issue, :project => (@project != issue.project)) %></td>
+            <td class="buttons"><%= link_to_context_menu %></td>
+          </tr>
+        <% end -%>
+        </table>
+      <% end %>
+    <% end %>
+    <%= call_hook :view_projects_roadmap_version_bottom, :version => version %>
+  </article>
+  <% end %>
+</div>
+<% end %>
+
+<% content_for :sidebar do %>
+  <%= render :partial => 'versions/sidebar' %>
+<% end %>
+
+<% html_title(l(:label_roadmap)) %>
+
+<%= context_menu %>
+
+<script>
+  document.addEventListener("DOMContentLoaded", function () {
+      const checkboxes = document.querySelectorAll(".approve-version");
+      const versionData = {}; // Armazena os dados de cada versão
+
+      // Captura os dados diretamente dos elementos <script>
+      document.querySelectorAll("script[id^='version-data-']").forEach(versionElement => {
+          const versionId = versionElement.id.replace("version-data-", "");
+          versionData[versionId] = JSON.parse(versionElement.textContent);
+      });
+
+      // Adiciona listeners de mudança nos checkboxes, se disponíveis
+      checkboxes.forEach(checkbox => {
+          checkbox.addEventListener("change", function () {
+              updateSummary();
+          });
+      });
+
+      // Atualiza o cabeçalho com os dados iniciais
+      updateSummary();
+
+      function updateSummary() {
+        let totalCount = 0;
+        let totalDuration = 0;
+        let totalCost = 0;
+        let totalVersions = 0;
+        let totalStories = 0;
+    
+        // Percorre todas as versões disponíveis
+        Object.keys(versionData).forEach(versionId => {
+            const data = versionData[versionId];
+            const checkbox = document.querySelector(`.approve-version[data-version-id="${versionId}"]`);
+    
+            if (data) {
+                if (checkbox) {
+                    // Quando o checkbox está presente
+                    if (checkbox.checked) {
+                        // Adiciona os valores das versões marcadas
+                        totalCount += data.estimated_count;
+                        totalDuration += data.estimated_duration;
+                        totalCost += data.estimated_cost;
+                        totalVersions++;
+                        totalStories += data.total_stories;
+                    }
+                } else if (data.status === 'rejected') {
+                } else {
+                    // Inclui no cálculo as versões que não são rejeitadas
+                    totalCount += data.estimated_count;
+                    totalDuration += data.estimated_duration;
+                    totalCost += data.estimated_cost;
+                    totalVersions++;
+                    totalStories += data.total_stories;
+                }
+            }
+        });
+    
+        // Atualiza os valores no topo da tela
+        document.getElementById("estimated-count").textContent = totalCount.toFixed(2).replace(".", ",");
+        document.getElementById("estimated-duration").textContent = totalDuration;
+        document.getElementById("estimated-cost").textContent = new Intl.NumberFormat('pt-BR', { style: 'currency', currency: 'BRL' }).format(totalCost);
+        document.getElementById("total-versions").textContent = totalVersions;
+        document.getElementById("total-stories").textContent = totalStories;
+    }
+    
+    
+  });
+  
+  
+  document.getElementById("approve-work_plan").addEventListener("click", async function () {
+    console.log("Botão clicado!");
+
+    const approvedVersions = [];
+    const projectId = "<%= @project.identifier %>"; // Pegando o ID do projeto no ERB
+
+    document.querySelectorAll(".approve-version").forEach(checkbox => {
+        if (checkbox.checked) {
+            approvedVersions.push(checkbox.value);
+        }
+    });
+
+    if (approvedVersions.length === 0) {
+        alert("Nenhuma versão selecionada para aprovação.");
+        return;
+    }
+
+    try {
+        const response = await fetch("/update_versions_status", {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json",
+                "X-CSRF-Token": document.querySelector('meta[name="csrf-token"]').content
+            },
+            body: JSON.stringify({
+                id: projectId,  // Enviando o project_id
+                version_ids: approvedVersions
+            })
+        });
+
+        if (!response.ok) {
+            throw new Error("Erro ao aprovar o planejamento no servidor.");
+        }
+
+        const data = await response.json();
+
+        // Exibe mensagem de sucesso
+        const successMessage = document.createElement("p");
+        successMessage.textContent = data.message || "Planejamento aprovado com sucesso!";
+        successMessage.style.color = "green";
+        successMessage.style.fontWeight = "bold";
+        document.body.appendChild(successMessage);
+
+        setTimeout(() => location.reload(), 2000);
+
+    } catch (error) {
+        console.error("Erro:", error);
+        alert(error.message || "Erro ao se comunicar com o servidor.");
+    }
+});
+  
+  
+</script>

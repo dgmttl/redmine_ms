@@ -1,6 +1,6 @@
 require_relative '../test_helper'
 
-class PlanTest < ActiveSupport::TestCase
+class WorkPlanTest < ActiveSupport::TestCase
 
   # Replace this with your real tests.
   def test_truth

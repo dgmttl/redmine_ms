@@ -8,18 +8,17 @@ class ContractMember < ApplicationRecord
 
 
     PROFILES = [
-      ['product_owner', [100]],
+      ['product owner', [100]],
       ['senior architect', [33, 66, 100]],
       ['mid-level developer', [100]],
       ['senior developer', [100]],
       ['tech lead', [33, 66, 100]],
-      ['mid-level business analyst', [50, 100]], 
-      ['mid-level requirements analyst', [50, 100]],
-      ['senior business analyst', [33, 66, 100]],
-      ['senior requirements analyst', [50, 100]],
+      ['mid-level business/requirements analyst', [50, 100]],
+      ['senior business/requirements analyst', [33, 66, 100]],
       ['senior business intelligence analyst', [50, 100]],
       ['senior data admin', [20, 40, 60, 80, 100]],
-      ['scrum master', [33, 66, 100]]
+      ['scrum master', [33, 66, 100]],
+      ['requesting', []]
     ].freeze
 
     def self.profile_options

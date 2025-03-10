@@ -1,6 +1,6 @@
 class ContractMembersController < ApplicationController
 
-  include ContractMembersHelper
+  helper ContractsHelper
 
   before_action :authorize_global
   before_action :find_contract, only: [:index, :new, :create]
@@ -58,36 +58,32 @@ class ContractMembersController < ApplicationController
   end
 
   def update_contract_members_in_projects
-    if @contract.projects.any?
-      @contract.projects.each do |project|
-        member = Member.find_by_user_id(@contract_member.user_id)
+    @contract.projects.each do |project|
+      member = project.members.find_by(user_id: @contract_member.user_id)
+      if member
         member.role_ids = @contract_member.role_ids
         member.save!
       end
-    end  
-  end
-
-  def destroy_contract_members_in_projects
-    if @contract.projects.any?
-      @contract.projects.each do |project|
-        if project.members.any? { |member| member.user_id == @contract_member.user_id }
-          Member.find_by_user_id(@contract_member.user_id).destroy
-        end
-      end
-    end  
-  end
-  
-  def create_contract_members_in_projects
-    if @contract.projects.any?
-      @contract.projects.each do |project|
-        Member.create_principal_memberships(
-          @contract_member.user, 
-          :project_ids => [project.id], 
-          :role_ids => @contract_member.role_ids
-        )
-      end
     end
   end
+  
+  
+
+  def destroy_contract_members_in_projects
+    return if @contract_member.profile != 'contract member'  
+    Member.where(user_id: @contract_member.user_id, project_id: @contract.projects.pluck(:id)).destroy_all
+  end
+  
+  
+  def create_contract_members_in_projects
+    project_ids = @contract.projects.pluck(:id) 
+    Member.create_principal_memberships(
+      @contract_member.user,
+      project_ids: project_ids,
+      role_ids: @contract_member.role_ids
+    )
+  end
+  
   
   def contract_member_params
     params[:contract_member].permit(:user_id, :profile, role_ids: [])

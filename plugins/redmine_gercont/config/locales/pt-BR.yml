@@ -13,8 +13,7 @@ pt-BR:
       completed: Finalizado
       abstained: Abonado
       canceled: Cancelado
- 
- 
+  
   answers:
     terrible: Péssima
     bad: Ruim
@@ -28,7 +27,7 @@ pt-BR:
     shared_code: Código compartilhado
 
   profiles:
-    product_owner: Dono do Produto
+    product owner: Dono do Produto
     contract member: Membro do Contrato
     senior architect: Arquiteto Sênior
     mid-level developer: Desenvolvedor Pleno
@@ -42,10 +41,11 @@ pt-BR:
     senior data admin: Administrador De Dados Sênior
     scrum master: Scrum Master
     project manager: Gerente De Projetos
+    requester: Requisitante
 
   project_module_slas: Níveis Mínimos de Serviço
   project_module_assessments: Questionários
-  project_module_plans: Planejamentos
+  project_module_work_plans: Planos de Trabalho
 
   permission_manage_assessment: Gerenciar Questionários
   permission_manage_contract: Gerenciar Contrato
@@ -55,7 +55,14 @@ pt-BR:
   permission_view_contract: Ver Contrato
   permission_view_plan_menu: Ver menu de Planejamento
   permission_view_sla_event_menu: Ver menu de Eventos NMS
+  permission_approve_plan: Aprovar planejamento
+  permission_ask_for_plan_approval: Solicitar aprovação de planejamento
+  permission_view_work_plans: Ver Planos de Trabalho
+  permission_view_work_plans_menu: Ver menu de Planos de Trabalho
+  permission_manage_work_plans: Gerenciar Planos de Trabalho
 
+  button_ask_for_approval: Solicitar aprovação
+  button_approve: Aprovar
 
   field_acronym: Sigla
   field_action: Ação
@@ -86,10 +93,12 @@ pt-BR:
   field_user_assesse: Profisional Avaliado
 
   label_active_contracts: Contratos ativos
+  label_approve_plan: Aprovar plano
   label_assesse: Avaliado
   label_assessment: Questionário
   label_assessments: Questionários
   label_assessment_description: Questionário de Avaliação Individual do Perfil Profissional (IPP)
+  label_calendar_days: dias corridos.
   label_canceled_contracts: Contratos cancelados
   label_catalog: Catálogo
   label_catalog_items: Itens do Catálogo
@@ -101,6 +110,14 @@ pt-BR:
   label_contracts: Contratos
   label_edit_assessment: Editar Questionário
   label_edit_sla_event: Editar NMS
+  label_estimated_count: Contagem estimada
+  label_estimated_duration: Prazo estimado
+  label_estimated_cost: Custo estimado
+  label_field_for_plan_flag: Campo customizado para situação do planejamento
+  label_field_for_requested_versions: Campo customizado para releases demandadas
+  label_field_for_version_cost: Campo customizado para custo estimado
+  label_field_for_version_count: Campo customizado para contagem estimada
+  label_field_for_version_duration: Campo customizado para prazo estimado
   label_holidays: Feriados
   label_item: Item
   label_measured_value: Pontuação
@@ -114,12 +131,15 @@ pt-BR:
   label_new_rule: Nova Regra
   label_new_sla: Novo NMS
   label_not_registred: Não registrado
+  label_resume: Resumo
   label_product_backlog: Backlog do produto
   label_project_members: Membros dos Projetos
   label_role_for_administrative_inspector: Papel para Fiscal Administrativo
   label_role_for_agent: Papel para o Preposto
+  label_role_for_contract_admin: Papel para o Administrador do Contrato
   label_role_for_contract_manager: Papel para o Gestor de Contrato
   label_role_for_product_owner: Papel para o Dono do Produto
+  label_role_for_requester: Papel para o Fiscal Requisitante
   label_role_for_technical_inspector: Papel para o Fiscal Técnico
   label_roles_for_assessment: Papéis sujeitos à avaliação
   label_rules: Regras de Negócio
@@ -129,12 +149,36 @@ pt-BR:
   label_sla_with_assessments: NMS com Questionários
   label_slas: Níveis Mínimos de Serviço
   label_statuses_for_edit_assessment: Estados para editar questionários
+  label_story_plural: Histórias
   label_tracker_for_demand: Tipo de Tarefa para Demanda
+  label_view: Visualisar
   label_week_day: Dia da semana
+  label_work_plans: Planos de Trabalho
+
   
+  plan_status_approved: aprovado
+  plan_status_approving: em aprovação
+  plan_status_attending: em atendimento
+  plan_status_blocked: bloqueado
+  plan_status_closed: concluído
+  plan_status_partially_approved: aprovado parcialmente
+  plan_status_planned: planejado
+  plan_status_planning: em planejamento
+  plan_status_requested: demandado
+
+  notice_select_at_least_one_version: Selecione ao menos uma versão para prosseguir.
+
   text_created_automaticaly: Este é o backlog princpipal do projeto.
-  text_code_local: Insira o seu código aqui.
+  text_code_area: Insira o seu código aqui.
+  text_need_associate_stories_to_versions: A solicitação não pode prosseguir. Existem releases sem histórias associadas.
   
+
+  version_status_approved: planejamento aprovado
+  version_status_planned: planejada
+  version_status_planning: em planejamento
+  version_status_rejected: planejamento rejeitado
+  version_status_requested: demandada
+
   warning_name_not_available: Nome não está disponível
   warning_need_contract: Solicite ao administrador cadastrar ao menos um contrato.
   warning_need_sla: Solicite ao administrador cadastrar ao menos um NMS do tipo IPP.

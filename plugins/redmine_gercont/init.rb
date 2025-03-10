@@ -8,7 +8,12 @@ Redmine::Plugin.register :redmine_gercont do
   author_url 'www.linkedin.com/in/diogo-mattioli-neiva-9a5b77b0'
 
   Dir[File.join(File.dirname(__FILE__), '/lib/redmine_gercont/patches/*.rb')].each { |file| require_dependency file }
-  
+
+
+
+  #Plan
+  permission :approve_plan, {:versions => [:approve_plan]}
+  permission :ask_for_plan_approval, {:versions => [:ask_for_plan_approval]}
 
   #Contract
   permission :view_contract, {
@@ -19,7 +24,8 @@ Redmine::Plugin.register :redmine_gercont do
     :items => [:new, :create, :edit, :update, :destroy],
     :slas => [:new, :create, :edit, :update, :destroy],
     :rules => [:new, :create, :edit, :update, :destroy],
-    :holidays =>  [:new, :create, :edit, :update, :destroy]
+    :holidays =>  [:new, :create, :edit, :update, :destroy],
+    :contract_members =>  [:new, :create, :edit, :update, :destroy]
   }
   
   menu :top_menu, 
@@ -71,27 +77,30 @@ Redmine::Plugin.register :redmine_gercont do
     caption: :label_assessments
 
 
-  # # plan
-  # project_module :plans do
-  #   permission :view_plan_menu, {:plans => [:index, :show]}
-  #   permission :manage_plan, {:plans => [:new, :create, :edit, :update, :destroy]}
-  # end   
+  # work_plan
+  project_module :work_plans do
+    permission :view_work_plans_menu, {:work_plans => [:index]}
+    permission :view_work_plans, {:work_plans => [:show]}
+    permission :manage_work_plans, {:work_plans => [:new, :create, :edit, :update, :destroy]}
+  end   
 
-  # menu :project_menu, 
-  #   :plans, 
-  #   { controller: 'plans', action: 'index'},
-  #   if: Proc.new { User.current.allowed_to_globally?(:view_plan_menu) },
-  #   caption: :label_plans, 
-  #   after: :activity, 
-  #   param: :project_id
+  menu :project_menu, 
+    :work_plans, 
+    { controller: 'work_plans', action: 'index'},
+    # if: Proc.new { User.current.allowed_to_globally?(:view_work_plans) },
+    caption: :label_work_plans, 
+    after: :activity, 
+    param: :project_id
 
-  # menu :application_menu, 
-  #   :plans, 
-  #   { controller: 'plans', action: 'index'},
-  #   if: Proc.new { User.current.allowed_to_globally?(:view_plan_menu) },
-  #   caption: :label_plans    
+  menu :application_menu, 
+    :work_plans, 
+    { controller: 'work_plans', action: 'index'},
+    # if: Proc.new { User.current.allowed_to_globally?(:view_work_plans_menu) },
+    caption: :label_work_plans    
 
 
   settings default: {'empty' => true}, partial: 'settings/redmine_gercont'
 
 end
+
+

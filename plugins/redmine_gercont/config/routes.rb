@@ -12,7 +12,7 @@ end
 resources :projects, shallow: true do
   resources :sla_events
   resources :assessments
-  resources :plans
+  resources :work_plans
 end
 
 get 'sla_events', to: 'sla_events#index', as: 'sla_events'
@@ -21,3 +21,5 @@ post '/rules/:id/change_status', to: 'rules#change_status', as: 'rule_status'
 put '/rules/:id/reorder', to: 'rules#reorder'
 post '/sla/:id/change_status', to: 'slas#change_status', as: 'sla_status'
 put 'update_assessments_by_issue', to: 'assessments#update_by_issue'
+post 'update_versions_status', to: 'versions#approve_plan'
+post 'ask_for_plan_approval', to: 'versions#ask_for_plan_approval'

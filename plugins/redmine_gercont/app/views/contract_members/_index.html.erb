@@ -28,14 +28,15 @@
           <td><%= member.roles.sort.collect(&:to_s).join(', ') %></td>
           
           <td>
+            
             <%= link_to l(:button_edit), 
               edit_contract_member_path(member), 
-              class: 'icon icon-edit'
+              class: 'icon icon-edit' 
             %>
             <%= link_to l(:button_delete), 
               contract_member_path(member), 
               method: :delete, 
-              class: 'icon icon-del'
+              class: 'icon icon-del' 
             %>
           </td>
         </tr>
@@ -76,7 +77,7 @@
             <%= link_to l(:button_delete), 
               contract_member_path(member), 
               method: :delete, 
-              class: 'icon icon-del'
+              class: 'icon icon-del' if User.current.admin?
             %>
           </td>
         </tr>

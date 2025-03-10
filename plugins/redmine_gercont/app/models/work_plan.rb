@@ -1,5 +1,5 @@
-class Plan < ApplicationRecord
-    self.table_name = 'contract_plans'
+class WorkPlan < ApplicationRecord
+    self.table_name = 'contract_work_plans'
 
     belongs_to :issue
     has_one :contract, through: :issue

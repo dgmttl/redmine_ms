@@ -221,7 +221,7 @@ pt-BR:
   permission_view_pending_effort: "Ver esforço pendente"
   permission_view_product_backlog: "Ver backlog do produto"
   permission_view_product_backlog_burndown: "Ver burndown do backlog do produto"
-  permission_view_release_plan: "Ver roadmap"
+  permission_view_release_plan: "Ver plano de release"
   permission_view_remaining_story_points: "Ver pontos de história restantes"
   permission_view_scrum_stats: "Ver estatísticas do Scrum"
   permission_view_sprint_board: "Ver quadro do Sprint"

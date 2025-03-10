@@ -64,13 +64,16 @@ module ContractsHelper
         
         cm_id = Setting.plugin_redmine_gercont["role_for_contract_manager"].to_i
         ti_id = Setting.plugin_redmine_gercont["role_for_technical_inspector"].to_i
+        ti_id = Setting.plugin_redmine_gercont["role_for_technical_inspector"].to_i
         ai_id = Setting.plugin_redmine_gercont["role_for_administrative_inspector"].to_i
         ag_id = Setting.plugin_redmine_gercont["role_for_agent"].to_i
+        ca_id = Setting.plugin_redmine_gercont["role_for_contract_admin"].to_i
       
         roles << Role.find(cm_id)
         roles << Role.find(ti_id)
         roles << Role.find(ai_id)
         roles << Role.find(ag_id)
+        roles << Role.find(ca_id)
         
         roles
     end

@@ -94,7 +94,7 @@ class RulesController < CustomWorkflowsController
     CustomWorkflow.create!(
       name: workflow_contract_name,
       before_save: workflow_params[:observable] != 'shared' ? workflow_before_save_code : "",
-      shared_code: workflow_params[:observable] == 'shared' ? l(:text_code_local) : "",
+      shared_code: workflow_params[:observable] == 'shared' ? l(:text_code_area) : "",
       description: "",
       string: "",
       position: CustomWorkflow.count + 1,
@@ -108,9 +108,9 @@ class RulesController < CustomWorkflowsController
 
   def workflow_before_save_code
     if workflow_params[:observable] == 'issue'
-      "if project.contracts.any? { |contract| contract.id == #{@rule.contract_id} } && tracker_id == #{@rule.tracker_id}\n\n\n ' #{l(:text_code_local)} '\n\n\nend\n"
+      "if tracker_id == #{@rule.tracker_id} && project.contracts.any? { |contract| contract.id == #{@rule.contract_id} } \n\n\n ' #{l(:text_code_area)} '\n\n\nend\n"
     else
-      " ' #{l(:text_code_local)} ' "
+      " ' #{l(:text_code_area)} ' "
     end
   end
 

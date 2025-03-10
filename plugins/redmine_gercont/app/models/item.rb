@@ -3,6 +3,6 @@ class Item < ActiveRecord::Base
 
     belongs_to :contract
     has_many :planned_items
-    has_many :plans, through: :planned_items
+    has_many :work_plans, through: :planned_items
 
 end

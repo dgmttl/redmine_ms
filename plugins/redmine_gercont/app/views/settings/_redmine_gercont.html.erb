@@ -2,8 +2,8 @@
   <h2> <%= l(:label_settings) %> </h2>
   <p>
     <%= content_tag(:label, l(:label_tracker_for_demand)) %>
-    <%= select_tag('settings[demand]', 
-               options_for_select(Tracker.all.map { |trk| [trk.name, trk.id] }, @settings['demand'].to_i)) %>
+    <%= select_tag('settings[demand_tracker_id]', 
+               options_for_select(Tracker.all.map { |trk| [trk.name, trk.id] }, @settings['demand_tracker_id'].to_i)) %>
   </p>
 
   <p>
@@ -37,6 +37,17 @@
   </p>
 
   <p>
+    <%= content_tag(:label, l(:label_role_for_contract_admin)) %>
+    <%= select_tag('settings[role_for_contract_admin]', 
+               options_for_select(Role.all.map { |role| [role.name, role.id] }, @settings['role_for_contract_admin'].to_i)) %>
+  </p>
+  <p>
+    <%= content_tag(:label, l(:label_role_for_requester)) %>
+    <%= select_tag('settings[role_for_requester]', 
+               options_for_select(Role.all.map { |role| [role.name, role.id] }, @settings['role_for_requester'].to_i)) %>
+  </p>
+
+  <p>
     <%= content_tag(:label, l(:label_roles_for_assessment)) %>
     <div class="tabular">
       <% Role.all.each do |role| %>
@@ -62,6 +73,30 @@
         </div>
       <% end %>
     </div>
+  </p>
+
+  <p>
+    <%= content_tag(:label, l(:label_field_for_version_count)) %>
+    <%= select_tag('settings[field_for_version_count]', 
+               options_for_select(CustomField.where(type: 'VersionCustomField').map { |custom| [custom.name, custom.id] }, @settings['field_for_version_count'].to_i)) %>
+  </p>
+
+  <p>
+    <%= content_tag(:label, l(:label_field_for_version_duration)) %>
+    <%= select_tag('settings[field_for_version_duration]', 
+               options_for_select(CustomField.where(type: 'VersionCustomField').map { |custom| [custom.name, custom.id] }, @settings['field_for_version_duration'].to_i)) %>
+  </p>
+
+  <p>
+    <%= content_tag(:label, l(:label_field_for_version_cost)) %>
+    <%= select_tag('settings[field_for_version_cost]', 
+               options_for_select(CustomField.where(type: 'VersionCustomField').map { |custom| [custom.name, custom.id] }, @settings['field_for_version_cost'].to_i)) %>
+  </p>
+
+  <p>
+    <%= content_tag(:label, l(:label_field_for_requested_versions)) %>
+    <%= select_tag('settings[field_for_requested_versions]', 
+               options_for_select(CustomField.where(type: 'IssueCustomField').map { |custom| [custom.name, custom.id] }, @settings['field_for_requested_versions'].to_i)) %>
   </p>
 
 </div>

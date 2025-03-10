@@ -182,8 +182,8 @@ class ContractsController < ApplicationController
     @contract.project_ids != contract_params[:project_ids].reject(&:empty?).map(&:to_i) ? true : false
   end
 
-  def addedd_projects
-    added_projects = contract_params[:project_ids].reject(&:empty?).map(&:to_i) - @contract.project_ids
+  def added_projects
+    contract_params[:project_ids].reject(&:empty?).map(&:to_i) - @contract.project_ids
   end
 
   def contract_members

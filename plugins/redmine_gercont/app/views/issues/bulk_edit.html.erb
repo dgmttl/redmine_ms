@@ -41,14 +41,14 @@
 </p>
 <% end %>
 
-<% if @project.contract.empty? || User.current.admin? %>
-<p>
-  <label for="issue_tracker_id"><%= l(:field_tracker) %></label>
-  <%= select_tag('issue[tracker_id]',
-                 content_tag('option', l(:label_no_change_option), :value => '') +
-                   options_from_collection_for_select(@trackers, :id, :name, @issue_params[:tracker_id]),
-                   :onchange => "updateBulkEditFrom('#{escape_javascript url_for(:action => 'bulk_edit', :format => 'js')}')") %>
-</p>
+<% if @project.contracts.empty? || User.current.admin? %>
+  <p>
+    <label for="issue_tracker_id"><%= l(:field_tracker) %></label>
+    <%= select_tag('issue[tracker_id]',
+                  content_tag('option', l(:label_no_change_option), :value => '') +
+                    options_from_collection_for_select(@trackers, :id, :name, @issue_params[:tracker_id]),
+                    :onchange => "updateBulkEditFrom('#{escape_javascript url_for(:action => 'bulk_edit', :format => 'js')}')") %>
+  </p>
 <% end %>
 
 <% if @available_statuses.any? %>

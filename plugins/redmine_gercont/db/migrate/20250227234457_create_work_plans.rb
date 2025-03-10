@@ -1,6 +1,6 @@
-class CreatePlans < ActiveRecord::Migration[7.2]
+class CreateWorkPlans < ActiveRecord::Migration[7.2]
   def change
-    create_table :contract_plans do |t|
+    create_table :contract_work_plans do |t|
       t.integer :issue_id
       t.text :baseline
 
