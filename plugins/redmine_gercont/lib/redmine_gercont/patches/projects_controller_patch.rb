@@ -9,7 +9,7 @@ module RedmineGercont
           alias_method :original_settings, :settings
           def settings
             original_settings
-            unless @project.contracts.empty?
+            if @project.contracts.any?
               @versions = @project.versions
             end
           end

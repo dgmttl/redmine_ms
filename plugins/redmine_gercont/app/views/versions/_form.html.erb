@@ -17,8 +17,11 @@
   <% end %>
 <% end %>
 
+
 <% @version.visible_custom_field_values.each do |value| %>
-  <p><%= custom_field_tag_with_label :version, value %></p>
+
+  <% next if project_type == 1 && estimative_field_ids.include?(value.custom_field.id) && !User.current.admin? %>
+    <p><%= custom_field_tag_with_label :version, value %></p>
 <% end %>
 
 </div>

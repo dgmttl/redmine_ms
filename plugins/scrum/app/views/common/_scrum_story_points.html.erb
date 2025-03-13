@@ -4,6 +4,6 @@
                        :value => pbi.story_points,
                        :unit => l(:label_story_point_unit),
                        :unit_title => l(:label_story_point_plural),
-                       :editable => (User.current.allowed_to?(:edit_issues, pbi.project) and
+                       :editable => (User.current.allowed_to?(:manage_sprints, pbi.project) and
                                      pbi.editable? and !read_only),
                        :change_element_path => change_story_points_path(pbi)} %>

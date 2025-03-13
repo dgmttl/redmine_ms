@@ -149,6 +149,8 @@ class ProductBacklogController < ApplicationController
   end
 
   def release_plan
+    logger.info "+++++++++++++++++++++++ release_plan - @object: #{@object}"
+    logger.info "+++++++++++++++++++++++ release_plan - @project: #{@project}"
     @sprints = []
     velocity_all_pbis, velocity_scheduled_pbis, @sprints_count = @project.story_points_per_sprint(@pbi_filter)
     @velocity_type = params[:velocity_type] || 'custom'
@@ -158,12 +160,7 @@ class ProductBacklogController < ApplicationController
       when 'only_scheduled'
         @velocity = velocity_scheduled_pbis
       else
-        
-        logger.info " \n\n ++++++++++++++++++++++++ def release_plan - default_velocity #{Setting.plugin_scrum['product_backlog_default_velocity'].to_f}"
-
         @velocity = (params[:custom_velocity].to_f unless params[:custom_velocity].blank?) || Setting.plugin_scrum['product_backlog_default_velocity'].to_f
-
-        logger.info " \n\n ++++++++++++++++++++++++ def release_plan - @velocity #{@velocity}"
     end
     @velocity = 1.0 if @velocity.blank? or @velocity < 1.0
     @total_story_points = 0.0

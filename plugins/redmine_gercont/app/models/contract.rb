@@ -8,8 +8,8 @@ class Contract < ActiveRecord::Base
     has_many :rules, dependent: :destroy
     has_many :holidays, dependent: :destroy
     has_many :contract_members, dependent: :destroy
-    has_many :work_orders, dependent: :destroy
-    has_many :work_plans, dependent: :destroy
+    has_many :work_orders, through: :issue, dependent: :destroy
+    has_many :work_plans, through: :issue, dependent: :destroy
 
     validates :name, presence: true, uniqueness: true
     # validates :terms_reference, presence: true

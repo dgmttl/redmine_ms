@@ -46,8 +46,8 @@ module RedmineGercont
 
             alias_method :original_create, :create
             def create
-              if params[:version]
-                params[:version][:status] ||= 'planning'
+              if @project.contracts.any?
+                params[:version][:status] ||= 'planning' if params[:version]
               end
               original_create
             end
@@ -55,7 +55,7 @@ module RedmineGercont
             alias_method :original_index, :index
             def index
               original_index
-              unless @project.contracts.empty?
+              if @project.contracts.any?
                 @versions = @project.versions
               end
             end

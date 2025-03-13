@@ -119,10 +119,11 @@ class ContractsController < ApplicationController
     assessments_present = @contract.slas.any? { |sla| sla.assessments }
   
     @contract.projects.each do |project|
-      project.enable_module!(:slas)
+      project.enable_module!(:redmine_gercont)
       project.enable_module!(:scrum)
-      # project.enable_module!(:time_tracking)
-      project.enable_module!(:assessments) if assessments_present
+      # project.enable_module!(:work_plans)
+      # project.enable_module!(:work_orders)
+      # project.enable_module!(:assessments) if assessments_present
     end
   end
   

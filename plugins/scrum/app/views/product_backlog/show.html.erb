@@ -13,7 +13,11 @@
              :locals => {:project => @project, :top => true} %>
   <div id="messages"></div>
   <ul id="pbis" class="pbis">
+    <%= logger.info "+++++++++++++++++++++++++++++ SHOW PRODUCT_BACKLOG - @pbi_filter: #{@pbi_filter}" %>
+
     <%- @product_backlog.pbis(@pbi_filter).each do |pbi| -%>
+    <%= logger.info "+++++++++++++++++++++++++++++ SHOW PRODUCT_BACKLOG - pbi #{pbi}" %>
+    <%= logger.info "+++++++++++++++++++++++++++++ SHOW PRODUCT_BACKLOG - pbi.class #{pbi.class}" %>
       <%= render :partial => 'post_its/product_backlog/pbi',
                  :locals => {:project => @project, :pbi => pbi, :read_only => false} %>
     <%- end -%>

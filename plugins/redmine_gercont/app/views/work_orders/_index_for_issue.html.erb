@@ -8,7 +8,7 @@
   <%= render :partial => 'post_its/product_backlog/head',
              :locals => {:project => @project, :product_backlog => @product_backlog,
                          :path => method(:release_plan_product_backlog_path)} %>
-  <%= render :partial => 'product_backlog/release_plan_head',
+  <%= render :partial => 'release_plan_head',
              :locals => {:sprints_count => @sprints_count,
                          :sps_per_sprint => @velocity,
                          :default_sps_per_sprint => @default_velocity,

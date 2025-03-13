@@ -21,4 +21,9 @@
 
 
 # After save items
-@stories_to_save_after = []
+@stories_to_demand = []
+@stories_out_demand = []
+@default_pbl = nil
+@requested = nil
+@aproved = nil
+@demand_backlog = nil

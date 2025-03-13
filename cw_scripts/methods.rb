@@ -21,5 +21,18 @@ def stories_by_version_ids(version_ids)
     Issue.where(id: story_ids)
 end
 
-
+def create_demand_backlog(issue)
+    @demand_backlog = Sprint.new(
+        name: issue.to_s.split(':')[0],
+        description: "[#{l(:label_view)} #{issue.to_s.split(':')[0]}](/issues/#{issue.id})",
+        status: 'open',
+        shared: '0',
+        is_product_backlog: 'true',
+        project: issue.project,
+        sprint_start_date: Date.today,
+        sprint_end_date: Date.today,
+        user: User.current,
+    )
+    @demand_backlog.save!
+  end
 

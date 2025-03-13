@@ -1,10 +1,20 @@
-<%= render :partial => 'common/scrum_backlog_menu' %>
+<!-- common/scrum_backlog_menu -->
+<div class="contextual scrum-menu">
+  <%- if User.current.allowed_to?(:view_product_backlog, @project) -%>
+    <%= link_to(l(:label_demand_backlog), product_backlog_path(@product_backlog),
+                :class => 'icon icon-product-backlog') %>
+  <%- end -%>
+    
+  <%= render_scrum_help %>
+</div>
 
-<h2>
-  <%= l(:label_release_plan) %>
-</h2>
+
+<h3>
+  <%= l(:label_sprint_plural) %>
+</h3>
 
 <table class="box attributes" width="100%">
+  <% @product_backlog.description = nil %>
   <%= render :partial => 'post_its/product_backlog/head',
              :locals => {:project => @project, :product_backlog => @product_backlog,
                          :path => method(:release_plan_product_backlog_path)} %>

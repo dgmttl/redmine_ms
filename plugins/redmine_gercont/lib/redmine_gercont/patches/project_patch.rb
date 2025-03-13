@@ -7,6 +7,7 @@ module RedmineGercont
           has_many :assessments, through: :sla_events, dependent: :destroy
           has_many :work_orders, through: :issues, dependent: :destroy
           has_many :work_plans, through: :issues, dependent: :destroy
+          has_many :work_order_professionals, through: :work_plans, dependent: :destroy
           has_and_belongs_to_many :contracts
         end
       end

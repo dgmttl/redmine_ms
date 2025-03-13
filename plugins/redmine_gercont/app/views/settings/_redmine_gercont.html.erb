@@ -1,102 +1,121 @@
 <div class="box tabular settings">
   <h2> <%= l(:label_settings) %> </h2>
+  
   <p>
     <%= content_tag(:label, l(:label_tracker_for_demand)) %>
     <%= select_tag('settings[demand_tracker_id]', 
                options_for_select(Tracker.all.map { |trk| [trk.name, trk.id] }, @settings['demand_tracker_id'].to_i)) %>
   </p>
 
-  <p>
-    <%= content_tag(:label, l(:label_role_for_contract_manager)) %>
-    <%= select_tag('settings[role_for_contract_manager]', 
-               options_for_select(Role.all.map { |role| [role.name, role.id] }, @settings['role_for_contract_manager'].to_i)) %>
-  </p>
+  
+  <fieldset class="box tabular">
+    <legend><%= l(:label_role_plural) %></legend>
+    <p>
+      <%= content_tag(:label, l(:label_role_for_contract_manager)) %>
+      <%= select_tag('settings[role_for_contract_manager]', 
+                options_for_select(Role.all.map { |role| [role.name, role.id] }, @settings['role_for_contract_manager'].to_i)) %>
+    </p>
 
-  <p>
-    <%= content_tag(:label, l(:label_role_for_technical_inspector)) %>
-    <%= select_tag('settings[role_for_technical_inspector]', 
-               options_for_select(Role.all.map { |role| [role.name, role.id] }, @settings['role_for_technical_inspector'].to_i)) %>
-  </p>
+    <p>
+      <%= content_tag(:label, l(:label_role_for_technical_inspector)) %>
+      <%= select_tag('settings[role_for_technical_inspector]', 
+                options_for_select(Role.all.map { |role| [role.name, role.id] }, @settings['role_for_technical_inspector'].to_i)) %>
+    </p>
 
-  <p>
-    <%= content_tag(:label, l(:label_role_for_administrative_inspector)) %>
-    <%= select_tag('settings[role_for_administrative_inspector]', 
-               options_for_select(Role.all.map { |role| [role.name, role.id] }, @settings['role_for_administrative_inspector'].to_i)) %>
-  </p>
+    <p>
+      <%= content_tag(:label, l(:label_role_for_administrative_inspector)) %>
+      <%= select_tag('settings[role_for_administrative_inspector]', 
+                options_for_select(Role.all.map { |role| [role.name, role.id] }, @settings['role_for_administrative_inspector'].to_i)) %>
+    </p>
 
-  <p>
-    <%= content_tag(:label, l(:label_role_for_agent)) %>
-    <%= select_tag('settings[role_for_agent]', 
-               options_for_select(Role.all.map { |role| [role.name, role.id] }, @settings['role_for_agent'].to_i)) %>
-  </p>
+    <p>
+      <%= content_tag(:label, l(:label_role_for_agent)) %>
+      <%= select_tag('settings[role_for_agent]', 
+                options_for_select(Role.all.map { |role| [role.name, role.id] }, @settings['role_for_agent'].to_i)) %>
+    </p>
 
-  <p>
-    <%= content_tag(:label, l(:label_role_for_product_owner)) %>
-    <%= select_tag('settings[role_for_product_owner]', 
-               options_for_select(Role.all.map { |role| [role.name, role.id] }, @settings['role_for_product_owner'].to_i)) %>
-  </p>
+    <p>
+      <%= content_tag(:label, l(:label_role_for_product_owner)) %>
+      <%= select_tag('settings[role_for_product_owner]', 
+                options_for_select(Role.all.map { |role| [role.name, role.id] }, @settings['role_for_product_owner'].to_i)) %>
+    </p>
 
-  <p>
-    <%= content_tag(:label, l(:label_role_for_contract_admin)) %>
-    <%= select_tag('settings[role_for_contract_admin]', 
-               options_for_select(Role.all.map { |role| [role.name, role.id] }, @settings['role_for_contract_admin'].to_i)) %>
-  </p>
-  <p>
-    <%= content_tag(:label, l(:label_role_for_requester)) %>
-    <%= select_tag('settings[role_for_requester]', 
-               options_for_select(Role.all.map { |role| [role.name, role.id] }, @settings['role_for_requester'].to_i)) %>
-  </p>
+    <p>
+      <%= content_tag(:label, l(:label_role_for_contract_admin)) %>
+      <%= select_tag('settings[role_for_contract_admin]', 
+                options_for_select(Role.all.map { |role| [role.name, role.id] }, @settings['role_for_contract_admin'].to_i)) %>
+    </p>
+    <p>
+      <%= content_tag(:label, l(:label_role_for_requester)) %>
+      <%= select_tag('settings[role_for_requester]', 
+                options_for_select(Role.all.map { |role| [role.name, role.id] }, @settings['role_for_requester'].to_i)) %>
+    </p>
 
-  <p>
-    <%= content_tag(:label, l(:label_roles_for_assessment)) %>
-    <div class="tabular">
-      <% Role.all.each do |role| %>
-        <div class="checkbox">
-          <p>
-            <%= check_box_tag 'settings[roles_for_assessment][]', role.id, @settings['roles_for_assessment']&.include?(role.id.to_s) %>
-            <%= role.name %>
-          </p>
-        </div>
-      <% end %>
-    </div>
-  </p>
+    <p>
+      <%= content_tag(:label, l(:label_roles_for_assessment)) %>
+      <div class="tabular">
+        <% Role.all.each do |role| %>
+          <div class="checkbox">
+            <p>
+              <%= check_box_tag 'settings[roles_for_assessment][]', role.id, @settings['roles_for_assessment']&.include?(role.id.to_s) %>
+              <%= role.name %>
+            </p>
+          </div>
+        <% end %>
+      </div>
+    </p>
+  </fieldset>
 
-  <p>
-    <%= content_tag(:label, l(:label_statuses_for_edit_assessment)) %>
-    <div class="tabular">
-      <% IssueStatus.all.each do |status| %>
-        <div class="checkbox">
-          <p>
-            <%= check_box_tag 'settings[statuses_for_edit_assessment][]', status.id, @settings['statuses_for_edit_assessment']&.include?(status.id.to_s) %>
-            <%= status.name %>
-          </p>
-        </div>
-      <% end %>
-    </div>
-  </p>
 
+  <fieldset class="box tabular">
+    <legend><%= l(:label_issue_status_plural) %></legend>
+    <p>
+      <%= content_tag(:label, l(:label_statuses_for_edit_assessment)) %>
+      <div class="tabular">
+        <% IssueStatus.all.each do |status| %>
+          <div class="checkbox">
+            <p>
+              <%= check_box_tag 'settings[statuses_for_edit_assessment][]', status.id, @settings['statuses_for_edit_assessment']&.include?(status.id.to_s) %>
+              <%= status.name %>
+            </p>
+          </div>
+        <% end %>
+      </div>
+    </p>
+  </fieldset>
+
+
+  <fieldset class="box tabular">
+    <legend><%= l(:label_custom_field_plural) %></legend>
   <p>
     <%= content_tag(:label, l(:label_field_for_version_count)) %>
     <%= select_tag('settings[field_for_version_count]', 
                options_for_select(CustomField.where(type: 'VersionCustomField').map { |custom| [custom.name, custom.id] }, @settings['field_for_version_count'].to_i)) %>
-  </p>
+    </p>
 
-  <p>
-    <%= content_tag(:label, l(:label_field_for_version_duration)) %>
-    <%= select_tag('settings[field_for_version_duration]', 
-               options_for_select(CustomField.where(type: 'VersionCustomField').map { |custom| [custom.name, custom.id] }, @settings['field_for_version_duration'].to_i)) %>
-  </p>
+    <p>
+      <%= content_tag(:label, l(:label_field_for_version_duration)) %>
+      <%= select_tag('settings[field_for_version_duration]', 
+                options_for_select(CustomField.where(type: 'VersionCustomField').map { |custom| [custom.name, custom.id] }, @settings['field_for_version_duration'].to_i)) %>
+    </p>
 
-  <p>
-    <%= content_tag(:label, l(:label_field_for_version_cost)) %>
-    <%= select_tag('settings[field_for_version_cost]', 
-               options_for_select(CustomField.where(type: 'VersionCustomField').map { |custom| [custom.name, custom.id] }, @settings['field_for_version_cost'].to_i)) %>
-  </p>
+    <p>
+      <%= content_tag(:label, l(:label_field_for_version_cost)) %>
+      <%= select_tag('settings[field_for_version_cost]', 
+                options_for_select(CustomField.where(type: 'VersionCustomField').map { |custom| [custom.name, custom.id] }, @settings['field_for_version_cost'].to_i)) %>
+    </p>
 
-  <p>
-    <%= content_tag(:label, l(:label_field_for_requested_versions)) %>
-    <%= select_tag('settings[field_for_requested_versions]', 
-               options_for_select(CustomField.where(type: 'IssueCustomField').map { |custom| [custom.name, custom.id] }, @settings['field_for_requested_versions'].to_i)) %>
-  </p>
+    <p>
+      <%= content_tag(:label, l(:label_field_for_requested_versions)) %>
+      <%= select_tag('settings[field_for_requested_versions]', 
+                options_for_select(CustomField.where(type: 'IssueCustomField').map { |custom| [custom.name, custom.id] }, @settings['field_for_requested_versions'].to_i)) %>
+    </p>
 
+    <p>
+      <%= content_tag(:label, l(:label_field_for_project_type)) %>
+      <%= select_tag('settings[field_for_project_type]', options_for_select(CustomField.where(type: 'ProjectCustomField').map { |custom| [custom.name, custom.id] }, @settings['field_for_project_type'].to_i)) %>
+      <em><%= simple_format(t(:'text_setting_project_type_explanation')) %></em>
+    </p>
+    </fieldset>
+    
 </div>

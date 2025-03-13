@@ -43,9 +43,13 @@ pt-BR:
     project manager: Gerente De Projetos
     requester: Requisitante
 
-  project_module_slas: Níveis Mínimos de Serviço
-  project_module_assessments: Questionários
-  project_module_work_plans: Planos de Trabalho
+  # project_module_slas: Níveis Mínimos de Serviço
+  # project_module_assessments: Questionários
+  # project_module_work_plans: Planos de Trabalho
+  # project_module_work_orders: Ordens de Serviço
+  # project_module_work_order_professionals: Profissionais Alocados
+  project_module_redmine_gercont: Redmine Gercont
+
 
   permission_manage_assessment: Gerenciar Questionários
   permission_manage_contract: Gerenciar Contrato
@@ -55,11 +59,18 @@ pt-BR:
   permission_view_contract: Ver Contrato
   permission_view_plan_menu: Ver menu de Planejamento
   permission_view_sla_event_menu: Ver menu de Eventos NMS
+  permission_view_sla_event: Ver Evento NMS
   permission_approve_plan: Aprovar planejamento
   permission_ask_for_plan_approval: Solicitar aprovação de planejamento
   permission_view_work_plans: Ver Planos de Trabalho
   permission_view_work_plans_menu: Ver menu de Planos de Trabalho
   permission_manage_work_plans: Gerenciar Planos de Trabalho
+  permission_view_work_orders: Ver Ordens de Serviço
+  permission_view_work_orders_menu: Ver menu de Ordens de Serviço
+  permission_manage_work_orders: Gerenciar Ordens de Serviço
+  permission_view_work_order_professionals_menu: Ver menu de Profissionais Alocados
+  permission_view_work_order_professionals: Ver Profissionais Alocados
+  permission_manage_work_order_professionals: Gerencia Profissionais Alocados
 
   button_ask_for_approval: Solicitar aprovação
   button_approve: Aprovar
@@ -108,12 +119,14 @@ pt-BR:
   label_contract_list: Lista de Contratos
   label_contract_members: Membros do Contrato
   label_contracts: Contratos
+  label_demand_backlog: Backlog da Demanda
   label_edit_assessment: Editar Questionário
   label_edit_sla_event: Editar NMS
   label_estimated_count: Contagem estimada
   label_estimated_duration: Prazo estimado
   label_estimated_cost: Custo estimado
   label_field_for_plan_flag: Campo customizado para situação do planejamento
+  label_field_for_project_type: Campo customizado para tipo de projeto
   label_field_for_requested_versions: Campo customizado para releases demandadas
   label_field_for_version_cost: Campo customizado para custo estimado
   label_field_for_version_count: Campo customizado para contagem estimada
@@ -153,7 +166,12 @@ pt-BR:
   label_tracker_for_demand: Tipo de Tarefa para Demanda
   label_view: Visualisar
   label_week_day: Dia da semana
+  label_work_order: Ordem de Serviço
+  label_work_orders: Ordens de Serviço
+  label_work_order_professionals: Profissionais Alocados
+  label_work_plan: Plano de Trabalho
   label_work_plans: Planos de Trabalho
+
 
   
   plan_status_approved: aprovado
@@ -171,6 +189,7 @@ pt-BR:
   text_created_automaticaly: Este é o backlog princpipal do projeto.
   text_code_area: Insira o seu código aqui.
   text_need_associate_stories_to_versions: A solicitação não pode prosseguir. Existem releases sem histórias associadas.
+  text_setting_project_type_explanation: "Deve ser um campo do formato 'chave/lista de valores' com os valores nas posições:\n1. Desenvolvimento\n2. Manutenção"
   
 
   version_status_approved: planejamento aprovado

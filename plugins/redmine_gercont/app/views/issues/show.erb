@@ -1,6 +1,7 @@
 <% pbi_tracker_id = Setting.plugin_scrum['pbi_tracker_ids']&.first.to_i %>
 <% demand_tracker_id = Setting.plugin_redmine_gercont['demand_tracker_id'] %>
 
+
 <% content_for :header_tags do %>
   <%= javascripts_for_quote_reply_include_tag %>
 <% end %>
@@ -84,6 +85,7 @@
   end
 end %>
 <%= render_half_width_custom_fields_rows(@issue) %>
+<%= @issue.product_backlog %>
 <%= call_hook(:view_issues_show_details_bottom, :issue => @issue) %>
 </div>
 

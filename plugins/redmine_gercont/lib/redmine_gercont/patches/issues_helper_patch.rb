@@ -9,22 +9,50 @@ module RedmineGercont
                     
                     def issue_history_tabs
                         tabs = original_issue_history_tabs
-                        if @issue.assessments.any?
-                            tabs << {
-                                name: 'assessments',
-                                label: :label_assessments,
-                                partial: Setting.plugin_redmine_gercont["statuses_for_edit_assessment"]
-                                            .map(&:to_i).include?(@issue.status_id) ? 'assessments/edit_for_issue' : 'assessments/index_for_issue'
-                            }
+
+                        if @project.contracts.any?
+                            if @issue.assessments.any?
+                                tabs << {
+                                    name: 'assessments',
+                                    label: :label_assessments,
+                                    partial: Setting.plugin_redmine_gercont["statuses_for_edit_assessment"]
+                                                .map(&:to_i).include?(@issue.status_id) ? 'assessments/edit_for_issue' : 'assessments/index_for_issue'
+                                }
+                            end
+
+                            if @issue.sla_events.any?
+                                tabs << {
+                                    name: 'sla_events',
+                                    label: :label_slas,
+                                    partial: 'sla_events/index_for_issue'
+                                }
+                            end
+
+                            if @work_plan.present?
+                                tabs << {
+                                    name: 'work_plans',
+                                    label: :label_work_plan,
+                                    partial: 'work_plans/show_for_issue'
+                                }
+                            end
+
+                            if @work_order.present?
+                                tabs << {
+                                    name: 'work_orders',
+                                    label: :label_work_order,
+                                    partial: 'work_orders/index_for_issue'
+                                }
+                            end
+
+                            if @work_order_professionals.any?
+                                tabs << {
+                                    name: 'work_order_professionals',
+                                    label: :label_work_order_professionals,
+                                    partial: 'work_order_professionals/index_for_issue'
+                                }
+                            end
                         end
 
-                        if @issue.sla_events.any?
-                            tabs << {
-                                name: 'sla_events',
-                                label: :label_slas,
-                                partial: 'sla_events/index_for_issue'
-                            }
-                        end
                         tabs
                     end
 

@@ -82,10 +82,10 @@ Redmine::Plugin.register :scrum do
   end
 
   menu              :project_menu, :product_backlog, {:controller => :product_backlog, :action => :index},
-                    :caption => :label_menu_product_backlog, :after => :activity, :param => :project_id
+                    :caption => :label_menu_product_backlog, :before => :roadmap, :param => :project_id
   menu              :project_menu, :sprint, {:controller => :sprints, :action => :index},
                     if: Proc.new { |project| project.sprints.any? },
-                    :caption => :label_menu_sprint, :after => :activity, :param => :project_id
+                    :caption => :label_menu_sprint, :after => :work_order_professionals, :param => :project_id
 
 
   settings          :default => {:create_journal_on_pbi_position_change => '0',

@@ -1,5 +1,5 @@
 <div class="contextual">
-  <% if can_manage_versions?(@project)  %>
+  <% if User.current.allowed_to?(:manage_versions, @project)  %>
     <%= link_to(sprite_icon('add', l(:label_version_new)), new_project_version_path(@project),
                 class: 'icon icon-add') %>
   <% end %>
@@ -11,7 +11,8 @@
   <% end %>
 </div>
 
-<h2><%= l(:label_roadmap) %>
+<h2>
+  <%= l(:label_roadmap) %>
   <span class="badge <%= plan_status_classes(@versions) %>">
     <%= l("plan_status_#{Version.plan_status(@versions)}") %>
   </span>
@@ -20,51 +21,60 @@
 <% if @versions.empty? %>
   <p class="nodata"><%= l(:label_no_data) %></p>
 <% else %>
-<fieldset>
-  <legend><%= l(:label_resume) %></legend>
-  <div style="display: flex; gap: 20px;">
-    <div style="flex: 1;">
-      <p><strong><%= l(:label_estimated_count) %>:</strong>
-        <span id="estimated-count"><%= number_with_precision(sum_estimated_counts(@versions), delimiter: '.', separator: ',', precision: 2) %></span>
-      </p>
-      <p><strong><%= l(:label_estimated_duration) %>:</strong>
-        <span id="estimated-duration"><%= sum_estimated_durations(@versions).to_i %></span> <%= l(:label_calendar_days) %>
-      </p>
-      <p><strong><%= l(:label_estimated_cost) %>:</strong>
-        <span id="estimated-cost"><%= number_to_currency(sum_estimated_costs(@versions)) %></span>
-      </p>
-    </div>
+  <fieldset>
 
-    <div style="flex: 1;">
-      <p><strong><%= l(:label_version_plural) %>:</strong>
-        <span id="total-versions"><%= @versions.size %></span>
-      </p>
-      <p><strong><%= l(:label_story_plural) %>:</strong>
-        <span id="total-stories"><%= sum_related_stories(@versions) %></span>
-      </p>
-    </div>
-  </div>
+    <legend><%= l(:label_resume) %></legend>
+    <div style="display: flex; gap: 20px;">
+      <% if project_type == 0 %>
+        <div style="flex: 1;">
+          <p><strong><%= l(:label_estimated_count) %>:</strong>
+            <span id="estimated-count"><%= number_with_precision(sum_estimated_counts(@versions), delimiter: '.', separator: ',', precision: 2) %></span>
+          </p>
+          <p><strong><%= l(:label_estimated_duration) %>:</strong>
+            <span id="estimated-duration"><%= sum_estimated_durations(@versions).to_i %></span> <%= l(:label_calendar_days) %>
+          </p>
+          <p><strong><%= l(:label_estimated_cost) %>:</strong>
+            <span id="estimated-cost"><%= number_to_currency(sum_estimated_costs(@versions)) %></span>
+          </p>
+        </div>
+      <% end %>
 
-  <% if (@project.versions.any? { |version| ['planning', 'rejected'].include?(version.status) }  &&
-         User.current.allowed_to?(:ask_for_plan_approval, @project)  ) || User.current.admin? %>
+      <div style="flex: 1;">
+        <p><strong><%= l(:label_version_plural) %>:</strong>
+          <span id="total-versions"><%= @versions.size %></span>
+        </p>
+        <p><strong><%= l(:label_story_plural) %>:</strong>
+          <span id="total-stories"><%= sum_related_stories(@versions) %></span>
+        </p>
+      </div>
+    </div>
+      <% if can_ask_for_approval? %>
       <%= button_to l(:button_ask_for_approval),
-                    ask_for_plan_approval_path(id: @project.identifier),
-                    method: :post %>
-  <% end %>
-  
-  <% if can_approve_plan?(@versions) %>
+        ask_for_plan_approval_path(id: @project.identifier),
+        method: :post 
+      %>
+    <% end %>
+
+    <% if can_approve_plan? %>
     <div>
-      <%= button_tag l(:label_approve_plan), type: "button", class: "btn btn-primary", id: "approve-work_plan" %>
+      <%= button_tag l(:label_approve_plan),
+        type: "button",
+        class: "btn btn-primary", 
+        id: "approve-work_plan" 
+      %>
     </div>
-  <% end %>
-</fieldset>
+    <% end %>
+  </fieldset>
 
+  
 
-<br>
-<br>
+  <br>
+  <br>
+
 
 <div id="roadmap">
   <% @versions.each do |version| %>
+  
   <script type="application/json" id="version-data-<%= version.id %>">
     {
       "estimated_count": <%= sum_estimated_counts([version]) %>,
@@ -74,15 +84,16 @@
       "status": "<%= version.status %>"
     }
   </script>
+  
   <% next if version.status == 'closed' %>
   <article class="version-article <%= version.css_classes %>">
     <div class="contextual">
-      <% if can_manage_versions?(@project)  %>   
+      <% if User.current.allowed_to?(:manage_versions, version.project)  %>   
         <%= link_to sprite_icon('edit', l(:button_edit)), edit_version_path(version), 
                     title: l(:button_edit), class: 'icon-only icon-edit' %>
       <% end %>
       
-      <% if can_approve_plan?(@versions) %>
+      <% if can_approve_plan? %>
         <!-- Renderiza o checkbox -->
         <div>
           <%= check_box_tag "approve_version_#{version.id}", version.id, version.status == 'rejected' ? false : true, class: "approve-version", data: { version_id: version.id } %>
@@ -110,7 +121,6 @@
         </script>
       <% end %>
 
-    
     </div>
 
     <header>

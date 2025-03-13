@@ -31,21 +31,21 @@ module RedmineGercont
             end
           end
 
-
-          def can_manage_versions?(project)
-            (User.current.allowed_to?(:manage_versions, project) &&
-            project.versions.any? { |version| ['planned', 'rejected'].include?(version.status) }) || User.current.admin?
-          end
-        
+       
           def plan_status_classes(versions)
             versions = Array(versions)
             status = Version.plan_status(versions)
             "badge-status-#{status}"
           end
         
-          def can_approve_plan?(versions)
+          def can_approve_plan?
             (@project.versions.any? { |version| ['planned', 'rejected'].include?(version.status) } &&
               User.current.allowed_to?(:approve_plan, @project)) || User.current.admin?
+          end
+
+          def can_ask_for_approval?
+            (@project.versions.any? { |version| ['planning', 'rejected'].include?(version.status) }  &&
+            User.current.allowed_to?(:ask_for_plan_approval, @project)  ) || User.current.admin?
           end
 
           def link_to_demand(version)
@@ -55,21 +55,25 @@ module RedmineGercont
                 .include?(version.id.to_s) 
             end
 
-            puts "+++++++++++++++++++ issue #{demand}"
-            puts "+++++++++++++++++++ version #{version}"
-          
             if demand && on_status.include?(version.status)
-              # Retorna o link HTML pronto
               link_to("#{l(:label_view)} #{demand.tracker}", issue_path(demand), class: 'demand-link').html_safe
             else
-              # Retorna uma mensagem ou link vazio
               ""
             end
           end
-          
 
-          
+          def project_type
+            cf_id = @project.custom_field_value(Setting.plugin_redmine_gercont['field_for_project_type'])
+            CustomFieldEnumeration.find(cf_id).position
+          end
 
+          def estimative_field_ids
+            field_ids = []
+            field_ids << Setting.plugin_redmine_gercont['field_for_version_count']
+            field_ids << Setting.plugin_redmine_gercont['field_for_version_duration']
+            field_ids << Setting.plugin_redmine_gercont['field_for_version_cost']
+            field_ids.map(&:to_i)
+          end
 
         end
       end
