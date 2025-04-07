@@ -9,7 +9,7 @@ gem "actionpack-xml_parser"
 gem 'roadie-rails', '~> 3.2.0'
 gem 'marcel'
 gem 'mail', '~> 2.8.1'
-gem 'nokogiri', '~> 1.16.0'
+gem 'nokogiri', '~> 1.18.3'
 gem 'i18n', '~> 1.14.1'
 gem 'rbpdf', '~> 1.21.3'
 gem 'addressable'
@@ -113,6 +113,7 @@ group :test do
   gem 'rubocop', '~> 1.68.0', require: false
   gem 'rubocop-performance', '~> 1.22.0', require: false
   gem 'rubocop-rails', '~> 2.27.0', require: false
+  gem 'bundle-audit', require: false
 end
 
 local_gemfile = File.join(File.dirname(__FILE__), "Gemfile.local")
