@@ -1,0 +1,71 @@
+<%= error_messages_for 'work_order' %>
+
+<h2 class="inline-flex"><%= l(:label_work_order) %></h2>
+<span class="badge badge-status-<%= @work_order.status %>">
+    <%= l("statuses.work_order.#{@work_order.status}") %>
+</span>
+
+
+<fieldset>
+    <legend><strong>1. <%= l(:label_identification).upcase %></strong></legend>
+    <div class="splitcontent">
+        <div class="splitcontenttop">
+            <p><h3><strong><%= l(:label_work_order_number) %>: </strong><%= @work_order.id %></h3></p>
+        </div>
+
+        <div class="splitcontentleft">
+
+            <p><strong><%= l(:field_contract) %>: </strong><%= @work_order.contract.name %></p>
+            <p><strong><%= l(:field_contracts_object) %>: </strong><%= @work_order.static_data[:identification][:object] %></p>
+            <p><strong><%= l(:field_contractor) %>: </strong><%= @work_order.contract.contractor %></p>
+            <p><strong><%= l(:field_agent) %>: </strong><%= @work_order.contract.agent.user.name %></p>
+            
+        </div>
+        <div class="splitcontentright">
+            
+            <p><strong><%= l(:label_issue_date) %>: </strong><%= I18n.l(@work_order.static_data[:identification][:issue_date].to_date) %></p>
+            <p><strong><%= l(:field_cnpj) %>: </strong><%= @work_order.static_data[:identification][:cnpj] %></p>
+            <p><strong><%= l(:field_terms_start) %>: </strong><%= I18n.l(@work_order.static_data[:identification][:terms_start].to_date) %></p>
+            <p><strong><%= l(:field_terms_end) %>: </strong><%= I18n.l(@work_order.static_data[:identification][:terms_end].to_date) %></p>
+        </div>
+
+    </div>
+</fieldset>
+<br>
+<fieldset>
+    <legend><strong>2. <%= l(:label_requester_area).upcase %></strong></legend>
+    <div class="splitcontent">
+        <div class="splitcontenttop">
+            <p><strong><%= l(:field_requester_unity) %>: </strong><%= @work_order.static_data[:requester_area][:unity] %></p>
+        </div>
+        
+        <div class="splitcontentleft">
+            <p><strong><%= l(:label_requester) %>: </strong><%= @work_order.static_data[:requester_area][:requester] %></p>
+        </div>
+        
+        <div class="splitcontentright">
+            <p><strong><%= l(:field_mail) %>: </strong><%= @work_order.static_data[:requester_area][:requester_email] %></p>
+        </div>
+
+    </div>
+</fieldset>
+<br>
+<fieldset>
+    <legend><strong>3. <%= l(:label_work_order_objective).upcase %></strong></legend>
+    <div class="splitcontent">
+        <div class="splitcontenttop">
+            <p><%= @work_order.static_data[:objective] %></p>
+        </div>
+    </div>
+</fieldset>
+<br>
+<fieldset>
+    <legend><strong>4. <%= l(:label_work_plan_items).upcase %></strong></legend>
+    <div class="splitcontent">
+        <div class="splitcontenttop">
+            <% @work_plan_items = @work_order.work_plan.work_plan_items %>
+            <p><%= render 'work_plan_items/index' %></p>
+        </div>
+    </div>
+</fieldset>
+<br>        

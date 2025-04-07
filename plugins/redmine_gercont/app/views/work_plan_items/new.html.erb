@@ -1,0 +1,5 @@
+<%= work_plan_item_title%>
+
+<%= labelled_form_for [@work_plan, @work_plan_item], :html => {:multipart => true} do |f| %>
+    <%= render :partial => 'form', :locals => { :f => f } %>
+<% end %>

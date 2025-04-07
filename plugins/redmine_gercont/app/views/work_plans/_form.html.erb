@@ -1,0 +1,12 @@
+
+<% if @work_plan %>
+    <%= error_messages_for 'work_plan' %>
+    <fieldset class="box tabular">
+        <p><%= f.select :issue_id, options_for_select(demand_options, @work_plan.issue.id) %></p>
+        <p><%= f.select :status, options_for_select(WorkPlan.status_options, @work_plan.status)  %></p>
+
+    </fieldset>
+    <%= submit_tag l(@work_plan.new_record? ? :button_create : :button_save) %>
+<% else %>
+    <p class="nodata"><%= l(:label_no_data) %></p>
+<% end %>

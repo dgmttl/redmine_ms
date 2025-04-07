@@ -1,1 +1,6 @@
-<h2>WorkOrdersController#new</h2>
+<%= title l(:label_new_work_order) %>
+
+
+<%= labelled_form_for [@project, @work_order], :html => {:multipart => true} do |f| %>
+    <%= render :partial => 'form', :locals => { :f => f } %>
+<% end %>

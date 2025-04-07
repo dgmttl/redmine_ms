@@ -6,6 +6,8 @@ class CreateItems < ActiveRecord::Migration[6.1]
       t.text :unit_measure
       t.float :unit_value
       t.integer :contract_id
+      t.string :profile
+      t.integer :shared_by, null: false, default: 1
     end
   end
 end

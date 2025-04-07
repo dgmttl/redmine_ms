@@ -2,6 +2,7 @@
 <% demand_tracker_id = Setting.plugin_redmine_gercont['demand_tracker_id'] %>
 
 
+
 <% content_for :header_tags do %>
   <%= javascripts_for_quote_reply_include_tag %>
 <% end %>
@@ -68,24 +69,29 @@
     rows.left l(:field_fixed_version), (@issue.fixed_version ? link_to_version(@issue.fixed_version) : "-"), :class => 'fixed-version'
   end
 
-  unless @issue.disabled_core_fields.include?('start_date')
-    rows.right l(:field_start_date), format_date(@issue.start_date), :class => 'start-date'
+  unless @issue.disabled_core_fields.include?('start_date') || (@issue.start_date.nil? && !User.current.admin?)
+    rows.right l(:field_start_date), format_date(@issue.start_date), class: 'start-date'
   end
-  unless @issue.disabled_core_fields.include?('due_date')
-    rows.right l(:field_due_date), issue_due_date_details(@issue), :class => 'due-date'
+
+  unless @issue.disabled_core_fields.include?('due_date') || (@issue.due_date.nil? && !User.current.admin?)
+    rows.right l(:field_due_date), issue_due_date_details(@issue), class: 'due-date'
   end
-  unless @issue.disabled_core_fields.include?('done_ratio')
-    rows.right l(:field_done_ratio), progress_bar(@issue.done_ratio, :legend => "#{@issue.done_ratio}%"), :class => 'progress'
+
+  unless @issue.disabled_core_fields.include?('done_ratio') || (@issue.done_ratio.to_i.zero? && !User.current.admin?)
+    rows.right l(:field_done_ratio), progress_bar(@issue.done_ratio, legend: "#{@issue.done_ratio}%"), class: 'progress'
   end
-  unless @issue.disabled_core_fields.include?('estimated_hours')
-    rows.right l(:field_estimated_hours), issue_estimated_hours_details(@issue), :class => 'estimated-hours'
+
+  unless @issue.disabled_core_fields.include?('estimated_hours') || (@issue.estimated_hours.to_f.zero? && !User.current.admin?)
+    rows.right l(:field_estimated_hours), issue_estimated_hours_details(@issue), class: 'estimated-hours'
   end
-  if User.current.allowed_to?(:view_time_entries, @project) && @issue.total_spent_hours > 0
-    rows.right l(:label_spent_time), issue_spent_hours_details(@issue), :class => 'spent-time'
+
+  if User.current.allowed_to?(:view_time_entries, @project) && (@issue.total_spent_hours.to_f.positive? || User.current.admin?)
+    rows.right l(:label_spent_time), issue_spent_hours_details(@issue), class: 'spent-time'
   end
+
 end %>
 <%= render_half_width_custom_fields_rows(@issue) %>
-<%= @issue.product_backlog %>
+
 <%= call_hook(:view_issues_show_details_bottom, :issue => @issue) %>
 </div>
 

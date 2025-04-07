@@ -112,10 +112,28 @@
     </p>
 
     <p>
+      <%= content_tag(:label, l(:label_field_for_requester_unity)) %>
+      <%= select_tag('settings[field_for_requester_unity]', options_for_select(CustomField.where(type: 'ProjectCustomField').map { |custom| [custom.name, custom.id] }, @settings['field_for_requester_unity'].to_i)) %>
+    </p>   
+   
+    <p>
       <%= content_tag(:label, l(:label_field_for_project_type)) %>
-      <%= select_tag('settings[field_for_project_type]', options_for_select(CustomField.where(type: 'ProjectCustomField').map { |custom| [custom.name, custom.id] }, @settings['field_for_project_type'].to_i)) %>
+      <%= select_tag('settings[field_for_project_type]', 
+        options_for_select(CustomField.where(type: 'ProjectCustomField')
+          .map { |custom| [custom.name, custom.id] }, @settings['field_for_project_type'].to_i))
+      %>
       <em><%= simple_format(t(:'text_setting_project_type_explanation')) %></em>
     </p>
+
+    <p>
+      <%= content_tag(:label, l(:label_field_for_non_functional_requirements)) %>
+      <%= select_tag('settings[field_for_non_functional_requirements]',
+        options_for_select(CustomField.where(type: 'IssueCustomField')
+          .map { |custom| [custom.name, custom.id] }, @settings['field_for_non_functional_requirements'].to_i)) 
+      %>
+    </p>
+
+
     </fieldset>
     
 </div>

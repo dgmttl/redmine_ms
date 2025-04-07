@@ -1,0 +1,49 @@
+<% if @work_order_items.any? %>
+
+    <div id="content">
+        <table class="list issues sort-by" id="itensTable">
+            <thead>
+                <tr>
+                    <th> # </th>                 
+                    <th> <%= l(:field_name) %> </th> 
+                    <th> <%= l(:field_quantity) %> </th>
+                    <th> <%= l(:field_percentage) %> </th>
+                    <th> <%= l(:label_sprint_plural) %> </th>
+                    <th> <%= l(:field_rationale) %> </th>
+                    <th> <%= l(:label_calendar_days) %> </th>
+                    <th> <%= l(:label_daily_cost) %> </th>
+                    <th> <%= l(:label_total) %> </th>
+                    <% if User.current.allowed_to?(:manage_work_orders, @project) %>
+                        <th></th>
+                    <% end %>
+                </tr>
+            </thead>
+            <tbody>
+                <% i = 1 %>
+                <% @work_order_items.each do |work_order_item| %>
+                <tr>
+                    <td><%= i %></td>
+                    <td><%= work_order_item.item.name %></td>
+                    <td><%= work_order_item.quantity %></td>
+                    <td><%= number_with_precision(work_order_item.percentage.to_f, precision: 1, separator: ',') %>%</td>
+                    <td><%= JSON.parse(work_order_item.sprints || "[]").map { |index| "Sprint #{index}" }.join(", ") || "-" %></td>
+                    <td><%= work_order_item.rationale %></td>
+                    <td><%= work_order_item.estimated_calendar_days(JSON.parse(work_order_item.sprints).count * Setting.plugin_scrum['default_sprint_days'].to_i, work_order_item.work_order.days_allocation) %></td>
+                    <td><%= number_to_currency(work_order_item.item.daily_cost) %></td>                    
+                    <td><%= number_to_currency(work_order_item.total) %></td>
+                    <% if can_plan_work_order? %>
+                        <td>
+                            <%= link_to l(:button_delete), 
+                                work_order_item_path(work_order_item), 
+                                method: :delete, 
+                                class: 'icon icon-del'
+                            %>
+                        </td>
+                    <% end %>
+                </tr>
+                <% i += 1 %>
+                <% end %>
+            </tbody>
+        </table>
+    </div>
+<% end %>

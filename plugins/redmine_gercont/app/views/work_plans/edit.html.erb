@@ -1,1 +1,6 @@
-<h2>WorkPlansController#edit</h2>
+<%= title l(:label_edit_work_plan) %>
+
+
+<%= labelled_form_for [@work_plan], :html => {:multipart => true} do |f| %>
+    <%= render :partial => 'form', :locals => { :f => f } %>
+<% end %>

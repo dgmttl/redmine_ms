@@ -19,7 +19,10 @@
         &nbsp;&nbsp;&nbsp;
       <% end %>
 
-      <% if User.current.allowed_to?(:manage_sprints, @project) %>
+      <% if ((@issue.work_plan.present? && 
+              ['planning', 'rejected'].include?(@issue.work_plan.status))  &&
+              User.current.allowed_to?(:plan_work_plan, @project) 
+            ) || User.current.admin? %>
         <%= label_tag(:velocity_type_custom) do %>
           <%= radio_button_tag(:velocity_type, 'custom', 'custom' == velocity_type) %>
           <%= l(:label_velocity_custom) %>

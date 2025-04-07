@@ -26,6 +26,16 @@ class Contract < ActiveRecord::Base
         STATUSES.map { |status| [I18n.t("statuses.contract.#{status}"), status] }
     end
 
+
+    def agent
+        contract_members.find { |member| member.role_ids.include?(Setting.plugin_redmine_gercont['role_for_agent'].to_i) }
+    end
+
+    def manager
+        contract_members.find { |member| member.role_ids.include?(Setting.plugin_redmine_gercont['role_for_contract_manager'].to_i) }
+    end
+
+
     private
 
     def terms_end_greater_than_terms_start

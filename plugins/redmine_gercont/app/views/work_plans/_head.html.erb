@@ -1,0 +1,64 @@
+<fieldset>
+    <legend><strong><%= l(:label_resume) %></strong></legend>
+    <div class="splitcontent">
+        <div class="splitcontentleft">
+            <p><strong><%= l(:label_total) %>: </strong><%= number_to_currency(@work_plan.total) %></p>
+            <p><strong><%= l(:label_deadline) %>: </strong><%= @work_plan.deadline %>  <%= l(:label_business_days)%></p>
+            
+            <%= form_with model: @work_plan do |f| %>
+                <p>
+                    <label><strong><%= l(:field_days_allocation) %>:</strong></label>
+                    <%= f.number_field :days_allocation, min: 1, max: 15, readonly: !can_plan_work_plan? %>
+                    <%= f.submit l(:button_update) if can_plan_work_plan? %>
+                </p>
+            <% end %>
+        </div>
+        <div class="splitcontentright">
+            <p><strong><%= l(:label_sprint_plural) %>: </strong><%= @work_plan.available_sprints.count %></p>
+            <p><strong><%= l(:label_work_plan_items) %>: </strong><%= @work_plan.work_plan_items.count %></p>
+            <p><strong><%= l(:label_story_plural) %>: </strong><%= @work_plan.stories.count %></p>
+        </div>
+
+    </div>
+
+    <% if can_plan_work_plan? %>
+        <%= button_to l(:button_ask_for_approval),
+        ask_for_work_plan_approval_path(id: @work_plan.id),
+        method: :post 
+        %>
+    <% end %>
+    
+    <% if can_approve_work_plan? %>
+        <%= button_to l(:button_approve),
+            approve_work_plan_path(id: @work_plan.id),
+            method: :post 
+        %>
+        <%= button_to l(:button_reject),
+            reject_work_plan_path(id: @work_plan.id),
+            method: :post 
+        %>
+    <% end %>
+    
+    <% if can_generate_work_order? %>
+        <%= button_to l(:button_generate_work_order),
+            generate_work_order_path(issue_id: @issue.id, status: 'waiting_professionals'),
+            method: :post 
+        %>
+    <% end %>
+
+</fieldset>
+
+
+
+<style>
+    input[readonly] {
+      border: none; /* Remove a borda */
+      background-color: transparent; /* Fundo transparente */
+      color: inherit; /* Mantém a cor padrão */
+      pointer-events: none; /* Impede interações do usuário */
+    }
+  </style>
+
+
+
+

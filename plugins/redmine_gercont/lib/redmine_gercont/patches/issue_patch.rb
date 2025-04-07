@@ -8,6 +8,7 @@ module RedmineGercont
           has_many :assessments, through: :work_order, source: :work_order_professionals
           has_many :sla_events, through: :work_order
           has_one :work_plan
+          has_many :work_plan_items, through: :workplan
 
           
 

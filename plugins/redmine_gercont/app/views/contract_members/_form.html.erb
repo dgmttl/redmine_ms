@@ -5,11 +5,12 @@
   <% end %>
 
   <% if @contract_member %>
+
     <fieldset class="box tabular">
       <% if @contract_member.new_record? %>
-        <%= hidden_field_tag "contract_member[profile]", 'contract member' %>
-        <p><%= f.select :user_id, options_for_select(member_options), required: true %></p>
-        <% role_options.each do |role| %>
+        
+        <p><%= f.select :user_id, member_options, required: true %></p>
+        <% @contract_member.role_options.each do |role| %>
           <p>
             <%= check_box_tag "contract_member[role_ids][]", role.id, @contract_member.role_ids.include?(role.id) %>
             <%= label_tag "contract_member_role_ids_#{role.id}", role.name %>
@@ -19,15 +20,19 @@
       <% else %>
         <%= hidden_field_tag "contract_member[user_id]", @contract_member.user_id %>
         <% if @contract_member.profile == 'contract member' %>
-          <% role_options.each do |role| %>
+          <% @contract_member.role_options.each do |role| %>
             <p>
               <%= check_box_tag "contract_member[role_ids][]", role.id, @contract_member.role_ids.include?(role.id) %>
               <%= label_tag "contract_member_role_ids_#{role.id}", role.name %>
             </p>
           <% end %>
 
+        <% elsif available_profiles.any? %>
+
+          <p><%= f.select :item_id, available_profiles, required: true %></p>
+
         <% else %>
-          <p><%= f.select :profile, options_for_select(ContractMember.profile_options), required: true %></p>
+          <p class="nodata"><%= l(:text_need_create_items_first) %></p>
         <% end %>
       
       <% end %>

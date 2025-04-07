@@ -16,6 +16,8 @@
             <tr>
                 <th> <%= l(:field_item) %> </th>
                 <th> <%= l(:field_description) %> </th>
+                <th> <%= l(:field_profile) %> </th>
+                <th> <%= l(:field_shared_by) %> </th>
                 <th> <%= l(:field_unit_measure) %> </th>
                 <th> <%= l(:field_unit_value) %> </th>
                 <% if User.current.allowed_to_globally?(:manage_contract) %>
@@ -28,6 +30,8 @@
             <tr>                        
                 <td><%= link_to item.name, edit_item_path(item)  %></td>
                 <td><%= item.description %></td>
+                <td><%= I18n.t("profiles.#{item.profile}") %></td>
+                <td><%= item.shared_by %></td>
                 <td><%= item.unit_measure %></td>
                 <td><%= number_to_currency(item.unit_value) %></td>
                 <% if User.current.allowed_to_globally?(:manage_contract) %>

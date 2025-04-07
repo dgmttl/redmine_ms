@@ -15,6 +15,7 @@ class ItemsController < ApplicationController
 
   def create
     @item = @contract.items.new(item_params)
+
     if @item.save
       flash[:notice] = l(:notice_successful_create)
       redirect_to contract_catalog_path
@@ -52,7 +53,7 @@ class ItemsController < ApplicationController
   end
 
   def item_params
-    params[:item].permit(:name, :description, :unit_measure, :unit_value)
+    params[:item].permit(:name, :description, :shared_by, :profile, :unit_measure, :unit_value)
   end
 
 end

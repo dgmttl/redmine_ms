@@ -1,1 +1,59 @@
-<h2>WorkOrdersController#index</h2>
+<% if @project.present? && @project.contracts.any? && User.current.allowed_to_globally?(:manage_work_order) %>
+    <div class="contextual">
+        <%= link_to l(:label_new_work_order),
+            new_project_work_order_path(@project, @work_order),
+            class: 'icon icon-add'
+                
+        %>
+    </div>
+<% end %>
+
+<%= title l(:label_work_orders) %>
+
+<% if @work_orders.any? %>
+
+    <div id="content">
+
+        <table class="list issues sort-by" id="work_ordersTable">
+            <thead>
+                <tr>
+                    <th> # </th>                 
+                    <th> <%= l(:field_project) %> </th> 
+                    <th> <%= l(:field_issue) %> </th>
+                    <th> <%= l(:field_status) %> </th>
+                        <% if User.current.allowed_to_globally?(:manage_work_order) %>
+                        <th></th>
+                        <th></th>
+                    <% end %>
+                </tr>
+            </thead>
+            <tbody>
+                <% @work_orders.each do |work_order| %>
+                <tr>
+                    <td><%= work_order.id %></td>
+                    <td><%= link_to work_order.project.name, project_path(work_order.project) %></td>
+                    <td><%= link_to work_order.issue, issue_path(work_order.issue) %></td>
+                    <td><%= I18n.t("statuses.work_order.#{work_order.status}") %></td>
+                    <% if User.current.allowed_to_globally?(:manage_work_order) %>
+                        <td>
+                            <%= link_to l(:button_edit), 
+                                edit_work_order_path(work_order), 
+                                class: 'icon icon-edit'
+                            %>
+                            <%= link_to l(:button_delete), 
+                                work_order_path(work_order), 
+                                method: :delete, 
+                                data: { confirm: l(:text_are_you_sure) }, 
+                                class: 'icon icon-del'
+                            %>
+                        </td>
+                    <% end %>
+                </tr>
+                <% end %>
+            </tbody>
+        </table>
+    </div>
+<% else %>
+    <p class="nodata"><%= l(:label_no_data) %></p>
+<% end %>
+

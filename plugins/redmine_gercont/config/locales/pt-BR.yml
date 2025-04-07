@@ -13,6 +13,26 @@ pt-BR:
       completed: Finalizado
       abstained: Abonado
       canceled: Cancelado
+          
+    work_plan:
+      planning: em planejamento
+      planned: planejado
+      approved: aprovado
+      rejected: rejeitado
+      closed: concluído
+
+    work_order:
+      waiting_professionals: alocando profissionais
+      attending: em atendimento
+      paused: em espera
+      delivered: entregue
+      accepted: aceita
+      rejected: rejeitada
+      waiting_payment: aguardando pagamento 
+      closed: concluída
+      cancelled: cancelada
+
+  
   
   answers:
     terrible: Péssima
@@ -33,23 +53,15 @@ pt-BR:
     mid-level developer: Desenvolvedor Pleno
     senior developer: Desenvolvedor Sênior
     tech lead: Líder Técnico De Desenvolvimento
-    mid-level business analyst: Analista De Negócios Pleno
-    mid-level requirements analyst: Analista De Requisitos Pleno
-    senior business analyst: Analista De Negócios Sênior
-    senior requirements analyst: Analista De Requisitos Sênior
+    mid-level business/requirements analyst: Analista De Negócios/Requisitos Pleno
+    senior business/requirements analyst: Analista De Negócios/Requisitos Sênior
     senior business intelligence analyst: Analista De BI Sênior
     senior data admin: Administrador De Dados Sênior
     scrum master: Scrum Master
     project manager: Gerente De Projetos
     requester: Requisitante
 
-  # project_module_slas: Níveis Mínimos de Serviço
-  # project_module_assessments: Questionários
-  # project_module_work_plans: Planos de Trabalho
-  # project_module_work_orders: Ordens de Serviço
-  # project_module_work_order_professionals: Profissionais Alocados
   project_module_redmine_gercont: Redmine Gercont
-
 
   permission_manage_assessment: Gerenciar Questionários
   permission_manage_contract: Gerenciar Contrato
@@ -71,27 +83,40 @@ pt-BR:
   permission_view_work_order_professionals_menu: Ver menu de Profissionais Alocados
   permission_view_work_order_professionals: Ver Profissionais Alocados
   permission_manage_work_order_professionals: Gerencia Profissionais Alocados
+  permission_save_release_plan: Salvar Plano de Release
+  permission_plan_work_plan: Planejar Plano de Trabalho
+  permission_approve_work_plan: Aprovar Plano de Trabalho
+  permission_generate_work_order: Gerar Ordem de Serviço
 
   button_ask_for_approval: Solicitar aprovação
   button_approve: Aprovar
+  button_reject: Rejeitar
+  button_generate_work_order: Gerar Ordem de Serviço
 
   field_acronym: Sigla
   field_action: Ação
   field_agent: Preposto
   field_attendance: Assiduidade
   field_assessments: Questionários
+  field_baseline: Baseline
   field_cnpj: CNPJ
   field_conduct: Habilidades Comportamentais
   field_contract: Número do Contrato
   field_contracts_object: Objeto do Contrato
   field_contractor: Contratada
   field_date: Data
+  field_days_allocation: Dias corridos para alocação de profissionais
   field_description: Descrição
   field_frequency: Periodicidade
   field_issue: Ordem de Serviço
   field_item: Item
   field_measured_value: Valor Aferido
+  field_percentage: Percentual
   field_profile: Perfil
+  field_quantity: Quantidade
+  field_rationale: Memória de cálculo/Justificativa
+  field_requester_unity: Unidade Requisitante
+  field_shared_by: Compartilhado por
   field_sla: Indicador
   field_sla_event_work_order: Ordem de Serviço
   field_target: Meta
@@ -109,7 +134,8 @@ pt-BR:
   label_assessment: Questionário
   label_assessments: Questionários
   label_assessment_description: Questionário de Avaliação Individual do Perfil Profissional (IPP)
-  label_calendar_days: dias corridos.
+  label_business_days: dias úteis
+  label_calendar_days: dias corridos
   label_canceled_contracts: Contratos cancelados
   label_catalog: Catálogo
   label_catalog_items: Itens do Catálogo
@@ -119,19 +145,28 @@ pt-BR:
   label_contract_list: Lista de Contratos
   label_contract_members: Membros do Contrato
   label_contracts: Contratos
+  label_deadline: Prazo após abertura da OS
+  label_daily_cost: Custo diário
+  label_demand: Demanda
   label_demand_backlog: Backlog da Demanda
   label_edit_assessment: Editar Questionário
   label_edit_sla_event: Editar NMS
+  label_edit_work_plan: Editar Plano de Trabalho
+  label_estimated_calendar_days: Dias corridos estimados
   label_estimated_count: Contagem estimada
   label_estimated_duration: Prazo estimado
   label_estimated_cost: Custo estimado
+  label_field_for_non_functional_requirements: Campo customizado para requisitos não funcionais
   label_field_for_plan_flag: Campo customizado para situação do planejamento
   label_field_for_project_type: Campo customizado para tipo de projeto
+  label_field_for_requester_unity: Campo customizado para unidade requisitante
   label_field_for_requested_versions: Campo customizado para releases demandadas
   label_field_for_version_cost: Campo customizado para custo estimado
   label_field_for_version_count: Campo customizado para contagem estimada
   label_field_for_version_duration: Campo customizado para prazo estimado
   label_holidays: Feriados
+  label_identification: Identificação
+  label_issue_date: Data de emissão
   label_item: Item
   label_measured_value: Pontuação
   label_plans: Planejamentos
@@ -143,10 +178,15 @@ pt-BR:
   label_new_item: Novo Item
   label_new_rule: Nova Regra
   label_new_sla: Novo NMS
+  label_new_work_order: Nova Ordem de Serviço
+  label_new_work_plan: Novo Plano de Trabalho
+  label_new_work_plan_item: Novo perfil profissional
   label_not_registred: Não registrado
   label_resume: Resumo
   label_product_backlog: Backlog do produto
   label_project_members: Membros dos Projetos
+  label_requester: Requisitante
+  label_requester_area: Área Requisitante
   label_role_for_administrative_inspector: Papel para Fiscal Administrativo
   label_role_for_agent: Papel para o Preposto
   label_role_for_contract_admin: Papel para o Administrador do Contrato
@@ -156,24 +196,27 @@ pt-BR:
   label_role_for_technical_inspector: Papel para o Fiscal Técnico
   label_roles_for_assessment: Papéis sujeitos à avaliação
   label_rules: Regras de Negócio
+  label_select_item: Selecione um item do Catálogo
   label_sla_script: Script
   label_sla_event: Evento de NMS
   label_sla_short: NMS
   label_sla_with_assessments: NMS com Questionários
   label_slas: Níveis Mínimos de Serviço
   label_statuses_for_edit_assessment: Estados para editar questionários
+  label_statuses_for_save_release_plan: Estados para salvar plano de trabalho
   label_story_plural: Histórias
   label_tracker_for_demand: Tipo de Tarefa para Demanda
   label_view: Visualisar
   label_week_day: Dia da semana
   label_work_order: Ordem de Serviço
   label_work_orders: Ordens de Serviço
+  label_work_order_number: Número da OS
+  label_work_order_objective: Objetivo da Ordem de Serviço
   label_work_order_professionals: Profissionais Alocados
   label_work_plan: Plano de Trabalho
+  label_work_plan_items: Perfis Profissionais
   label_work_plans: Planos de Trabalho
 
-
-  
   plan_status_approved: aprovado
   plan_status_approving: em aprovação
   plan_status_attending: em atendimento
@@ -189,8 +232,10 @@ pt-BR:
   text_created_automaticaly: Este é o backlog princpipal do projeto.
   text_code_area: Insira o seu código aqui.
   text_need_associate_stories_to_versions: A solicitação não pode prosseguir. Existem releases sem histórias associadas.
+  text_need_create_items_first: Cadastre antes pelo menos um Item de Catálogo para prosseguir.
   text_setting_project_type_explanation: "Deve ser um campo do formato 'chave/lista de valores' com os valores nas posições:\n1. Desenvolvimento\n2. Manutenção"
-  
+  text_productivity_target: 0,58 pontos de função por dia por desenvolvedor
+
 
   version_status_approved: planejamento aprovado
   version_status_planned: planejada

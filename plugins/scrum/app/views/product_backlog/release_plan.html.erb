@@ -28,7 +28,7 @@
     <%- @sprints.each_with_index do |sprint, index| -%>
     <tr class="sprint-board">
       <td class="sprint-board" align="center">
-        <%= "#{l(:field_sprint)} +#{index + 1}" %>
+        <%= "#{l(:field_sprint)} #{index + 1}" %>
       </td>
       <td class="sprint-board">
         <%= raw(sprint[:versions].collect{|version| link_to_version(version)}.join(", ")) %>
@@ -44,6 +44,21 @@
     </tr>
     <%- end -%>
   </table>
+
+
+  <%= form_with url: save_release_plan_path, method: :post, local: true do %>
+  <% if ((@issue.work_plan.present? && 
+          ['planning', 'rejected'].include?(@issue.work_plan.status))  &&
+          User.current.allowed_to?(:plan_work_plan, @project) 
+        ) || User.current.admin? %>
+      <% @sprints.each_with_index do |sprint, index| %>
+        <%= hidden_field_tag :id, @issue.id %>
+        <input type="hidden" name="sprints[]" value="<%= sprint.to_json %>">
+      <% end %>
+      <%= submit_tag l(:button_save), class: 'button' %>
+    <% end %>
+  <% end %>
+
 <% end %>
 
 <%= render :partial => 'common/scrum_footer' %>

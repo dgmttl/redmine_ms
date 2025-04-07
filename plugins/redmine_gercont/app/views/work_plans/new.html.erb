@@ -1,1 +1,6 @@
-<h2>WorkPlansController#new</h2>
+<%= title l(:label_new_work_plan) %>
+
+
+<%= labelled_form_for [@project, @work_plan], :html => {:multipart => true} do |f| %>
+    <%= render :partial => 'form', :locals => { :f => f } %>
+<% end %>

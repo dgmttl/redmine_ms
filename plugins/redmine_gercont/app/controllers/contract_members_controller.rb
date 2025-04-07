@@ -1,6 +1,6 @@
 class ContractMembersController < ApplicationController
 
-  helper ContractsHelper
+  include ContractMembersHelper
 
   before_action :authorize_global
   before_action :find_contract, only: [:index, :new, :create]
@@ -19,7 +19,7 @@ class ContractMembersController < ApplicationController
     create_contract_members_in_projects
     if @contract_member.save
       flash[:notice] = l(:notice_successful_create)
-      redirect_to contract_contract_member_path
+      redirect_to contract_contract_member_path(@contract_member)
     else
       render :new
     end
@@ -33,7 +33,7 @@ class ContractMembersController < ApplicationController
     if @contract_member.update(contract_member_params)
       update_contract_members_in_projects
       flash[:notice] = l(:notice_successful_update)
-      redirect_to contract_contract_member_path
+      redirect_to contract_contract_member_path(@contract_member)
     else
       render :edit
     end
@@ -44,7 +44,7 @@ class ContractMembersController < ApplicationController
     destroy_contract_members_in_projects
     @contract_member.destroy
     flash[:notice] = l(:notice_successful_delete)
-    redirect_to contract_contract_member_path
+    redirect_to contract_contract_member_path(@contract_member)
   end
 
   private
@@ -86,7 +86,7 @@ class ContractMembersController < ApplicationController
   
   
   def contract_member_params
-    params[:contract_member].permit(:user_id, :profile, role_ids: [])
+    params[:contract_member].permit(:user_id, :item_id, role_ids: [])
   end
 
 end

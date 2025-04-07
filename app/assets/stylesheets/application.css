@@ -1717,13 +1717,14 @@ td.gantt_selected_column .gantt_hdr,.gantt_selected_column_container {
   background:#9DB9D5;
 }
 .badge-status-open,
-.badge-status-attending {
+.badge-status-attending{
   color: #205D86;
   border: 1px solid #205D86;
 }
 .badge-status-locked,
 .badge-status-blocked,
-.badge-status-requested {
+.badge-status-requested,
+.badge-status-cancelled {
   color: #696969;
   border: 1px solid #696969;
 }
@@ -1736,12 +1737,17 @@ td.gantt_selected_column .gantt_hdr,.gantt_selected_column_container {
 }
 .badge-status-planning,
 .badge-status-planned,
-.badge-status-approving{
+.badge-status-approving,
+.badge-status-waiting_professionals,
+.badge-status-waiting_payment,
+.badge-status-paused {
   color: #d18a1f;
   border: 1px solid #d18a1f;
 }
 .badge-status-approved,
-.badge-status-partially_approved{
+.badge-status-partially_approved,
+.badge-status-delivered,
+.badge-status-accepted {
   color: #1fd13d;
   border: 1px solid #1fd13d;
 }

@@ -30,9 +30,9 @@ module RedmineGercont
 
                             if @work_plan.present?
                                 tabs << {
-                                    name: 'work_plans',
+                                    name: 'work_plan',
                                     label: :label_work_plan,
-                                    partial: 'work_plans/show_for_issue'
+                                    partial: 'work_plans/show'
                                 }
                             end
 
@@ -40,7 +40,7 @@ module RedmineGercont
                                 tabs << {
                                     name: 'work_orders',
                                     label: :label_work_order,
-                                    partial: 'work_orders/index_for_issue'
+                                    partial: 'work_orders/show'
                                 }
                             end
 
@@ -64,6 +64,16 @@ module RedmineGercont
                         end
                         trackers
                     end
+
+                    # def can_plan_work_plan?
+                    #     ((@issue.work_plan.present? && ['planning', 'rejected'].include?(@issue.work_plan.status))  &&
+                    #     User.current.allowed_to?(:plan_work_plan, @project)) || User.current.admin?
+                    # end
+
+                    # def can_approve_work_plan?
+                    #    ((@issue.work_plan.present? && @issue.work_plan.status == 'planned')  &&
+                    #     User.current.allowed_to?(:approve_work_plan, @project)) || User.current.admin?
+                    # end
 
                     
                 end

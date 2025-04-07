@@ -18,17 +18,21 @@ Redmine::Plugin.register :redmine_gercont do
     permission :manage_assessment, {:assessments => [:new, :create, :edit, :update, :destroy]}
     permission :view_work_plans_menu, {:work_plans => [:index]}
     permission :view_work_plans, {:work_plans => [:show]}
-    permission :manage_work_plans, {:work_plans => [:new, :create, :edit, :update, :destroy]}
+    permission :manage_work_plans, {:work_plans => [:new, :create, :edit, :update, :destroy, :save_release_plan]}
     permission :view_work_orders_menu, {:work_orders => [:index]}
     permission :view_work_orders, {:work_orders => [:show]}
     permission :manage_work_orders, {:work_orders => [:new, :create, :edit, :update, :destroy]}
     permission :view_work_order_professionals_menu, {:work_order_professionals => [:index]}
     permission :view_work_order_professionals, {:work_order_professionals => [:show]}
     permission :manage_work_order_professionals, {:work_order_professionals => [:new, :create, :edit, :update, :destroy]}
+    permission :approve_plan, {:versions => [:approve_plan]}
+    permission :ask_for_plan_approval, {:versions => [:ask_for_plan_approval]}
+    permission :plan_work_plan, {:work_plans => [:ask_for_work_plan_approval], :work_plan_items => [:new, :create, :destroy]} 
+    permission :approve_work_plan, {:work_plans => [:approve_work_plan, :reject_work_plan]} 
+    permission :generate_work_order, {:work_orders => [:generate_work_order]}
   end 
 
-  permission :approve_plan, {:versions => [:approve_plan]}
-  permission :ask_for_plan_approval, {:versions => [:ask_for_plan_approval]}
+
 
 
 
@@ -88,7 +92,7 @@ Redmine::Plugin.register :redmine_gercont do
   menu :project_menu, 
     :work_plans, 
     { controller: 'work_plans', action: 'index'},
-    if: Proc.new { User.current.allowed_to_globally?(:view_work_plans) },
+    if: Proc.new { User.current.allowed_to_globally?(:view_work_plans)},
     caption: :label_work_plans, 
     after: :roadmap, 
     param: :project_id

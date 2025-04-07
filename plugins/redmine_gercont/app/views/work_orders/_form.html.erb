@@ -1,1 +1,12 @@
-<h2>WorkOrdersController#_form</h2>
+
+<% if @work_order %>
+    <%= error_messages_for 'work_order' %>
+    <fieldset class="box tabular">
+        <p><%= f.select :issue_id, options_for_select(demand_options, @work_order.issue_id) %></p>
+        <p><%= f.select :status, options_for_select(WorkOrder.status_options, @work_order.status)  %></p>
+
+    </fieldset>
+    <%= submit_tag l(@work_order.new_record? ? :button_create : :button_save) %>
+<% else %>
+    <p class="nodata"><%= l(:label_no_data) %></p>
+<% end %>

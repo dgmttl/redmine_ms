@@ -42,7 +42,7 @@ class ContractsController < ApplicationController
     @contract_members, @project_members = @contract.contract_members
       .select { |member| member.user.active? }
       .partition do |member|
-        member.roles.any? { |role| role_options.include?(role) }
+        member.roles.any? { |role| member.role_options.include?(role) }
     end
   end
 

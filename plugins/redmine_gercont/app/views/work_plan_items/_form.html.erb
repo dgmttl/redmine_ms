@@ -1,0 +1,79 @@
+<%= error_messages_for 'work_plan_item' %>
+
+<% if @work_plan_item %>
+
+<fieldset class="box tabular">
+    <div class="splitcontent">
+        <!-- Lado esquerdo -->
+        <div class="splitcontentleft" style="width: 50%;">
+            <p><%= f.select :item_id, 
+                Item.all.map { |i| [i.name, i.id, { data: { shared_by: i.shared_by } }] }, 
+                prompt: l(:label_select_item),
+                required: true
+                %>
+            </p>
+            <p><%= f.number_field :quantity, label: :field_quantity, min: 1, max: 9, value: 1 %></p>
+            <p><%= f.select :percentage, [], label: :field_percentage %></p>
+            
+            <fieldset>
+                <legend><strong><%= l(:label_sprint_plural) %></strong></legend>
+                <div>
+                    <% @work_plan_item.work_plan.available_sprints.each do |sprint| %>
+                        <p>
+                            <%= check_box_tag "work_plan_item[sprints][]", sprint[:index], 
+                                @work_plan_item.sprints&.include?(sprint[:index]), 
+                                id: "sprint_#{sprint[:index]}" %>
+                            <%= label_tag "sprint_#{sprint[:index]}", sprint[:name] || "Sprint #{sprint[:index]}" %>
+                        </p>
+                    <% end %>
+                </div>
+            </fieldset>
+            
+            
+        </div>
+
+        <!-- Lado direito -->
+        <div class="splitcontentright" style="width: 50%;">
+            <p><%= f.text_area :rationale, rows: 20, label: :field_rationale, required: true %></p>
+        </div>
+    </div>
+</fieldset>
+
+    <%= submit_tag l(:button_add) %>
+<% else %>
+    <p class="nodata"><%= l(:label_no_data) %></p>
+<% end %>
+
+<script>
+    function setupItemSelectListener() {
+        var itemSelect = document.getElementById("work_plan_item_item_id"); 
+        var percentageSelect = document.getElementById("work_plan_item_percentage"); 
+    
+        if (!itemSelect || !percentageSelect) {
+            setTimeout(setupItemSelectListener, 500);
+            return;
+        }
+    
+        function updatePercentageOptions() {
+            var selectedOption = itemSelect.options[itemSelect.selectedIndex];
+            var sharedBy = selectedOption.dataset.sharedBy ? parseInt(selectedOption.dataset.sharedBy) : 0;
+    
+            percentageSelect.innerHTML = ""; 
+    
+            if (sharedBy > 0) {
+                var step = 100 / sharedBy;
+                for (var i = 1; i <= sharedBy; i++) {
+                    var option = document.createElement("option");
+                    option.value = (step * i).toFixed(1).replace('.', ',');
+                    option.textContent = option.value;
+                    percentageSelect.appendChild(option);
+                }
+            }
+        }
+    
+        itemSelect.addEventListener("change", updatePercentageOptions);
+    }
+    
+    document.addEventListener("DOMContentLoaded", setupItemSelectListener);
+    
+</script>

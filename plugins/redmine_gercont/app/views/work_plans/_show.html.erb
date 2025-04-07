@@ -1,0 +1,46 @@
+<%= error_messages_for 'work_plan' %>
+
+<h2 class="inline-flex"><%= l(:label_work_plan) %></h2>
+<span class="badge badge-status-<%= @work_plan.status %>">
+    <%= l("statuses.work_plan.#{@work_plan.status}") %>
+</span>
+
+<div class="contextual scrum-menu">
+    <% if can_plan_work_plan? %>
+        <%= 
+            link_to(l(:label_demand_backlog), 
+            product_backlog_path(@work_plan.issue.product_backlog),
+            :class => 'icon icon-product-backlog') 
+        %>
+    <% end %>
+</div>
+
+<% if @work_plan.sprints.blank? %>
+    <p class="nodata"><%= l(:label_no_data) %></p>
+<% else %>
+    <%= render 'work_plans/head' %>
+    <h3><%= l(:label_sprint_plural) %></h3>
+    <%= render 'work_plans/sprints' %>
+
+    <% if can_plan_work_plan? %>
+        <div class="contextual scrum-menu">
+            <%= 
+                link_to(l(:label_new_work_plan_item), 
+                new_work_plan_work_plan_item_path(@work_plan),
+                :class => 'icon icon-add') 
+            %>
+        </div>    
+    <% end %>
+    <h3><%= l(:label_work_plan_items) %></h3>
+
+    <%= render 'work_plan_items/index' if @work_plan.work_plan_items.any? %>
+<% end %>
+
+
+
+
+
+
+
+
+
