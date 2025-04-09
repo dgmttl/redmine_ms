@@ -13,7 +13,7 @@ class ContractMember < ApplicationRecord
       User.where(status: 1, admin: false).map { |user| [user.name, user.id] }
     end
 
-    def role_options
+    def self.role_options
       roles = []
     
       # IDs de configuração
@@ -34,12 +34,12 @@ class ContractMember < ApplicationRecord
     
 
   def contract_members_role_ids
-      role_options.map(&:id)
+      ContractMember.role_options.map(&:id)
   end
 
   def profile
 
-    if role_options.map(&:id).any? { |role_id| roles.map(&:id).include?(role_id) }
+    if ContractMember.role_options.map(&:id).any? { |role_id| roles.map(&:id).include?(role_id) }
       'contract member'
     else
       item&.profile

@@ -10,7 +10,7 @@
       <% if @contract_member.new_record? %>
         
         <p><%= f.select :user_id, member_options, required: true %></p>
-        <% @contract_member.role_options.each do |role| %>
+        <% ContractMember.role_options.each do |role| %>
           <p>
             <%= check_box_tag "contract_member[role_ids][]", role.id, @contract_member.role_ids.include?(role.id) %>
             <%= label_tag "contract_member_role_ids_#{role.id}", role.name %>
@@ -20,7 +20,7 @@
       <% else %>
         <%= hidden_field_tag "contract_member[user_id]", @contract_member.user_id %>
         <% if @contract_member.profile == 'contract member' %>
-          <% @contract_member.role_options.each do |role| %>
+          <% ContractMember.role_options.each do |role| %>
             <p>
               <%= check_box_tag "contract_member[role_ids][]", role.id, @contract_member.role_ids.include?(role.id) %>
               <%= label_tag "contract_member_role_ids_#{role.id}", role.name %>

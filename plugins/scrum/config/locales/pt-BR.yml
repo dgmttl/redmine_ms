@@ -211,6 +211,7 @@ pt-BR:
   notice_task_created: "A tarefa foi criada com sucesso"
   notice_unable_delete_sprint: "Falha ao excluir o Sprint"
   project_module_scrum: "Scrum"
+  permission_check_dependencies: "Verificar dependências"
   permission_edit_pending_effort: "Editar esforço pendente"
   permission_edit_product_backlog: "Editar backlog do produto"
   permission_edit_remaining_story_points: "Editar pontos de história restantes"

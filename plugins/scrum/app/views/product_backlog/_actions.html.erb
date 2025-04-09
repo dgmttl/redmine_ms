@@ -12,7 +12,7 @@
       <% end %>
     <%- end -%>
 
-  <% if User.current.allowed_to?(:sort_product_backlog, @project) %>
+  <% if User.current.allowed_to?(:check_dependencies, @project) %>
     <%= link_to(l(:label_check_dependencies),
       check_dependencies_product_backlog_path(@product_backlog),
       :remote => true, :method => 'GET', :class => 'icon icon-help') %>

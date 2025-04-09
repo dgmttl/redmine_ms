@@ -12,15 +12,12 @@ class Contract < ActiveRecord::Base
     has_many :work_plans, through: :issue, dependent: :destroy
 
     validates :name, presence: true, uniqueness: true
-    # validates :terms_reference, presence: true
-    # validates :terms_start, presence: true
-    # validates :terms_end, presence: true
     validate :terms_end_greater_than_terms_start
-    # validates :contractor, presence: true
-    # validates :cnpj, presence: true
-    # validates :status, presence: true
+
         
     STATUSES = ['active', 'closed', 'canceled', 'new'].freeze
+
+    MODULES = ['issue_tracking', 'time_tracking', 'repository', 'redmine_gercont', 'scrum'].freeze
 
     def self.status_options
         STATUSES.map { |status| [I18n.t("statuses.contract.#{status}"), status] }

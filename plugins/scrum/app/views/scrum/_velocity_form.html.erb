@@ -19,7 +19,7 @@
         &nbsp;&nbsp;&nbsp;
       <% end %>
 
-      <% if ((@issue.work_plan.present? && 
+      <% if (@issue.present? && (@issue.work_plan.present? && 
               ['planning', 'rejected'].include?(@issue.work_plan.status))  &&
               User.current.allowed_to?(:plan_work_plan, @project) 
             ) || User.current.admin? %>

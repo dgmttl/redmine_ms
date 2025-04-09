@@ -149,7 +149,8 @@ class ProductBacklogController < ApplicationController
   end
 
   def release_plan
-    @issue = Issue.find(@product_backlog.description.scan(/\d+/).last.to_i)
+    issue_id = @product_backlog.description.scan(/\d+/).last.to_i
+    @issue = Issue.find(issue_id) if issue_id > 0
     @sprints = []
     velocity_all_pbis, velocity_scheduled_pbis, @sprints_count = @project.story_points_per_sprint(@pbi_filter)
     @velocity_type = params[:velocity_type] || 'custom'

@@ -42,16 +42,20 @@ class ContractsController < ApplicationController
     @contract_members, @project_members = @contract.contract_members
       .select { |member| member.user.active? }
       .partition do |member|
-        member.roles.any? { |role| member.role_options.include?(role) }
+        member.roles.any? { |role| ContractMember.role_options.include?(role) }
     end
   end
 
   def update
+    @contract_was = @contract.dup
+    logger.info " +++++++++++++++++++ update - @contract_was #{@contract_was.inspect}"
+    @added_projects = Project.where(id: added_project_ids) if added_project_ids.any?
+    
     if contract_projects_changed?
-      manage_contract_members_in_project
-    
+
       @contract.assign_attributes(contract_params)
-    
+
+      manage_contract_members_in_project
       manage_project_modules
       manage_project_trackers
       manage_project_pbl
@@ -114,27 +118,28 @@ class ContractsController < ApplicationController
 
 
   def manage_project_modules
-    return unless @contract.projects.any? && @contract.slas.any?
-  
-    assessments_present = @contract.slas.any? { |sla| sla.assessments }
-  
+    return unless @contract.projects.any?
+
+    contract_modules = Contract::MODULES
+    logger.info " +++++++++++++++++++ manage_project_modules - contract_modules: #{contract_modules.inspect}"
+
     @contract.projects.each do |project|
-      project.enable_module!(:redmine_gercont)
-      project.enable_module!(:scrum)
-      # project.enable_module!(:work_plans)
-      # project.enable_module!(:work_orders)
-      # project.enable_module!(:assessments) if assessments_present
+      logger.info " +++++++++++++++++++ manage_project_modules - enabled_modules: #{project.enabled_modules.inspect}"
+      project.enabled_module_names = contract_modules
+
     end
   end
   
 
   def manage_project_trackers
-    return unless added_projects.any?
-  
+    logger.info " +++++++++++++++++++ manage_project_trackers - added_project_ids: #{@added_projects.inspect}"
+    return unless @added_projects.any?
+
+ 
     tracker_ids = contract_params[:tracker_ids]
     return if tracker_ids.blank?
   
-    added_projects.each do |project|
+    @added_projects.each do |project|
       project.tracker_ids = tracker_ids
       project.save
     end
@@ -142,9 +147,10 @@ class ContractsController < ApplicationController
   
 
   def manage_project_pbl
-    return unless added_projects.any?
+
+    return unless @added_projects.any?
   
-    added_projects.each do |project|
+    @added_projects.each do |project|
       next if project.product_backlogs.any?
   
       Sprint.find_or_create_by(
@@ -161,13 +167,14 @@ class ContractsController < ApplicationController
   
 
   def create_project_members_in_contract
-    return unless added_projects.any?
+
+    return unless @added_projects.any?
   
-    added_projects.each do |project|
+    @added_projects.each do |project|
       project.members.each do |member|
         next if @contract.contract_members.map(&:user).include?(member.user)
         
-        member_roles = member.roles.reject { |role| role_options.include?(role) || role.blank? }.map(&:id)
+        member_roles = member.roles.reject { |role| ContractMember.role_options.include?(role) || role.blank? }.map(&:id)
         
         ContractMember.create(
           contract_id: @contract.id,
@@ -180,11 +187,16 @@ class ContractsController < ApplicationController
   
 
   def contract_projects_changed?
-    @contract.project_ids != contract_params[:project_ids].reject(&:empty?).map(&:to_i) ? true : false
+    @contract_was.project_ids != contract_params[:project_ids].reject(&:empty?).map(&:to_i) ? true : false
   end
 
-  def added_projects
-    contract_params[:project_ids].reject(&:empty?).map(&:to_i) - @contract.project_ids
+  def added_project_ids
+    added = contract_params[:project_ids].reject(&:empty?).map(&:to_i) - @contract_was.project_ids
+
+    logger.info " +++++++++++++++++++ added_project_ids - contract_params[:project_ids]: #{contract_params[:project_ids].inspect}"
+    logger.info " +++++++++++++++++++ added_project_ids - @contract_was.project_ids: #{@contract_was.project_ids.inspect}"
+    logger.info " +++++++++++++++++++ added_project_ids - added: #{added.inspect} \n"
+    added
   end
 
   def contract_members
@@ -195,11 +207,11 @@ class ContractsController < ApplicationController
   # if project out: retire contract_members from project_member
   def manage_contract_members_in_project
     if contract_members.any?
-      if added_projects.any?
+      if @added_projects.any?
         contract_members.each do |member|
           Member.create_principal_memberships(
             member.user, 
-            project_ids: added_projects, 
+            project_ids: added_project_ids, 
             role_ids: member.role_ids
           )
         end
