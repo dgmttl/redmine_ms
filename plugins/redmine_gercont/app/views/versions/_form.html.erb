@@ -2,7 +2,7 @@
 <%= error_messages_for 'version' %>
 
 <div class="box tabular">
-<p><%= f.text_field :name, :maxlength => 60, :size => 60, :required => true %></p>
+<p><%= f.text_field :name, :maxlength => 60, :size => 60, :required => true, :label => :field_name %></p>
 <p><%= f.text_field :description, :size => 60 %></p>
 
 <% if @project.contracts.empty? || User.current.admin? %>

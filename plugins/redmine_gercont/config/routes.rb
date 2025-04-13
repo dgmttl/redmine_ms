@@ -42,3 +42,5 @@ post 'ask_for_work_plan_approval', to: 'work_plans#ask_for_work_plan_approval'
 post 'approve_work_plan', to: 'work_plans#approve_work_plan'
 post 'reject_work_plan', to: 'work_plans#reject_work_plan'
 post 'generate_work_order', to: 'work_orders#generate_work_order'
+
+post '/contracts/default_configuration', :to => 'contracts#default_configuration'

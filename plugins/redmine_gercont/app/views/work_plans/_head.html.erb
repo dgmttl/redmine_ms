@@ -41,7 +41,7 @@
     
     <% if can_generate_work_order? %>
         <%= button_to l(:button_generate_work_order),
-            generate_work_order_path(issue_id: @issue.id, status: 'waiting_professionals'),
+            generate_work_order_path(issue_id: @issue.id, status: 'new'),
             method: :post 
         %>
     <% end %>

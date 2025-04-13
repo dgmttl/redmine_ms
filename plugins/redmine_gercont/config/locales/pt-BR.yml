@@ -22,7 +22,7 @@ pt-BR:
       closed: concluído
 
     work_order:
-      waiting_professionals: alocando profissionais
+      new: nova
       attending: em atendimento
       paused: em espera
       delivered: entregue
@@ -92,6 +92,42 @@ pt-BR:
   button_approve: Aprovar
   button_reject: Rejeitar
   button_generate_work_order: Gerar Ordem de Serviço
+
+  default_field_blocked: Bloqueado
+  default_field_story_points: Pontos de História
+  default_field_versions: Versões
+  default_field_non_functional_requirements: Requisitos Não Funcionais
+  default_field_project_type: Tipo de Projeto
+  default_field_project_type_development: Desenvolvimento
+  default_field_project_type_maintenance: Manutenção
+  default_field_requester_unity: Unidade Requisitante
+  default_field_estimated_count: Contagem Estimada (PPF)
+  default_field_estimated_duration: Prazo estimado (dias corridos)
+  default_field_estimated_cost: Custo estimado (R$)
+
+  default_issue_status_request_approval: Solicitar Aprovação
+  default_issue_status_request_adjustment: Solicitar Ajuste
+  default_issue_status_approve: Aprovar
+  default_issue_status_develop_work_plan: Planejar Plano de Trabalho
+  default_issue_status_approve_work_plan: Aprovar Plano de Trabalho
+  default_issue_status_generate_work_order: Gerar Ordem de Serviço
+  default_issue_status_allocate_professionals: Alocar Profissionais
+  default_issue_status_delivered: Entregue
+  default_issue_status_accepted: Aceito
+
+  default_role_contract_manager: Gestor de Contrato
+  default_role_technical_inspector: Fiscal Técnico
+  default_role_requester: Fiscal Requisitante
+  default_role_administrative_inspector: Fiscal Administrativo
+  default_role_product_owner: Dono do Produto
+  default_role_contract_admin: Administrador do Contrato
+  default_role_agent: Preposto
+  default_role_scrum_master: Scrum Master
+  default_role_scrum_team: Equipe Scrum
+
+  default_tracker_demand: Demanda
+  default_tracker_story: História de Usuário
+  default_tracker_task: Tarefa
 
   field_acronym: Sigla
   field_action: Ação

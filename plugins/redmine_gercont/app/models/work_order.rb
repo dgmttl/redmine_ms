@@ -12,14 +12,14 @@ class WorkOrder < ApplicationRecord
 
 
     STATUSES = [
-                'waiting_professionals', 
+                'new', 
                 'attending',
                 'paused', 
                 'delivered',
                 'accepted',
                 'rejected',
                 'waiting_payment', 
-                'paid',
+                'closed',
                 'cancelled'
                 ].freeze
 

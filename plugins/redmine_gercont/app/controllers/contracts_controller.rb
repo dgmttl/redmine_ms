@@ -48,7 +48,6 @@ class ContractsController < ApplicationController
 
   def update
     @contract_was = @contract.dup
-    logger.info " +++++++++++++++++++ update - @contract_was #{@contract_was.inspect}"
     @added_projects = Project.where(id: added_project_ids) if added_project_ids.any?
     
     if contract_projects_changed?
@@ -79,6 +78,18 @@ class ContractsController < ApplicationController
   def destroy    
     @contract.destroy
     flash[:notice] = l(:notice_successful_delete)
+    redirect_to contracts_path
+  end
+
+  def default_configuration
+    if request.post?
+      begin
+        RedmineGercont::DefaultData::Loader::load(params[:lang])
+        flash[:notice] = l(:notice_default_data_loaded)
+      rescue => e
+        flash[:error] = l(:error_can_t_load_default_data, ERB::Util.h(e.message))
+      end
+    end
     redirect_to contracts_path
   end
 
@@ -121,10 +132,7 @@ class ContractsController < ApplicationController
     return unless @contract.projects.any?
 
     contract_modules = Contract::MODULES
-    logger.info " +++++++++++++++++++ manage_project_modules - contract_modules: #{contract_modules.inspect}"
-
     @contract.projects.each do |project|
-      logger.info " +++++++++++++++++++ manage_project_modules - enabled_modules: #{project.enabled_modules.inspect}"
       project.enabled_module_names = contract_modules
 
     end
@@ -132,8 +140,7 @@ class ContractsController < ApplicationController
   
 
   def manage_project_trackers
-    logger.info " +++++++++++++++++++ manage_project_trackers - added_project_ids: #{@added_projects.inspect}"
-    return unless @added_projects.any?
+    return if @added_projects.nil?
 
  
     tracker_ids = contract_params[:tracker_ids]
@@ -191,12 +198,7 @@ class ContractsController < ApplicationController
   end
 
   def added_project_ids
-    added = contract_params[:project_ids].reject(&:empty?).map(&:to_i) - @contract_was.project_ids
-
-    logger.info " +++++++++++++++++++ added_project_ids - contract_params[:project_ids]: #{contract_params[:project_ids].inspect}"
-    logger.info " +++++++++++++++++++ added_project_ids - @contract_was.project_ids: #{@contract_was.project_ids.inspect}"
-    logger.info " +++++++++++++++++++ added_project_ids - added: #{added.inspect} \n"
-    added
+    contract_params[:project_ids].reject(&:empty?).map(&:to_i) - @contract_was.project_ids
   end
 
   def contract_members

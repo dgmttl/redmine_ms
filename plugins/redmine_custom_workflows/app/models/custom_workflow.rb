@@ -51,6 +51,28 @@ class CustomWorkflow < ApplicationRecord
     )
   end)
 
+  def self.save_backup_xml(xml_data,file_name)
+
+    file_path = "plugins/redmine_gercont/lib/redmine_gercont/default_data/cw_scripts/#{file_name}.xml"
+    new_file_path = "plugins/redmine_gercont/lib/redmine_gercont/default_data/cw_scripts/#{Nokogiri::XML(xml_data).at_xpath('//name').text}.xml"
+
+    if new_file_path.match?(/GERCONT_.*\.xml$/)
+      if file_path != new_file_path
+        File.delete(file_path) if File.exist?(file_path)
+      end
+      
+      File.open(new_file_path, "w") do |file|
+        file.write(xml_data.encode("UTF-8").strip)
+      end
+    end
+  end
+
+  def self.destroy_backup_xml(xml_data)    
+    file_name = Nokogiri::XML(xml_data).at_xpath("//name").text
+    file_path = "plugins/redmine_gercont/lib/redmine_gercont/default_data/cw_scripts/#{file_name}.xml"
+    File.delete(file_path) if File.exist?(file_path)
+  end
+  
   def self.import_from_xml(xml)
     attributes = Hash.from_xml(xml).values.first
     attributes.delete 'id'

@@ -39,8 +39,10 @@ class CustomWorkflowsController < ApplicationController
           wf.position = wf.position - 1
         end
         wf.save
+        CustomWorkflow.save_backup_xml(wf.export_as_xml, wf.name)
       end
     end
+    
     respond_to do |format|
       format.html
       format.js
@@ -100,6 +102,7 @@ class CustomWorkflowsController < ApplicationController
     update_from_params
     respond_to do |format|
       if params.key?(:commit) && @workflow.save
+        CustomWorkflow.save_backup_xml(@workflow.export_as_xml, @workflow.name)
         flash[:notice] = l(:notice_successful_create)
         cookies[:custom_workflows_author] = @workflow.author
         format.html { redirect_to(custom_workflows_path) }
@@ -112,6 +115,7 @@ class CustomWorkflowsController < ApplicationController
   def change_status
     respond_to do |format|
       if @workflow.update(active: params[:active])
+        CustomWorkflow.save_backup_xml(@workflow.export_as_xml, @workflow.name)
         flash[:notice] = l(:notice_successful_status_change)
         format.html { redirect_to(custom_workflows_path) }
       else
@@ -121,9 +125,11 @@ class CustomWorkflowsController < ApplicationController
   end
 
   def update
+    file_name = @workflow.name
     respond_to do |format|
       update_from_params
       if params.key?(:commit) && @workflow.save
+        CustomWorkflow.save_backup_xml(@workflow.export_as_xml, file_name)
         flash[:notice] = l(:notice_successful_update)
         format.html { redirect_to(custom_workflows_path) }
       else
@@ -134,6 +140,7 @@ class CustomWorkflowsController < ApplicationController
 
   def destroy
     @workflow.destroy
+    CustomWorkflow.destroy_backup_xml(@workflow.export_as_xml)
     respond_to do |format|
       flash[:notice] = l(:notice_successful_delete)
       format.html { redirect_to(custom_workflows_path) }
@@ -141,6 +148,9 @@ class CustomWorkflowsController < ApplicationController
   end
 
   private
+
+
+  
 
   def find_workflow
     @workflow = CustomWorkflow.find(params[:id])

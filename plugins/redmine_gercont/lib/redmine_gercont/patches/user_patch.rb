@@ -4,7 +4,7 @@ module RedmineGercont
       def self.included(base)
         base.class_eval do
 
-          has_many :assessments, dependent: :destroy
+          has_many :assessments
           has_many :contract_members
 
         end

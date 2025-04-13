@@ -3,13 +3,13 @@
 <div class="splitcontent">
 <div class="splitcontentleft">
 <div class="box tabular">
-<p><%= f.select :field_format, custom_field_formats_for_select(@custom_field), {}, :disabled => !@custom_field.new_record? %></p>
-<p><%= f.text_field :name, :size => 50, :required => true %></p>
-<p><%= f.text_area :description, :rows => 7 %></p>
+<p><%= f.select :field_format, custom_field_formats_for_select(@custom_field), {}, :disabled => !@custom_field.new_record?, :label => :field_format %></p>
+<p><%= f.text_field :name, :size => 50, :required => true, :label => :field_name %></p>
+<p><%= f.text_area :description, :rows => 7, :label => :field_description %></p>
 
 <% if @custom_field.format.multiple_supported %>
 <p>
-  <%= f.check_box :multiple %>
+  <%= f.check_box :multiple, label: :field_multiple %>
   <% if !@custom_field.new_record? && @custom_field.multiple %>
   <em class="info"><%= l(:text_turning_multiple_off) %></em>
   <% end %>
@@ -32,23 +32,23 @@
 
 <div class="splitcontentright">
   <div class="box tabular">
-    <p><%= f.check_box :is_required %></p>
+    <p><%= f.check_box :is_required, label: :field_is_required %></p>
 
     <% if %w(UserCustomField).include?(@custom_field.class.name) %>
-      <p><%= f.check_box :visible %></p>
+      <p><%= f.check_box :visible, label: :field_visible %></p>
     <% end %>
 
     <% if @custom_field.is_a?(UserCustomField) %>
-      <p><%= f.check_box :editable %></p>
+      <p><%= f.check_box :editable, label: :field_editable %></p>
     <% end %>
 
     <% if %w(IssueCustomField UserCustomField ProjectCustomField VersionCustomField GroupCustomField TimeEntryCustomField).include?(@custom_field.class.name) &&
         @custom_field.format.is_filter_supported %>
-      <p><%= f.check_box :is_filter %></p>
+      <p><%= f.check_box :is_filter, label: :field_is_filter %></p>
     <% end %>
 
     <% if %w(IssueCustomField ProjectCustomField).include?(@custom_field.class.name) && @custom_field.format.searchable_supported %>
-      <p><%= f.check_box :searchable %></p>
+      <p><%= f.check_box :searchable, label: :field_searchable %></p>
     <% end %>
     <%= call_hook(:"view_custom_fields_form_#{@custom_field.type.to_s.underscore}", :custom_field => @custom_field, :form => f) %>
   </div>
