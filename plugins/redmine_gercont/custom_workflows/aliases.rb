@@ -1,18 +1,9 @@
-<?xml version="1.0" encoding="UTF-8"?>
-<hash>
-  <before-save nil="true"/>
-  <after-save nil="true"/>
-  <name>GERCONT_aliases</name>
-  <description></description>
-  <is-for-all type="boolean">false</is-for-all>
-  <author>diogo.neiva@saude.gov.br</author>
-  <active type="boolean">true</active>
-  <shared-code># Plugin attributes
+# Plugin attributes
 @demand = Setting.plugin_redmine_gercont["demand_tracker_id"].to_i
 @role_for_product_owner = Setting.plugin_redmine_gercont["role_for_product_owner"].to_i
 @role_for_requester = Setting.plugin_redmine_gercont["role_for_requester"].to_i
-@roles_for_assessment= Setting.plugin_redmine_gercont["roles_for_assessment"].map(&amp;:to_i)
-@statuses_for_edit_assessment= Setting.plugin_redmine_gercont["statuses_for_edit_assessment"].map(&amp;:to_i)
+@roles_for_assessment= Setting.plugin_redmine_gercont["roles_for_assessment"].map(&:to_i)
+@statuses_for_edit_assessment= Setting.plugin_redmine_gercont["statuses_for_edit_assessment"].map(&:to_i)
 @role_for_contract_manager = Setting.plugin_redmine_gercont["role_for_contract_manager"].to_i
 @role_for_technical_inspector = Setting.plugin_redmine_gercont["role_for_technical_inspector"].to_i
 @role_for_administrative_inspector = Setting.plugin_redmine_gercont["role_for_administrative_inspector"].to_i
@@ -35,22 +26,4 @@
 @default_pbl = nil
 @requested = nil
 @aproved = nil
-@demand_backlog = nil</shared-code>
-  <before-add nil="true"/>
-  <after-add nil="true"/>
-  <before-remove nil="true"/>
-  <after-remove nil="true"/>
-  <before-destroy nil="true"/>
-  <after-destroy nil="true"/>
-  <observable>shared</observable>
-  <id type="integer">2</id>
-  <created-at type="dateTime">2025-04-13T17:12:49Z</created-at>
-  <updated-at type="dateTime">2025-04-14T22:14:06Z</updated-at>
-  <string></string>
-  <position type="integer">1</position>
-  <integer type="integer">1</integer>
-  <exported-at>2025-04-14T22:14:06Z</exported-at>
-  <plugin-version>3.0.0</plugin-version>
-  <ruby-version>3.3.7-p123</ruby-version>
-  <rails-version>7.2.2.1</rails-version>
-</hash>
+@demand_backlog = nil

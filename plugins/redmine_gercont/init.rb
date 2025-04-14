@@ -43,8 +43,8 @@ Redmine::Plugin.register :redmine_gercont do
   permission :manage_contract, {
     :contracts => [:new, :create, :edit, :update, :destroy],
     :items => [:new, :create, :edit, :update, :destroy],
-    :slas => [:new, :create, :edit, :update, :destroy],
-    :rules => [:new, :create, :edit, :update, :destroy],
+    :slas => [:new, :create, :edit, :update, :destroy, :change_status, :reorder],
+    :rules => [:new, :create, :edit, :update, :destroy, :change_status, :reorder],
     :holidays =>  [:new, :create, :edit, :update, :destroy],
     :contract_members =>  [:new, :create, :edit, :update, :destroy]
   }

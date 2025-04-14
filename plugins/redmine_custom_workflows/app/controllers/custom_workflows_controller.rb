@@ -20,8 +20,8 @@
 
 # Custom workflows controller
 class CustomWorkflowsController < ApplicationController
-  layout 'admin'
-  before_action :require_admin
+  # layout 'admin'
+  before_action :authorize_global #:require_admin
   before_action :find_workflow, only: %i[show edit update destroy export change_status reorder]
 
   def reorder

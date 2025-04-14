@@ -1,5 +1,5 @@
 <div class="contextual">
-    <% if User.current.admin? %>
+    <% if User.current.allowed_to_globally?(:manage_contract) %>
         <%= link_to l(:label_new_rule), 
             new_contract_rule_path(@contract), 
             class: 'icon icon-add' 
@@ -18,7 +18,7 @@
         <th><%= l(:field_observable) %></th>
         <th><%= l(:field_action) %></th>
         <th><%= l(:field_name) %></th>
-        <% if User.current.admin? %>
+        <% if User.current.allowed_to_globally?(:manage_contract) %>
           <th></th>
         <% end %>
       </tr>
@@ -30,9 +30,9 @@
           <td><%= rule.tracker.name %></td>
           <td><%= workflow.observable %></td>
           <td><%= I18n.t("actions.#{rule.action}") %></td>
-          <td><%= User.current.admin? ? link_to(workflow.name.split('_').last, edit_custom_workflow_path(workflow)): workflow.name%></td>
+          <td><%= User.current.allowed_to_globally?(:manage_contract) ? link_to(workflow.name.split('_').last, edit_custom_workflow_path(workflow)): workflow.name%></td>
           
-          <% if User.current.admin? %>
+          <% if User.current.allowed_to_globally?(:manage_contract) %>
             <td class="buttons">
               <%= reorder_handle workflow, url: url_for(controller: 'rules', action: 'reorder', id: workflow) %>
               <% if workflow.active? %>

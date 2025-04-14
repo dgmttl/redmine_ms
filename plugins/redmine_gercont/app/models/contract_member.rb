@@ -23,7 +23,6 @@ class ContractMember < ApplicationRecord
       ag_id = Setting.plugin_redmine_gercont["role_for_agent"].to_i
       ca_id = Setting.plugin_redmine_gercont["role_for_contract_admin"].to_i
     
-      # Certifique-se de que os IDs existem e são válidos
       [cm_id, ti_id, ai_id, ag_id, ca_id].each do |id|
         role = Role.find_by(id: id)
         roles << role if role
@@ -38,7 +37,6 @@ class ContractMember < ApplicationRecord
   end
 
   def profile
-
     if ContractMember.role_options.map(&:id).any? { |role_id| roles.map(&:id).include?(role_id) }
       'contract member'
     else

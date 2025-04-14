@@ -55,16 +55,16 @@ pt-BR:
     tech lead: Líder Técnico De Desenvolvimento
     mid-level business/requirements analyst: Analista De Negócios/Requisitos Pleno
     senior business/requirements analyst: Analista De Negócios/Requisitos Sênior
-    senior business intelligence analyst: Analista De BI Sênior
+    senior business intelligence analyst: Analista De BI
     senior data admin: Administrador De Dados Sênior
     scrum master: Scrum Master
     project manager: Gerente De Projetos
-    requester: Requisitante
+    requester: Fiscal Requisitante
 
   project_module_redmine_gercont: Redmine Gercont
 
   permission_manage_assessment: Gerenciar Questionários
-  permission_manage_contract: Gerenciar Contrato
+  permission_manage_contract: Administrar Contrato
   permission_manage_plan: Gerenciar Planos
   permission_manage_sla_event: Gerenciar Eventos NMS
   permission_view_assessment_menu: Ver menu de Questionários
@@ -114,6 +114,8 @@ pt-BR:
   default_issue_status_allocate_professionals: Alocar Profissionais
   default_issue_status_delivered: Entregue
   default_issue_status_accepted: Aceito
+  
+  default_project_name: Exemplo de Projeto
 
   default_role_contract_manager: Gestor de Contrato
   default_role_technical_inspector: Fiscal Técnico
@@ -121,7 +123,7 @@ pt-BR:
   default_role_administrative_inspector: Fiscal Administrativo
   default_role_product_owner: Dono do Produto
   default_role_contract_admin: Administrador do Contrato
-  default_role_agent: Preposto
+  default_role_agent: Preposto do Contrato
   default_role_scrum_master: Scrum Master
   default_role_scrum_team: Equipe Scrum
 
@@ -282,5 +284,8 @@ pt-BR:
   warning_name_not_available: Nome não está disponível
   warning_need_contract: Solicite ao administrador cadastrar ao menos um contrato.
   warning_need_sla: Solicite ao administrador cadastrar ao menos um NMS do tipo IPP.
+
+  warning_cw_issue_demand_can_not_be_created: Não é possível criar uma Demanda. É necessário criar Releases antes.
+  warning_cw_tracker_can_not_be_changed: o Tipo não pode ser alterado.
   
   error_terms_end_date: Deve ser pelo menos 3 meses maior que o início da vigência.

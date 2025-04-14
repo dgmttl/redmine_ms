@@ -20,10 +20,12 @@ class ContractsController < ApplicationController
 
   def create
     @contract = Contract.new(contract_params)
+    @added_projects = added_project_ids.present? ? Project.where(id: added_project_ids) : []
     if @contract.save
         manage_project_modules
         manage_project_trackers
         manage_project_pbl
+        manage_custom_workflows
         create_project_members_in_contract
         manage_contract_members_in_project
       create_national_holidays(@contract.terms_start, @contract.terms_end)
@@ -48,7 +50,8 @@ class ContractsController < ApplicationController
 
   def update
     @contract_was = @contract.dup
-    @added_projects = Project.where(id: added_project_ids) if added_project_ids.any?
+
+    @added_projects = added_project_ids.present? ? Project.where(id: added_project_ids) : []
     
     if contract_projects_changed?
 
@@ -58,6 +61,7 @@ class ContractsController < ApplicationController
       manage_project_modules
       manage_project_trackers
       manage_project_pbl
+      manage_custom_workflows
       create_project_members_in_contract
 
     end
@@ -140,7 +144,7 @@ class ContractsController < ApplicationController
   
 
   def manage_project_trackers
-    return if @added_projects.nil?
+    return if @added_projects.blank?
 
  
     tracker_ids = contract_params[:tracker_ids]
@@ -152,11 +156,26 @@ class ContractsController < ApplicationController
     end
   end
   
+  def manage_custom_workflows
+    return if @added_projects.blank?
+    
+    workflows = CustomWorkflow.where(
+      "name LIKE ? AND observable NOT IN (?)", "GERCONT_%",
+       CustomWorkflow::PROJECT_OBSERVABLES
+    )
+
+    @added_projects.each do |project|
+      project.custom_workflow_ids = workflows.map(&:id)
+      project.save
+    end
+  end
+
+
+
 
   def manage_project_pbl
+    return if @added_projects.blank?
 
-    return unless @added_projects.any?
-  
     @added_projects.each do |project|
       next if project.product_backlogs.any?
   
@@ -174,9 +193,8 @@ class ContractsController < ApplicationController
   
 
   def create_project_members_in_contract
+    return if @added_projects.blank?
 
-    return unless @added_projects.any?
-  
     @added_projects.each do |project|
       project.members.each do |member|
         next if @contract.contract_members.map(&:user).include?(member.user)
@@ -198,7 +216,11 @@ class ContractsController < ApplicationController
   end
 
   def added_project_ids
-    contract_params[:project_ids].reject(&:empty?).map(&:to_i) - @contract_was.project_ids
+    if @contract_was.present?
+      contract_params[:project_ids].reject(&:empty?).map(&:to_i) - @contract_was.project_ids
+    else
+      contract_params[:project_ids].reject(&:empty?).map(&:to_i)
+    end
   end
 
   def contract_members
@@ -209,7 +231,7 @@ class ContractsController < ApplicationController
   # if project out: retire contract_members from project_member
   def manage_contract_members_in_project
     if contract_members.any?
-      if @added_projects.any?
+      if !added_project_ids.blank?
         contract_members.each do |member|
           Member.create_principal_memberships(
             member.user, 

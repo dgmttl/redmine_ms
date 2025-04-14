@@ -15,7 +15,7 @@ class Contract < ActiveRecord::Base
     validate :terms_end_greater_than_terms_start
 
         
-    STATUSES = ['active', 'closed', 'canceled', 'new'].freeze
+    STATUSES = ['new', 'active', 'closed', 'canceled'].freeze
 
     MODULES = ['issue_tracking', 'time_tracking', 'repository', 'redmine_gercont', 'scrum'].freeze
 

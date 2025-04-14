@@ -4,7 +4,7 @@ module RedmineGercont
       def self.included(base)
         base.class_eval do
 
-        helper :work_plans
+          helper :work_plans
 
           alias_method :original_show, :show
           def show
