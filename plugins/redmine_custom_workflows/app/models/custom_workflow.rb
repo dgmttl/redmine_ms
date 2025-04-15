@@ -53,8 +53,11 @@ class CustomWorkflow < ApplicationRecord
 
   def self.save_backup_xml(xml_data,file_name)
 
-    file_path = "plugins/redmine_gercont/lib/redmine_gercont/default_data/cw_scripts/#{file_name}.xml"
-    new_file_path = "plugins/redmine_gercont/lib/redmine_gercont/default_data/cw_scripts/#{Nokogiri::XML(xml_data).at_xpath('//name').text}.xml"
+    directory_path = "files/cw_scripts"
+    Dir.mkdir(directory_path) unless Dir.exist?(directory_path)
+
+    file_path = "files/cw_scripts/#{file_name}.xml"
+    new_file_path = "files/cw_scripts/#{Nokogiri::XML(xml_data).at_xpath('//name').text}.xml"
 
     if new_file_path.match?(/GERCONT_.*\.xml$/)
       if file_path != new_file_path
@@ -69,7 +72,7 @@ class CustomWorkflow < ApplicationRecord
 
   def self.destroy_backup_xml(xml_data)    
     file_name = Nokogiri::XML(xml_data).at_xpath("//name").text
-    file_path = "plugins/redmine_gercont/lib/redmine_gercont/default_data/cw_scripts/#{file_name}.xml"
+    file_path = "files/cw_scripts/#{file_name}.xml"
     File.delete(file_path) if File.exist?(file_path)
   end
   

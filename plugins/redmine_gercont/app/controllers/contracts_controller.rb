@@ -160,13 +160,16 @@ class ContractsController < ApplicationController
     return if @added_projects.blank?
     
     workflows = CustomWorkflow.where(
-      "name LIKE ? AND observable NOT IN (?)", "GERCONT_%",
+      "name LIKE ? AND observable IN (?)", "GERCONT_%",
        CustomWorkflow::PROJECT_OBSERVABLES
     )
 
+    puts "===================== manage_custom_workflows - workflows: #{workflows.map(&:name)}"
+
     @added_projects.each do |project|
+      puts "===================== manage_custom_workflows - project: #{project.name}"
       project.custom_workflow_ids = workflows.map(&:id)
-      project.save
+      project.save!
     end
   end
 
@@ -195,12 +198,16 @@ class ContractsController < ApplicationController
   def create_project_members_in_contract
     return if @added_projects.blank?
 
+    
+
     @added_projects.each do |project|
       project.members.each do |member|
         next if @contract.contract_members.map(&:user).include?(member.user)
-        
-        member_roles = member.roles.reject { |role| ContractMember.role_options.include?(role) || role.blank? }.map(&:id)
-        
+
+        contract_roles = ContractMember.role_options
+        contract_roles.delete_if { |role| role.name == l(:default_role_contract_admin) }
+        member_roles = member.roles.reject { |role| contract_roles.include?(role) || role.blank? }.map(&:id)
+
         ContractMember.create(
           contract_id: @contract.id,
           user_id: member.user_id, 

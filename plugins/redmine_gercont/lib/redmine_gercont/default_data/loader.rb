@@ -148,7 +148,10 @@ module RedmineGercont
                 :manage_project_workflow, 
                 :view_contract, 
                 :manage_contract, 
-                :view_issues
+                :view_issues, 
+                :view_sprint_board, 
+                :view_product_backlog, 
+                :view_release_plan
               ],
               :issues_visibility => "all",
               :users_visibility => "all",
@@ -338,8 +341,7 @@ module RedmineGercont
                 :view_product_backlog, 
                 :check_dependencies, 
                 :edit_product_backlog, 
-                :sort_product_backlog, 
-                :view_release_plan
+                :sort_product_backlog
               ],
               :issues_visibility => "default",
               :users_visibility => "members_of_visible_projects",
@@ -353,8 +355,8 @@ module RedmineGercont
                 }, 
                 "permissions_tracker_ids"=>{
                   "view_issues"=>[demand.id, story.id], 
-                  "add_issues"=>[demand.id, story.id], 
-                  "edit_issues"=>[demand.id, story.id], 
+                  "add_issues"=>[story.id], 
+                  "edit_issues"=>[story.id], 
                   "add_issue_notes"=>[demand.id, story.id], 
                   "delete_issues"=>[]
                 }
@@ -498,16 +500,16 @@ module RedmineGercont
             :multiple => 1,
             :visible => 1
           )
-
-          CustomFieldEnumeration.create!(
+          dev = CustomFieldEnumeration.create!(
             :name => l(:default_field_project_type_development),
             :custom_field => type
           )
-          CustomFieldEnumeration.create!(
+          mnt = CustomFieldEnumeration.create!(
             :name => l(:default_field_project_type_maintenance),
             :custom_field => type
           )
-
+          type.update(:default_value => mnt.id)
+          
           requester_unity = ProjectCustomField.create!(
             :field_format => 'list',
             :name => l(:default_field_requester_unity),
@@ -667,51 +669,52 @@ module RedmineGercont
           WorkflowPermission.replace_permissions(trackers, roles, permissions)
 
           # Requester workflow for story
-          WorkflowTransition.create!(
-            :tracker_id => story.id,:role_id => requester.id,
-            :old_status_id => new.id,:new_status_id => rejected.id
-          )
-          WorkflowTransition.create!(
-            :tracker_id => story.id,:role_id => requester.id,
-            :old_status_id => resolved.id,:new_status_id => feedback.id
-          )
-          WorkflowTransition.create!(
-            :tracker_id => story.id,:role_id => requester.id,
-            :old_status_id => resolved.id,:new_status_id => closed.id
+          [requester, product_owner].each do |role|
+            WorkflowTransition.create!(
+              :tracker_id => story.id,:role => role,
+              :old_status_id => new.id,:new_status_id => rejected.id
+            )
+            WorkflowTransition.create!(
+              :tracker_id => story.id,:role => role,
+              :old_status_id => resolved.id,:new_status_id => feedback.id
+            )
+            WorkflowTransition.create!(
+              :tracker_id => story.id,:role => role,
+              :old_status_id => resolved.id,:new_status_id => closed.id
+            )
+          end
+
+          WorkflowPermission.replace_permissions(
+            [demand],
+            [requester],
+            new.id.to_s => { 
+              "tracker_id" => "", 
+              "subject" => "", 
+              "description" => "", 
+              "assigned_to_id" => "",
+              "priority_id" => ""}
           )
 
           WorkflowPermission.replace_permissions(
-            demand,
-            requester,
-            new.id.to_s => { "tracker_id" => "", "subject" => "", "description" => "", "assigned_to_id" => "" },
-          )
-
-          WorkflowPermission.replace_permissions(
-            story,
-            requester,
-            new.id.to_s => { "tracker_id" => "", "subject" => "", "description" => "" }
-          )
-
-          # sys_config project
-          project = Project.create!(
-            :name => 'sys_config',
-            :identifier => 'sys_config',
-            :is_public => false,
-            :enabled_module_names => []
-          )
-
-          project.members.create!(
-            :user => users.select { |user| user.name == l(:default_role_contract_admin) }.first,
-            :roles => [contract_admin]
+            [story],
+            [requester, product_owner],
+            new.id.to_s => { 
+              "tracker_id" => "", 
+              "subject" => "", 
+              "description" => "",
+              "priority_id" => ""
+            }
           )
 
           # Sample Project
           project = Project.create!(
             :name => l(:default_project_name),
-            :identifier => l(:default_project_name).downcase.gsub(" ", "_")
+            :identifier => l(:default_project_name).downcase.gsub(" ", "_"),
+            :is_public => false,
           )
 
           non_project_roles = ContractMember.role_options
+          non_project_roles.delete_if { |role| role.name == l(:default_role_contract_admin) }
           project_users = users.select { |user| !non_project_roles.map(&:name).include?(user.name) }
 
           project_users.each do |user|
@@ -724,7 +727,7 @@ module RedmineGercont
 
           # Custom Workflows
           CustomWorkflow.first.destroy if CustomWorkflow.first.present?
-          files = Dir.glob(File.join(Rails.root, 'plugins', 'redmine_gercont', 'lib', 'redmine_gercont', 'default_data', 'cw_scripts', '*.xml'))
+          files = Dir.glob(File.join(Rails.root, 'files', 'cw_scripts', '*.xml'))
           files.each do |file|
             workflow = CustomWorkflow.import_from_xml(File.read(file))
             workflow.string=''

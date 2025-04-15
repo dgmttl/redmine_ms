@@ -7,7 +7,7 @@
 
   <%- if issue.safe_attribute?(:subject) -%>
     <p>
-      <%= f.text_field :subject, :size => 10, :maxlength => 255, :required => true %>
+      <%= f.text_field :subject, :size => 10, :maxlength => 255, :required => true, :label => :field_subject %>
     </p>
   <%- end -%>
 
@@ -22,19 +22,19 @@
   <%- allowed_statuses = issue.new_statuses_allowed_to(User.current) -%>
   <%- if issue.safe_attribute?(:status_id) and allowed_statuses.present? -%>
     <p>
-      <%= f.select :status_id, (allowed_statuses.collect {|status| [status.name, status.id]}), {:required => true} %>
+      <%= f.select :status_id, (allowed_statuses.collect {|status| [status.name, status.id]}), {:required => true, :label => :field_status} %>
     </p>
   <%- end -%>
 
   <%- if issue.safe_attribute?(:priority_id) -%>
     <p>
-      <%= f.select :priority_id, (IssuePriority.active.collect {|p| [p.name, p.id]}), {:required => true, :disabled => !issue.leaf?} %>
+      <%= f.select :priority_id, (IssuePriority.active.collect {|p| [p.name, p.id]}), {:required => true, :disabled => !issue.leaf?, :label => :field_priority} %>
     </p>
   <%- end -%>
 
   <%- if issue.field?(:assigned_to_id) -%>
     <p>
-      <%= f.select :assigned_to_id, principals_options_for_select(issue.assignable_users, issue.assigned_to), :include_blank => true, :required => issue.required_attribute?('assigned_to_id') %>
+      <%= f.select :assigned_to_id, principals_options_for_select(issue.assignable_users, issue.assigned_to), :include_blank => true, :required => issue.required_attribute?('assigned_to_id'), :label => :assigned_to %>
     </p>
   <%- end -%>
 
@@ -43,12 +43,12 @@
       <%= f.select :category_id,
                    (issue.project.issue_categories.collect {|c| [c.name, c.id]}),
                    :include_blank => true,
-                   :required => issue.required_attribute?(:category_id) %>
+                   :required => issue.required_attribute?(:category_id), :label => :field_category %>
     </p>
   <% end %>
 
   <%- if issue.field?(:fixed_version_id) and issue.assignable_versions.any? -%>
-    <p><%= f.select :fixed_version_id, version_options_for_select(issue.assignable_versions, issue.fixed_version), :include_blank => true, :required => issue.required_attribute?('fixed_version_id') %>
+    <p><%= f.select :fixed_version_id, version_options_for_select(issue.assignable_versions, issue.fixed_version), :include_blank => true, :required => issue.required_attribute?('fixed_version_id'), :label => :field_fixed_version %>
     </p>
   <%- end -%>
 
@@ -56,19 +56,19 @@
 
   <%- if issue.field?(:start_date) -%>
     <p>
-      <%= f.send method, :start_date, :size => 10, :disabled => !issue.leaf?, :required => issue.required_attribute?('start_date') %><%= calendar_for('issue_start_date') if issue.leaf? %>
+      <%= f.send method, :start_date, :size => 10, :disabled => !issue.leaf?, :required => issue.required_attribute?('start_date'), :label => :field_start_date %><%= calendar_for('issue_start_date') if issue.leaf? %>
     </p>
   <%- end -%>
 
   <%- if issue.field?(:due_date) -%>
     <p>
-      <%= f.send method, :due_date, :size => 10, :disabled => !issue.leaf?, :required => issue.required_attribute?('due_date') %><%= calendar_for('issue_due_date') if issue.leaf? %>
+      <%= f.send method, :due_date, :size => 10, :disabled => !issue.leaf?, :required => issue.required_attribute?('due_date'), :label => :field_due_date %><%= calendar_for('issue_due_date') if issue.leaf? %>
     </p>
   <%- end -%>
 
   <%- if issue.field?(:estimated_hours) -%>
     <p>
-      <%= f.text_field :estimated_hours, :size => 4, :maxlength => 10 %>
+      <%= f.text_field :estimated_hours, :size => 4, :maxlength => 10 , :label => :field_estimated_hours%>
     </p>
   <%- end -%>
 
@@ -81,7 +81,7 @@
 
   <%- if issue.field?(:done_ratio) and issue.leaf? and Issue.use_field_for_done_ratio? -%>
     <p>
-      <%= f.select :done_ratio, ((0..10).to_a.collect {|r| ["#{r * 10} %", r * 10] }), :required => issue.required_attribute?('done_ratio') %>
+      <%= f.select :done_ratio, ((0..10).to_a.collect {|r| ["#{r * 10} %", r * 10] }), :required => issue.required_attribute?('done_ratio'), :label => :field_done_ratio %>
     </p>
   <%- end -%>
 
@@ -103,7 +103,7 @@
 
   <%- if issue.field?(:description) -%>
     <p>
-      <%= f.label_for_field :description, :required => issue.required_attribute?(:description) %>
+      <%= f.label_for_field :description, :required => issue.required_attribute?(:description), :label => :field_description %>
       <%= content_tag :span, :id => "issue_description_and_toolbar" do %>
         <%= f.text_area :description,
                         :rows => 8,
@@ -117,7 +117,7 @@
 
   <%- if issue.id -%>
     <p>
-      <%= f.text_area :notes, :rows => 8, :class => "wiki-edit" %>
+      <%= f.text_area :notes, :rows => 8, :class => "wiki-edit", :label => :field_notes %>
     </p>
     <%= wikitoolbar_for 'issue_notes' %>
   <%- end -%>

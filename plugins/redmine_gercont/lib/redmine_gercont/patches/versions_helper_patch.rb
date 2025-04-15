@@ -64,7 +64,7 @@ module RedmineGercont
 
           def project_type
             cf_id = @project.custom_field_value(Setting.plugin_redmine_gercont['field_for_project_type'])
-            CustomFieldEnumeration.find(cf_id).position
+            CustomFieldEnumeration.find(cf_id).first.name
           end
 
           def estimative_field_ids

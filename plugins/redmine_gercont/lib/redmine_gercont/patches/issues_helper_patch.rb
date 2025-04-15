@@ -57,13 +57,13 @@ module RedmineGercont
                     end
 
 
-                    def trackers_for_select(issue)
-                        trackers = original_trackers_for_select(issue)
-                        if User.current.roles_for_project(Project.first).include?(Role.find(Setting.plugin_redmine_gercont['role_for_requester'].to_i))
-                            trackers = trackers.reject { |tracker| Setting.plugin_scrum['pbi_tracker_ids'].first.to_i == tracker.id }
-                        end
-                        trackers
-                    end
+                    # def trackers_for_select(issue)
+                    #     trackers = original_trackers_for_select(issue)
+                    #     if User.current.roles_for_project(Project.first).include?(Role.find(Setting.plugin_redmine_gercont['role_for_requester'].to_i))
+                    #         trackers = trackers.reject { |tracker| Setting.plugin_scrum['pbi_tracker_ids'].first.to_i == tracker.id }
+                    #     end
+                    #     trackers
+                    # end
 
                     # def can_plan_work_plan?
                     #     ((@issue.work_plan.present? && ['planning', 'rejected'].include?(@issue.work_plan.status))  &&
