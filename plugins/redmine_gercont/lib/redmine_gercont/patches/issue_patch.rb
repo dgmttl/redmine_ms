@@ -21,7 +21,8 @@ module RedmineGercont
           end
 
           def product_backlog
-            self.project.product_backlogs.find { |backlog| backlog.name == self.to_s.split(':')[0] } 
+            self.project.product_backlogs.find { |backlog| backlog.name == self.to_s.split(':')[0] } ||
+            self.project.product_backlogs.first
           end
 
           def contracts_any?

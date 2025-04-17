@@ -34,7 +34,8 @@ class CustomWorkflow < ApplicationRecord
 
   validates :name, uniqueness: true
   validates :author, format: /\A([^@\s]+)@((?:[-a-z0-9]+\.)+[a-z]{2,})\z/i, allow_blank: true
-  validate :validate_syntax, :validate_scripts_presence,
+  #:validate_syntax,
+  validate  :validate_scripts_presence,
            if: proc { |workflow| workflow.respond_to?(:observable) and workflow.active? }
 
   scope :active, -> { where(active: true) }

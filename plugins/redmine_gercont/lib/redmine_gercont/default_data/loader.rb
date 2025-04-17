@@ -70,6 +70,8 @@ module RedmineGercont
           rejected = IssueStatus.find_by(name: l(:default_issue_status_rejected))
           rejected.update!(default_done_ratio: 100)
 
+          puts "============= STATUS ATUALIZADOS"
+
           # Demand statuses
           request_approval        = IssueStatus.create!(:name => l(:default_issue_status_request_approval), :is_closed => false, :position => 7)
           request_adjust          = IssueStatus.create!(:name => l(:default_issue_status_request_adjustment), :is_closed => false, :position => 8)
@@ -81,6 +83,8 @@ module RedmineGercont
           delivered               = IssueStatus.create!(:name => l(:default_issue_status_delivered), :is_closed => false, :position => 14)
           accepted               = IssueStatus.create!(:name => l(:default_issue_status_accepted), :is_closed => false, :position => 15)
           
+          puts "============= NOVO STATUS CRIADOS"
+
           # Trackers
           demand = Tracker.create!(
             :name => l(:default_tracker_demand), 
@@ -89,7 +93,7 @@ module RedmineGercont
             :position => 1,
             :core_fields => [
               "assigned_to_id", 
-              "fixed_version_id", 
+              # "fixed_version_id", 
               "start_date", 
               "due_date", 
               "estimated_hours", 
@@ -133,6 +137,7 @@ module RedmineGercont
             ]
           )
 
+          puts "============= TRACKERS CRIADOS"
           # Roles
           # Role.transaction do
             contract_admin = Role.create!(
@@ -275,7 +280,9 @@ module RedmineGercont
                 :edit_own_issue_notes, 
                 :view_product_backlog, 
                 :edit_product_backlog, 
-                :sort_product_backlog
+                :sort_product_backlog,
+                :view_checklists,
+                :edit_checklists
               ],
               :issues_visibility => "default",
               :users_visibility => "members_of_visible_projects",
@@ -447,6 +454,8 @@ module RedmineGercont
             Role.non_member.update_attribute :permissions, [:view_issues]
             Role.anonymous.update_attribute :permissions, []
 
+            puts "============= ROLES CRIADOS"
+
           # end
 
           # Custom fields
@@ -473,30 +482,35 @@ module RedmineGercont
           )
 
             
-          releases = IssueCustomField.create!(
+          versions = IssueCustomField.create!(
             :field_format => 'version',
             :name => l(:default_field_versions),
             :edit_tag_style => 'check_box',
-            :is_required => 1,
+            :multiple => 1,
+            # :is_required => 1,
             :visible => 1,
             :tracker_ids => [demand.id], 
             :is_for_all => 1,
             :version_status => ["planning", "planned", "rejected"]
           )
 
-          non_funcional_requirements = IssueCustomField.create!(
-            :field_format => 'text',
-            :name => l(:default_field_non_functional_requirements),
+          in_project_backlog = IssueCustomField.create!(
+            :field_format => 'bool',
+            :name => l(:default_setting_field_in_project_backlog),
+            :default_value => 1,
             :is_required => 1,
+            :is_filter => 1,
             :searchable => 1,
-            :visible => 1,
-            :tracker_ids => [demand.id], 
+            :visible => 0,
+            :role_ids => [contract_admin.id],
+            :tracker_ids => [story.id], 
             :is_for_all => 1
           )
 
           type = ProjectCustomField.create!(
             :field_format => 'enumeration',
             :name => l(:default_field_project_type),
+            :edit_tag_style => 'check_box',
             :multiple => 1,
             :visible => 1
           )
@@ -539,11 +553,15 @@ module RedmineGercont
             :visible => 1
           )
 
+          puts "============= CUSTOM FIELDS CRIADOS"
+
           #General Settings
           Setting.default_language = 'pt-BR'
           Setting.new_project_user_role_id = contract_admin.id
           Setting.issue_done_ratio = 'issue_status'
           Setting.default_issue_start_date_to_creation_date = '0'
+
+          puts "============= GENERAL SETINGS ATUALIZADOS"
 
           # Plugin settings 
           gercont_settings = {
@@ -560,10 +578,10 @@ module RedmineGercont
             :field_for_version_count => estimated_count.id.to_s,
             :field_for_version_duration => estimated_duration.id.to_s,        
             :field_for_version_cost => estimated_cost.id.to_s,
-            :field_for_requested_versions => releases.id.to_s,
+            :field_for_requested_versions => versions.id.to_s,
             :field_for_requester_unity => requester_unity.id.to_s,
             :field_for_project_type => type.id.to_s,
-            :field_for_non_functional_requirements => non_funcional_requirements.id.to_s,
+            :field_for_issue_in_pbi => in_project_backlog.id.to_s
           }.transform_keys(&:to_s)
           Setting.send :plugin_redmine_gercont=, gercont_settings 
 
@@ -619,6 +637,8 @@ module RedmineGercont
           }.transform_keys(&:to_s)
           Setting.send :plugin_scrum=, scrum_settings
 
+          puts "============= PLUGIN SETINGS ATUALIZADOS"
+
           #users
           user_names = ContractMember.role_options.map(&:name) + Item.profile_options.map(&:first)
 
@@ -639,6 +659,8 @@ module RedmineGercont
             users << user
           end
 
+          puts "============= USUÁRIOS CRIADOS"
+
           # Fields visibility
           trackers = [demand, story, task]
           core_fields = trackers.map(&:core_fields).flatten.uniq
@@ -658,6 +680,7 @@ module RedmineGercont
             delivered, accepted
           ].map(&:id)
 
+
           # Workflow permissions
           permissions = status_ids.each_with_object({}) do |status, permissions_hash|
             permissions_hash[status] = {}
@@ -668,7 +691,9 @@ module RedmineGercont
           end
           WorkflowPermission.replace_permissions(trackers, roles, permissions)
 
-          # Requester workflow for story
+          puts "============= CAMPOS BLOQUEADOS"
+
+          # Requester and Product Owner workflow for story
           [requester, product_owner].each do |role|
             WorkflowTransition.create!(
               :tracker_id => story.id,:role => role,
@@ -684,15 +709,33 @@ module RedmineGercont
             )
           end
 
+            WorkflowTransition.create!(
+              :tracker_id => demand.id,:role => requester,
+              :old_status_id => new.id,:new_status_id => rejected.id
+            )
+            WorkflowTransition.create!(
+              :tracker_id => demand.id,:role => requester,
+              :old_status_id => new.id,:new_status_id => request_approval.id
+            )
+
           WorkflowPermission.replace_permissions(
             [demand],
             [requester],
             new.id.to_s => { 
               "tracker_id" => "", 
-              "subject" => "", 
+              "subject" => "",
               "description" => "", 
               "assigned_to_id" => "",
-              "priority_id" => ""}
+              "priority_id" => "",
+              versions.id.to_s => ""
+            },
+            request_approval.id.to_s => {
+              "subject" => "",
+              "description" => "", 
+              # "assigned_to_id" => "",
+              "priority_id" => "",
+              versions.id.to_s => "required"
+            }
           )
 
           WorkflowPermission.replace_permissions(
@@ -702,9 +745,19 @@ module RedmineGercont
               "tracker_id" => "", 
               "subject" => "", 
               "description" => "",
-              "priority_id" => ""
+              "priority_id" => "",
             }
           )
+
+          WorkflowPermission.replace_permissions(
+            [story],
+            [product_owner],
+            new.id.to_s => { 
+              "fixed_version_id" => ""
+            }
+          )
+
+          puts "============= PERMISSÕES ATUALIZADAS"
 
           # Sample Project
           project = Project.create!(
@@ -724,6 +777,7 @@ module RedmineGercont
                 :roles => [role],
               )
           end
+          puts "============= PROJETO EXEMPLO CRIADO"
 
           # Custom Workflows
           CustomWorkflow.first.destroy if CustomWorkflow.first.present?
@@ -732,7 +786,32 @@ module RedmineGercont
             workflow = CustomWorkflow.import_from_xml(File.read(file))
             workflow.string=''
             workflow.save
-          end            
+          end
+
+          puts "============= CUSTOM WORKFLOWS CRIADOS"
+          
+          # Queries
+          IssueQuery.create!(
+            :name => l(:default_query_project_backlog_issues),
+            :filters =>
+              {
+                'status_id' => {:operator => 'o', :values => ['']},
+                'tracker_id' => {:operator => '=', :values => [story.id]},
+                "cf_#{in_project_backlog.id}" => {:operator => '=', :values => [1]}
+              },
+            :sort_criteria => [['position', 'asc']],
+            :visibility => Query::VISIBILITY_PUBLIC,
+            :column_names => [
+              :tracker, 
+              :status, 
+              :priority, 
+              :subject, 
+              :sprint,
+              :fixed_version,
+              :position
+            ]
+          )
+          puts "============= QUERIES CRIADAS"
           true
         end
         

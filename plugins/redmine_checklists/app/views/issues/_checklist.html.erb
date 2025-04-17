@@ -1,0 +1,24 @@
+<%  if !@issue.blank? &&  @issue.checklists.any? && User.current.allowed_to?(:view_checklists, @project) && 
+      @issue.tracker_id == Setting.plugin_redmine_gercont['demand_tracker_id'].to_i
+%>
+<hr />
+<div id="checklist">
+  <% if User.current.admin? %>
+    <div class="contextual">
+      <%= link_to l("label_checklist_hide_closed"), '#', id: 'switch_link' %>
+    </div>
+  <% end %>
+  
+  <p><strong><%=l(:label_non_functional_requirements)%></strong></p>
+
+  <ul id="checklist_items">
+  <% @issue.checklists.each do |checklist_item| %>
+    <%= render :partial => 'checklists/checklist_item', :object => checklist_item %>
+  <% end %>
+  </ul>
+</div>
+  <%= javascript_tag do %>
+    new Redmine.ChecklistToggle('<%= l("label_checklist_show_closed") %>', '<%= l("label_checklist_hide_closed") %>');
+    $("#checklist_items").checklist();
+  <% end %>
+<% end %>

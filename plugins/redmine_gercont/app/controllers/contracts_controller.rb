@@ -164,17 +164,11 @@ class ContractsController < ApplicationController
        CustomWorkflow::PROJECT_OBSERVABLES
     )
 
-    puts "===================== manage_custom_workflows - workflows: #{workflows.map(&:name)}"
-
     @added_projects.each do |project|
-      puts "===================== manage_custom_workflows - project: #{project.name}"
       project.custom_workflow_ids = workflows.map(&:id)
       project.save!
     end
   end
-
-
-
 
   def manage_project_pbl
     return if @added_projects.blank?
@@ -186,7 +180,7 @@ class ContractsController < ApplicationController
         user: User.current,
         project: project,
         is_product_backlog: true,
-        name: l(:label_product_backlog),
+        name: l(:label_project_backlog),
         description: l(:text_created_automaticaly),
         status: 'open',
         shared: '0'

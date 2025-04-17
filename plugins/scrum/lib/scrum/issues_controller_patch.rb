@@ -40,6 +40,7 @@ module Scrum
               end
             end
           end
+          puts "======================= add_default_sprint - @issue.sprint: #{@issue.sprint}"
         end
 
       end

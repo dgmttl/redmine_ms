@@ -424,26 +424,26 @@ module Scrum
           return @assignable_sprints if @assignable_sprints
         end
 
-        # def scrum?
-        #   enabled = false
-        #   if project
-        #     enabled = true if project.scrum?
-        #   end
-        #   if sprint and sprint.project
-        #     enabled = true if sprint.project.scrum?
-        #   end
-        #   return enabled
-        # end
-
         def scrum?
-          return false unless is_task? || is_pbi?
-        
-          if project&.scrum? || sprint&.project&.scrum?
-            return true
-          else
-            return false
+          enabled = false
+          if project
+            enabled = true if project.scrum?
           end
+          if sprint and sprint.project
+            enabled = true if sprint.project.scrum?
+          end
+          return enabled
         end
+
+        # def scrum?
+        #   return false unless is_task? || is_pbi?
+        
+        #   if project&.scrum? || sprint&.project&.scrum?
+        #     return true
+        #   else
+        #     return false
+        #   end
+        # end
         
 
         def get_dependencies

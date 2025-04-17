@@ -1,0 +1,3 @@
+<li id="checklist_item_<%= checklist_item.id %>" >
+  <%= "#{checklist_item.position + 1}. #{textilizable(checklist_item, :subject).gsub(/<\/?(p|h\d+|li|ul|hr \/)>/, '').strip}".html_safe %>
+</li>

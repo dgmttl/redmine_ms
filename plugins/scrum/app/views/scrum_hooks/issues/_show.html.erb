@@ -4,13 +4,13 @@
       content = ''
     else
       if @issue.sprint.is_product_backlog
-        object = project_product_backlog_index_path(@issue.sprint.project)
+        object = product_backlog_path(@issue.product_backlog)
       else
         object = @issue.sprint
       end
       content = link_to(h(@issue.sprint.name), object)
     end
-    rows.left l(:label_sprint), raw(content), :class => 'sprint'
+    rows.left @issue.tracker_id == Setting.plugin_redmine_gercont['demand_tracker_id'].to_i ? l(:label_backlog) : l(:label_sprint), raw(content), :class => 'sprint'
 
     if @issue.is_pbi?
       content = ''

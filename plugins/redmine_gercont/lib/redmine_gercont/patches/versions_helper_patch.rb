@@ -7,21 +7,21 @@ module RedmineGercont
           def sum_estimated_counts(versions)
             versions.sum do |version|
               custom_value = version.custom_value_for(Setting.plugin_redmine_gercont['field_for_version_count'])
-              custom_value ? custom_value.value.tr(",", ".").to_f.round(2) : 0
+              custom_value.value.present? ? custom_value.value.tr(",", ".").to_f.round(2) : 0
             end
           end
 
           def sum_estimated_durations(versions)
             versions.sum do |version|
               custom_value = version.custom_value_for(Setting.plugin_redmine_gercont['field_for_version_duration'])
-              custom_value ? custom_value.value.tr(",", ".").to_f.round(2) : 0
+              custom_value.value.present? ? custom_value.value.tr(",", ".").to_f.round(2) : 0
             end
           end
 
           def sum_estimated_costs(versions)
             versions.sum do |version|
               custom_value = version.custom_value_for(Setting.plugin_redmine_gercont['field_for_version_cost'])
-              custom_value ? custom_value.value.tr(",", ".").to_f.round(2) : 0
+              custom_value.value.present? ? custom_value.value.tr(",", ".").to_f.round(2) : 0
             end
           end
 
@@ -64,7 +64,8 @@ module RedmineGercont
 
           def project_type
             cf_id = @project.custom_field_value(Setting.plugin_redmine_gercont['field_for_project_type'])
-            CustomFieldEnumeration.find(cf_id).first.name
+            type = CustomFieldEnumeration.find(cf_id).first.name
+            type
           end
 
           def estimative_field_ids

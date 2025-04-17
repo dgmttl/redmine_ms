@@ -9,6 +9,7 @@
 @role_for_administrative_inspector = Setting.plugin_redmine_gercont["role_for_administrative_inspector"].to_i
 @role_for_agent = Setting.plugin_redmine_gercont["role_for_agent"].to_i
 @role_for_contract_admin = Setting.plugin_redmine_gercont["role_for_contract_admin"].to_i
+@pbi_tracker_id = Setting.plugin_scrum['pbi_tracker_ids'].first.to_i
 
 
 # Custom fields
@@ -18,6 +19,11 @@
 @field_for_requested_versions= Setting.plugin_redmine_gercont["field_for_requested_versions"].to_i
 @field_for_story_points = Setting.plugin_scrum["story_points_custom_field_id"].to_i
 @field_for_blocked_story = Setting.plugin_scrum["blocked_custom_field_id"].to_i
+@field_for_issue_in_pbi = Setting.plugin_redmine_gercont['field_for_issue_in_pbi'].to_i
+@field_for_requested_versions = Setting.plugin_redmine_gercont['field_for_requested_versions'].to_i
+
+# Statuses
+@request_approval = 7
 
 
 # After save items

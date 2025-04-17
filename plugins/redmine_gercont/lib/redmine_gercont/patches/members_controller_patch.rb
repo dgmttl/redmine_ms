@@ -20,7 +20,7 @@ module RedmineGercont
                   contract_id: contract.id,
                   user_id: user_id,
                   role_ids: params[:membership][:role_ids]
-                )
+                ) unless contract.contract_members.where(user_id: user_id).present?
               end
             end
           end
@@ -28,12 +28,40 @@ module RedmineGercont
           
           alias_method :original_update, :update
           def update
-            original_update
-            contract_member = ContractMember.find_by_user_id(@member.user.id)
 
-            contract_member.role_ids = params[:membership][:role_ids]
-            contract_member.save
+            new_role_ids = params[:membership][:role_ids].map(&:to_i).reject { |id| id == 0 }
+            role_for_contract_admin = Setting.plugin_redmine_gercont['role_for_contract_admin'].to_i
 
+            if @project.identifier == l(:default_project_name).downcase.gsub(" ", "_") &&
+              User.current.id == @member.user_id &&
+              !new_role_ids.include?(role_for_contract_admin)
+
+                new_role_ids << role_for_contract_admin
+              params[:membership][:role_ids] = new_role_ids.map(&:to_s)
+              original_update
+            else
+              original_update
+              contract_member = ContractMember.find_by_user_id(@member.user_id)
+              if contract_member.present?
+                contract_member.role_ids = params[:membership][:role_ids]
+                contract_member.save!
+              end
+            end
+          end
+
+          alias_method :original_destroy, :destroy
+          def destroy
+            new_role_ids = params[:membership][:role_ids].map(&:to_i).reject { |id| id == 0 }
+            role_for_contract_admin = Setting.plugin_redmine_gercont['role_for_contract_admin'].to_i
+
+            if @project.identifier == l(:default_project_name).downcase.gsub(" ", "_") &&
+              User.current.id == @member.user_id
+
+              flash[:warning] = l(:error_can_not_remove_role)
+            
+            else
+              original_destroy
+            end
           end
         end
       end

@@ -727,7 +727,7 @@ pt-BR:
   default_issue_status_resolved: Resolvida
   default_issue_status_feedback: Feedback
   default_issue_status_closed: Fechada
-  default_issue_status_rejected: Rejeitada
+  default_issue_status_rejected: Cancelada
   default_doc_category_user: Documentação do usuário
   default_doc_category_tech: Documentação técnica
   default_priority_low: Baixa

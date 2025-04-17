@@ -31,9 +31,7 @@ pt-BR:
       waiting_payment: aguardando pagamento 
       closed: concluída
       cancelled: cancelada
-
-  
-  
+   
   answers:
     terrible: Péssima
     bad: Ruim
@@ -95,7 +93,7 @@ pt-BR:
 
   default_field_blocked: Bloqueado
   default_field_story_points: Pontos de História
-  default_field_versions: Versões
+  default_field_versions: Releases
   default_field_non_functional_requirements: Requisitos Não Funcionais
   default_field_project_type: Tipo de Projeto
   default_field_project_type_development: Desenvolvimento
@@ -114,8 +112,11 @@ pt-BR:
   default_issue_status_allocate_professionals: Alocar Profissionais
   default_issue_status_delivered: Entregue
   default_issue_status_accepted: Aceito
+  default_issue_status_new: Nova
   
   default_project_name: Exemplo de Projeto
+
+  default_query_project_backlog_issues: Tarefas do backlog do projeto
 
   default_role_contract_manager: Gestor de Contrato
   default_role_technical_inspector: Fiscal Técnico
@@ -126,6 +127,8 @@ pt-BR:
   default_role_agent: Preposto do Contrato
   default_role_scrum_master: Scrum Master
   default_role_scrum_team: Equipe Scrum
+
+  default_setting_field_in_project_backlog: no_backlog_do_projeto?
 
   default_tracker_demand: Demanda
   default_tracker_story: História de Usuário
@@ -172,6 +175,7 @@ pt-BR:
   label_assessment: Questionário
   label_assessments: Questionários
   label_assessment_description: Questionário de Avaliação Individual do Perfil Profissional (IPP)
+  label_backlog: Backlog
   label_business_days: dias úteis
   label_calendar_days: dias corridos
   label_canceled_contracts: Contratos cancelados
@@ -196,6 +200,7 @@ pt-BR:
   label_estimated_cost: Custo estimado
   label_field_for_non_functional_requirements: Campo customizado para requisitos não funcionais
   label_field_for_plan_flag: Campo customizado para situação do planejamento
+  label_field_for_issue_in_pbi: Campoo customizado para identificar Histórias no Product Backlog
   label_field_for_project_type: Campo customizado para tipo de projeto
   label_field_for_requester_unity: Campo customizado para unidade requisitante
   label_field_for_requested_versions: Campo customizado para releases demandadas
@@ -219,9 +224,11 @@ pt-BR:
   label_new_work_order: Nova Ordem de Serviço
   label_new_work_plan: Novo Plano de Trabalho
   label_new_work_plan_item: Novo perfil profissional
+  label_non_functional_requirements: Requisitos não funcionais
   label_not_registred: Não registrado
   label_resume: Resumo
   label_product_backlog: Backlog do produto
+  label_project_backlog: Backlog do projeto
   label_project_members: Membros dos Projetos
   label_requester: Requisitante
   label_requester_area: Área Requisitante
@@ -271,7 +278,6 @@ pt-BR:
   text_code_area: Insira o seu código aqui.
   text_need_associate_stories_to_versions: A solicitação não pode prosseguir. Existem releases sem histórias associadas.
   text_need_create_items_first: Cadastre antes pelo menos um Item de Catálogo para prosseguir.
-  text_setting_project_type_explanation: "Deve ser um campo do formato 'chave/lista de valores' com os valores nas posições:\n1. Desenvolvimento\n2. Manutenção"
   text_productivity_target: 0,58 pontos de função por dia por desenvolvedor
 
 
@@ -287,5 +293,7 @@ pt-BR:
 
   warning_cw_issue_demand_can_not_be_created: Não é possível criar uma Demanda. É necessário criar Releases antes.
   warning_cw_tracker_can_not_be_changed: o Tipo não pode ser alterado.
+  warning_cw_relation_must_be_open_story: "Não pode ser associado à uma #{tracker.name}. Selecione uma História de Usuário do mesmo backlog."
+  warning_cw_tracker_missing_fixed_issues: Não foi possível prosseguir. Uma ou mais Release selecionada não contém Histórias associadas.
   
   error_terms_end_date: Deve ser pelo menos 3 meses maior que o início da vigência.
