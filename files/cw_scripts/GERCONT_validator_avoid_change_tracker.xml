@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<hash>
+  <name>GERCONT_validator_avoid_change_tracker</name>
+  <observable>issue</observable>
+  <id type="integer">5</id>
+  <before-save>if !new_record? &amp;&amp; tracker_changed?
+    raise RedmineCustomWorkflows::Errors::WorkflowError, l(:warning_cw_tracker_can_not_be_changed)
+end
+
+</before-save>
+  <created-at type="dateTime">2025-04-14T19:55:16Z</created-at>
+  <updated-at type="dateTime">2025-04-17T06:02:29Z</updated-at>
+  <description nil="true"/>
+  <string></string>
+  <position type="integer">9</position>
+  <integer type="integer">1</integer>
+  <after-save nil="true"/>
+  <is-for-all type="boolean">false</is-for-all>
+  <author>diogo.neiva@saude.gov.br</author>
+  <active type="boolean">true</active>
+  <shared-code nil="true"/>
+  <before-add nil="true"/>
+  <after-add nil="true"/>
+  <before-remove nil="true"/>
+  <after-remove nil="true"/>
+  <before-destroy nil="true"/>
+  <after-destroy nil="true"/>
+  <exported-at>2025-04-17T06:10:49Z</exported-at>
+  <plugin-version>3.0.0</plugin-version>
+  <ruby-version>3.3.7-p123</ruby-version>
+  <rails-version>7.2.2.1</rails-version>
+</hash>

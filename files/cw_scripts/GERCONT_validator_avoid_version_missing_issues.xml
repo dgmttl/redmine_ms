@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<hash>
+  <before-save>selected_versions = @issue.custom_field_value(@field_for_requested_versions)
+
+puts "================= selected_versions: #{selected_versions}"
+
+if @issue.tracker_id == @demand &amp;&amp; requested_versions_changed? &amp;&amp; selected_versions != ['']
+    versions = Version.find(selected_versions)
+    if versions.any? { |version| version.fixed_issues.blank? }
+        raise RedmineCustomWorkflows::Errors::WorkflowError, l(:warning_cw_tracker_missing_fixed_issues)
+    end
+end</before-save>
+  <after-save></after-save>
+  <name>GERCONT_validator_avoid_version_missing_issues</name>
+  <description></description>
+  <is-for-all type="boolean">false</is-for-all>
+  <author>diogo.neiva@saude.gov.br</author>
+  <active type="boolean">true</active>
+  <shared-code nil="true"/>
+  <before-add nil="true"/>
+  <after-add nil="true"/>
+  <before-remove nil="true"/>
+  <after-remove nil="true"/>
+  <before-destroy></before-destroy>
+  <after-destroy></after-destroy>
+  <observable>issue</observable>
+  <id type="integer">7</id>
+  <created-at type="dateTime">2025-04-17T06:02:29Z</created-at>
+  <updated-at type="dateTime">2025-04-17T23:40:43Z</updated-at>
+  <string></string>
+  <position type="integer">9</position>
+  <integer type="integer">1</integer>
+  <exported-at>2025-04-17T23:40:43Z</exported-at>
+  <plugin-version>3.0.0</plugin-version>
+  <ruby-version>3.3.7-p123</ruby-version>
+  <rails-version>7.2.2.1</rails-version>
+</hash>

@@ -19,6 +19,7 @@
 /db/*.sqlite3-*
 /db/schema.rb
 /files/*
+!/files/cw_scripts
 /lib/redmine/scm/adapters/mercurial/redminehelper.pyc
 /lib/redmine/scm/adapters/mercurial/redminehelper.pyo
 /log/*.log*
