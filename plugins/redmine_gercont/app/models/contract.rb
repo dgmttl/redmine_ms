@@ -37,7 +37,7 @@ class Contract < ActiveRecord::Base
 
     def terms_end_greater_than_terms_start
         if terms_end.present? && terms_start.present? && terms_end < terms_start + 3.months
-            errors.add(:terms_end, l(:error_terms_end_date)) 
+            errors.add(:terms_end, :error_terms_end_date) 
         end
     end
 end

@@ -26,18 +26,18 @@ end
 
 def create_demand_backlog
 
-    puts "======================== issue: #{self}"
-    name = self.to_s.split(':')[0]
+    puts "======================== @issue: #{@issue}"
+    name = @issue.to_s.split(':')[0]
     puts "======================== nome: #{name}"
-    puts "======================== description: [#{l(:label_view)} #{self.to_s.split(':')[0]}](/issues/#{self.id})"
+    puts "======================== description: [#{l(:label_view)} #{@issue.to_s.split(':')[0]}](/issues/#{@issue.id})"
     demand_backlog = Sprint.create(
         name: name,
-        description: "[#{l(:label_view)} #{self.to_s.split(':')[0]}](/issues/#{self.id})",
+        description: "[#{l(:label_view)} #{@issue.to_s.split(':')[0]}](/issues/#{@issue.id})",
         # description: "[#{l(:label_view)} #{name}](/issues/#{@issue.id})",
         status: 'open',
         shared: '0',
         is_product_backlog: 'true',
-        project: self.project,
+        project: @issue.project,
         sprint_start_date: Date.today,
         sprint_end_date: Date.today,
         user: User.current

@@ -1,18 +1,22 @@
-if !new_record? && @issue.tracker_id == @demand && @issue.project.contracts.present?
+if @issue.tracker_id == @demand && @issue.project.contracts.present?
 
-  puts "================ @issue.product_backlog #{@issue.product_backlog}"
-  puts "================ @issue.sprint #{@issue.sprint}"
+  if (@issue.status_changed? && @issue.status_id == @request_approval) || requested_versions_changed?
+    
+    @issue.sprint = @issue.product_backlog if @issue.sprint.blank? && @issue.children?
+    
+    puts "====================== l(:default_role_technical_inspector) #{ l(:default_role_technical_inspector)} ========="
+    technical_inspector = User.new
+    if @issue.status_id == @request_approval
+      
+      technical_inspector = @issue.project.users.find do |u|
+        roles = u.roles_for_project(@issue.project)
+        roles && roles.any? { |role| role&.name == 'Fiscal Técnico' }
+      end
+      
+      puts "====================== Fiscal Técnico #{ technical_inspector.name} ================="
+    end
+    @issue.assigned_to_id = technical_inspector.id
 
-  @demand_backlog = @issue.sprint
-  if @demand_backlog.blank?
-    @demand_backlog = create_demand_backlog 
-    @issue.sprint = @demand_backlog
-  end
-  
-  puts "================ DEMAND_BACKLOG: #{@demand_backlog}"
-
-  if ( self.status_changed? && self.status_id == @request_approval) || requested_versions_changed?
-  
     @versions_in = requested_versions_is - requested_versions_was
     @versions_out = requested_versions_was - requested_versions_is
 
@@ -33,27 +37,28 @@ end
 
 
 #################################AFTER SAVE###################
+demand_backlog = @issue.sprint
+demand_backlog = create_demand_backlog if @issue.sprint.blank?
 
-puts "=================== AFTER SAVE: @demand_backlog: #{@demand_backlog}"
-puts "=================== AFTER SAVE: @demand_backlog.present?: #{@demand_backlog.present?}"
+puts
 
-puts "=================== AFTER SAVE: @stories_to_demand: #{@stories_to_demand}"
-puts "=================== AFTER SAVE: @stories_out_demand: #{@stories_out_demand}"
-
-
-@stories_to_demand.each do |story|
-  story.parent = self
-  story.sprint= @demand_backlog
-  story.custom_field_values=({@field_for_issue_in_pbi => false})
-  story.save!
-end if @stories_to_demand.present?
+if @stories_to_demand.present?
+  @stories_to_demand.each do |story|
+    story.parent = @issue
+    story.sprint = demand_backlog
+    story.custom_field_values=({@field_for_issue_in_pbi => false})
+    story.save!
+  end 
+end
 
 Version.where(id: @versions_in).update_all(status: 'requested')
 Version.where(id: @versions_out).update_all(status: 'planning')
 
-@stories_out_demand.each do |story|
-    story.parent_id= nil
-    story.sprint_id= self.project.product_backlogs.first.id
-    story.custom_field_values=({@field_for_issue_in_pbi => true})
-    story.save!
-end if @stories_out_demand.present?
+if @stories_out_demand.present?
+  @stories_out_demand.each do |story|
+      story.parent_id = nil
+      story.sprint = @issue.project.product_backlogs.first
+      story.custom_field_values=({@field_for_issue_in_pbi => true})
+      story.save!
+  end 
+end

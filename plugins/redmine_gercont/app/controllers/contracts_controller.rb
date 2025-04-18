@@ -42,7 +42,7 @@ class ContractsController < ApplicationController
     @rules = @contract.rules.includes(:custom_workflow).order('custom_workflows.position')
     @holidays = @contract.holidays.order(:date)
     @contract_members, @project_members = @contract.contract_members
-      .select { |member| member.user.active? }
+      .select { |member| member.user && member.user.active? }
       .partition do |member|
         member.roles.any? { |role| ContractMember.role_options.include?(role) }
     end
