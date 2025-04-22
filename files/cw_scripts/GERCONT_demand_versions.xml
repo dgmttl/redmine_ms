@@ -1,24 +1,28 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <hash>
-  <before-save>if @issue.tracker_id == @demand &amp;&amp; @issue.project.contracts.present?
+  <before-save>if @issue.tracker_id == @demand &amp;&amp; @issue.contracts_any?
+
+  if @issue.sprint.blank? &amp;&amp; @issue.children?
+      @issue.sprint = @issue.children.first.sprint
+  end
+
+  if @issue.status_id == @request_approval 
+    
+    if (@issue.assigned_to.present? &amp;&amp;
+      !@issue.assigned_to.roles_for_project(@issue.project)
+        .any? { |role| role&amp;.name == l(:default_role_technical_inspector) }) ||
+      @issue.assigned_to.nil?
+    
+      @issue.assigned_to = @issue.project.users.find do |u|
+        roles = u.roles_for_project(@issue.project)
+        roles &amp;&amp; roles.any? { |role| role&amp;.name == l(:default_role_technical_inspector) }
+      end
+      self.custom_workflow_messages[:warning] = l(:warning_cw_issue_assigned_to_updated_to_technical_inspector)
+    end
+  end
 
   if (@issue.status_changed? &amp;&amp; @issue.status_id == @request_approval) || requested_versions_changed?
     
-    @issue.sprint = @issue.product_backlog if @issue.sprint.blank? &amp;&amp; @issue.children?
-    
-    puts "====================== l(:default_role_technical_inspector) #{ l(:default_role_technical_inspector)} ========="
-    technical_inspector = User.new
-    if @issue.status_id == @request_approval
-      
-      technical_inspector = @issue.project.users.find do |u|
-        roles = u.roles_for_project(@issue.project)
-        roles &amp;&amp; roles.any? { |role| role&amp;.name == 'Fiscal Técnico' }
-      end
-      
-      puts "====================== Fiscal Técnico #{ technical_inspector.name} ================="
-    end
-    @issue.assigned_to_id = technical_inspector.id
-
     @versions_in = requested_versions_is - requested_versions_was
     @versions_out = requested_versions_was - requested_versions_is
 
@@ -36,10 +40,13 @@
 
   end
 end</before-save>
-  <after-save>demand_backlog = @issue.sprint
-demand_backlog = create_demand_backlog if @issue.sprint.blank?
+  <after-save>if @stories_to_demand.present? &amp;&amp; @issue.sprint.blank?
+  demand_backlog = create_demand_backlog
+else
+  demand_backlog = @issue.sprint
+end
 
-puts
+puts "=============== demand_backlog: #{demand_backlog.inspect}"
 
 if @stories_to_demand.present?
   @stories_to_demand.each do |story|
@@ -76,11 +83,11 @@ end</after-save>
   <observable>issue</observable>
   <id type="integer">3</id>
   <created-at type="dateTime">2025-04-16T12:39:01Z</created-at>
-  <updated-at type="dateTime">2025-04-18T01:51:54Z</updated-at>
+  <updated-at type="dateTime">2025-04-22T15:37:15Z</updated-at>
   <string></string>
-  <position type="integer">38</position>
+  <position type="integer">33</position>
   <integer type="integer">1</integer>
-  <exported-at>2025-04-18T01:51:54Z</exported-at>
+  <exported-at>2025-04-22T15:37:15Z</exported-at>
   <plugin-version>3.0.0</plugin-version>
   <ruby-version>3.3.7-p123</ruby-version>
   <rails-version>7.2.2.1</rails-version>

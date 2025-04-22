@@ -30,7 +30,7 @@
         <dt class="<%= 'disabled' unless w.active? %>">
           <label>
             <%= check_box_tag 'project[custom_workflow_ids][]', w.id,
-                  @project.custom_workflow_ids.include?(w.id) || w.is_for_all?, disabled: w.is_for_all? %> <%= w.name %>
+                  @project.custom_workflow_ids.include?(w.id) || w.is_for_all?, disabled: w.is_for_all? || w.name.starts_with?('GERCONT_')%> <%= w.name %>
             <% if !w.active? %>
               (<%= l(:text_custom_workflow_disabled) %>)
             <% elsif w.is_for_all? %>

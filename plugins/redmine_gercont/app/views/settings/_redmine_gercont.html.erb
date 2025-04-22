@@ -125,11 +125,6 @@
       %>
     </p>
 
-    <p>
-      <%= content_tag(:label, l(:label_field_for_issue_in_pbi)) %>
-      <%= select_tag('settings[field_for_issue_in_pbi]', options_for_select(CustomField.where(type: 'IssueCustomField').map { |custom| [custom.name, custom.id] }, @settings['field_for_issue_in_pbi'].to_i)) %>
-    </p>  
-
-    </fieldset>
+  </fieldset>
     
 </div>

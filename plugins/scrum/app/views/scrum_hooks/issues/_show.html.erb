@@ -4,7 +4,7 @@
       content = ''
     else
       if @issue.sprint.is_product_backlog
-        object = product_backlog_path(@issue.product_backlog)
+        object = product_backlog_path(@issue.sprint)
       else
         object = @issue.sprint
       end

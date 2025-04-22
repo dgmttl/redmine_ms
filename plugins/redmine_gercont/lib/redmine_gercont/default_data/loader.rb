@@ -494,19 +494,6 @@ module RedmineGercont
             :version_status => ["planning", "planned", "rejected"]
           )
 
-          in_project_backlog = IssueCustomField.create!(
-            :field_format => 'bool',
-            :name => l(:default_setting_field_in_project_backlog),
-            :default_value => 1,
-            :is_required => 1,
-            :is_filter => 1,
-            :searchable => 1,
-            :visible => 0,
-            :role_ids => [contract_admin.id],
-            :tracker_ids => [story.id], 
-            :is_for_all => 1
-          )
-
           type = ProjectCustomField.create!(
             :field_format => 'enumeration',
             :name => l(:default_field_project_type),
@@ -580,8 +567,7 @@ module RedmineGercont
             :field_for_version_cost => estimated_cost.id.to_s,
             :field_for_requested_versions => versions.id.to_s,
             :field_for_requester_unity => requester_unity.id.to_s,
-            :field_for_project_type => type.id.to_s,
-            :field_for_issue_in_pbi => in_project_backlog.id.to_s
+            :field_for_project_type => type.id.to_s
           }.transform_keys(&:to_s)
           Setting.send :plugin_redmine_gercont=, gercont_settings 
 
@@ -732,7 +718,7 @@ module RedmineGercont
             request_approval.id.to_s => {
               "subject" => "",
               "description" => "", 
-              # "assigned_to_id" => "",
+              "assigned_to_id" => "",
               "priority_id" => "",
               versions.id.to_s => "required"
             }
@@ -797,7 +783,7 @@ module RedmineGercont
               {
                 'status_id' => {:operator => 'o', :values => ['']},
                 'tracker_id' => {:operator => '=', :values => [story.id]},
-                "cf_#{in_project_backlog.id}" => {:operator => '=', :values => [1]}
+                'parent_id'=> {:operator => '!*', :values => ['']}
               },
             :sort_criteria => [['position', 'asc']],
             :visibility => Query::VISIBILITY_PUBLIC,
@@ -811,6 +797,15 @@ module RedmineGercont
               :position
             ]
           )
+
+          IssueQuery.create!(
+            :name => l(:default_query_project_demand_issues),
+            :filters =>
+              {'tracker_id' => {:operator => '=', :values => [demand.id]}},
+            :sort_criteria => [['id', 'desc']],
+            :visibility => Query::VISIBILITY_PUBLIC
+          )
+
           puts "============= QUERIES CRIADAS"
           true
         end

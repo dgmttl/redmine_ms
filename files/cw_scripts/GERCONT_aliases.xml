@@ -1,12 +1,19 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <hash>
-  <before-save nil="true"/>
-  <after-save nil="true"/>
+  <active type="boolean">true</active>
   <name>GERCONT_aliases</name>
+  <observable>shared</observable>
+  <id type="integer">2</id>
+  <before-save nil="true"/>
+  <created-at type="dateTime">2025-04-15T23:30:40Z</created-at>
+  <updated-at type="dateTime">2025-04-18T13:37:20Z</updated-at>
   <description></description>
+  <string></string>
+  <position type="integer">1</position>
+  <integer type="integer">1</integer>
+  <after-save nil="true"/>
   <is-for-all type="boolean">false</is-for-all>
   <author>diogo.neiva@saude.gov.br</author>
-  <active type="boolean">true</active>
   <shared-code># Plugin attributes
 @demand = Setting.plugin_redmine_gercont["demand_tracker_id"].to_i
 @role_for_product_owner = Setting.plugin_redmine_gercont["role_for_product_owner"].to_i
@@ -48,14 +55,7 @@
   <after-remove nil="true"/>
   <before-destroy nil="true"/>
   <after-destroy nil="true"/>
-  <observable>shared</observable>
-  <id type="integer">2</id>
-  <created-at type="dateTime">2025-04-15T23:30:40Z</created-at>
-  <updated-at type="dateTime">2025-04-17T06:12:27Z</updated-at>
-  <string></string>
-  <position type="integer">1</position>
-  <integer type="integer">1</integer>
-  <exported-at>2025-04-17T06:12:27Z</exported-at>
+  <exported-at>2025-04-18T13:37:20Z</exported-at>
   <plugin-version>3.0.0</plugin-version>
   <ruby-version>3.3.7-p123</ruby-version>
   <rails-version>7.2.2.1</rails-version>

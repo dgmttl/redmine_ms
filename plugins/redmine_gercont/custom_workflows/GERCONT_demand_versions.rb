@@ -1,22 +1,26 @@
-if @issue.tracker_id == @demand && @issue.project.contracts.present?
+if @issue.tracker_id == @demand && @issue.contracts_any?
+
+  if @issue.sprint.blank? && @issue.children?
+      @issue.sprint = @issue.children.first.sprint
+  end
+
+  if @issue.status_id == @request_approval 
+    
+    if (@issue.assigned_to.present? &&
+      !@issue.assigned_to.roles_for_project(@issue.project)
+        .any? { |role| role&.name == l(:default_role_technical_inspector) }) ||
+      @issue.assigned_to.nil?
+    
+      @issue.assigned_to = @issue.project.users.find do |u|
+        roles = u.roles_for_project(@issue.project)
+        roles && roles.any? { |role| role&.name == l(:default_role_technical_inspector) }
+      end
+      self.custom_workflow_messages[:warning] = l(:warning_cw_issue_assigned_to_updated_to_technical_inspector)
+    end
+  end
 
   if (@issue.status_changed? && @issue.status_id == @request_approval) || requested_versions_changed?
     
-    @issue.sprint = @issue.product_backlog if @issue.sprint.blank? && @issue.children?
-    
-    puts "====================== l(:default_role_technical_inspector) #{ l(:default_role_technical_inspector)} ========="
-    technical_inspector = User.new
-    if @issue.status_id == @request_approval
-      
-      technical_inspector = @issue.project.users.find do |u|
-        roles = u.roles_for_project(@issue.project)
-        roles && roles.any? { |role| role&.name == 'Fiscal Técnico' }
-      end
-      
-      puts "====================== Fiscal Técnico #{ technical_inspector.name} ================="
-    end
-    @issue.assigned_to_id = technical_inspector.id
-
     @versions_in = requested_versions_is - requested_versions_was
     @versions_out = requested_versions_was - requested_versions_is
 
@@ -37,10 +41,13 @@ end
 
 
 #################################AFTER SAVE###################
-demand_backlog = @issue.sprint
-demand_backlog = create_demand_backlog if @issue.sprint.blank?
+if @stories_to_demand.present? && @issue.sprint.blank?
+  demand_backlog = create_demand_backlog
+else
+  demand_backlog = @issue.sprint
+end
 
-puts
+puts "=============== demand_backlog: #{demand_backlog.inspect}"
 
 if @stories_to_demand.present?
   @stories_to_demand.each do |story|
@@ -48,6 +55,8 @@ if @stories_to_demand.present?
     story.sprint = demand_backlog
     story.custom_field_values=({@field_for_issue_in_pbi => false})
     story.save!
+
+
   end 
 end
 
