@@ -296,5 +296,6 @@ pt-BR:
   warning_cw_tracker_can_not_be_changed: o Tipo não pode ser alterado.
   warning_cw_relation_must_be_open_story: "Não pode ser associado à uma #{tracker.name}. Selecione uma História de Usuário do mesmo backlog."
   warning_cw_tracker_missing_fixed_issues: Não foi possível prosseguir. Uma ou mais Release selecionada não contém Histórias associadas.
-  warning_cw_issue_assigned_to_updated_to_technical_inspector: Atribuído automaticamente para o Fiscal Técnico 
+  warning_cw_issue_assigned_to_updated_to_technical_inspector: Atribuído automaticamente para o Fiscal Técnico
+  warning_cw_tracker_missing_non_functional_requisites: Não foi possível prosseguir. Indique um ou mais Requisitos não funcionais.
   error_terms_end_date: Deve ser pelo menos 3 meses maior que o início da vigência.
