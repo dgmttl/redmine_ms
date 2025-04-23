@@ -7,6 +7,12 @@ Redmine::Plugin.register :redmine_gercont do
   url 'https://github.com/dgmttl/redmine_plugdev'
   author_url 'www.linkedin.com/in/diogo-mattioli-neiva-9a5b77b0'
 
+
+  settings :default => {
+    :core_settings_version => '0.0.0'
+  }, partial: 'settings/redmine_gercont'
+
+
   Dir[File.join(File.dirname(__FILE__), '/lib/redmine_gercont/patches/*.rb')].each { |file| require_dependency file }
 
 

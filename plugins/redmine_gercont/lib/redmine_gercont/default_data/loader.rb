@@ -7,8 +7,15 @@ module RedmineGercont
       class << self
         # Returns true if no data is already loaded in the database
         # otherwise false
-        def no_data?
-          !Role.where(
+        
+        def out_dated?
+          version = Redmine::Plugin.find(:redmine_gercont).version
+          core_settings_version = Setting.plugin_redmine_gercont['core_settings_version'] || '0.0.0'
+          Gem::Version.new(version) > Gem::Version.new(core_settings_version)
+        end
+        
+        def gercont_roles
+          Role.where(
             :builtin => 0,
             :name => [
               l(:default_role_contract_admin),
@@ -21,33 +28,43 @@ module RedmineGercont
               l(:default_role_scrum_master), 
               l(:default_role_scrum_team)
             ]
-            ).exists? &&
-            !Tracker.where(
-              :name => [
-                l(:default_tracker_demand),
-                l(:default_tracker_story),
-                l(:default_tracker_task)
-              ]
-            ).exists? &&
-            !IssueStatus.where(
-              :name => [
-                l(:default_issue_status_request_approval),
-                l(:default_issue_status_request_adjustment),
-                l(:default_issue_status_approve),
-                l(:default_issue_status_develop_work_plan),
-                l(:default_issue_status_approve_work_plan),
-                l(:default_issue_status_generate_work_order),
-                l(:default_issue_status_allocate_professionals),
-                l(:default_issue_status_delivered),
-                l(:default_issue_status_accepted)
-              ]
-            ).exists?
+            )
+        end
+        
+        def gercont_statuses
+          IssueStatus.where(
+            :name => [
+              l(:default_issue_status_request_approval),
+              l(:default_issue_status_request_adjustment),
+              l(:default_issue_status_approve),
+              l(:default_issue_status_develop_work_plan),
+              l(:default_issue_status_approve_work_plan),
+              l(:default_issue_status_generate_work_order),
+              l(:default_issue_status_allocate_professionals),
+              l(:default_issue_status_delivered),
+              l(:default_issue_status_accepted)
+            ]
+          )
         end
 
-        # Loads the default data
-        # Raises a RecordNotSaved exception if something goes wrong
+        def gercont_trackers
+          Tracker.where(
+            :name => [
+              l(:default_tracker_demand),
+              l(:default_tracker_story),
+              l(:default_tracker_task)
+            ]
+          )
+        end
+        
+        def no_data?
+          !gercont_roles.exists? &&
+          !gercont_trackers.exists? &&
+          !gercont_statuses.exists?
+        end
+
         def load(lang=nil, options={})
-          raise DataAlreadyLoaded.new("Some configuration data is already loaded.") unless no_data?
+          # raise DataAlreadyLoaded.new("Some configuration data is already loaded.") unless no_data?
           set_language_if_valid(lang)
           # workflow = !(options[:workflow] == false)
 
@@ -73,21 +90,68 @@ module RedmineGercont
           puts "============= STATUS ATUALIZADOS"
 
           # Demand statuses
-          request_approval        = IssueStatus.create!(:name => l(:default_issue_status_request_approval), :is_closed => false, :position => 7)
-          request_adjust          = IssueStatus.create!(:name => l(:default_issue_status_request_adjustment), :is_closed => false, :position => 8)
-          approve                 = IssueStatus.create!(:name => l(:default_issue_status_approve), :is_closed => false, :position => 9)
-          develop_work_plan       = IssueStatus.create!(:name => l(:default_issue_status_develop_work_plan), :is_closed => false, :position => 10)
-          approve_work_plan       = IssueStatus.create!(:name => l(:default_issue_status_approve_work_plan), :is_closed => false, :position => 11)
-          generate_work_order     = IssueStatus.create!(:name => l(:default_issue_status_generate_work_order), :is_closed => false, :position => 12)
-          allocate_professionals  = IssueStatus.create!(:name => l(:default_issue_status_allocate_professionals), :is_closed => false, :position => 13)
-          delivered               = IssueStatus.create!(:name => l(:default_issue_status_delivered), :is_closed => false, :position => 14)
-          accepted               = IssueStatus.create!(:name => l(:default_issue_status_accepted), :is_closed => false, :position => 15)
+          request_approval = IssueStatus.find_or_initialize_by(name: l(:default_issue_status_request_approval))
+          request_approval.update(
+            is_closed: false, 
+            position: 7
+          )
+
+          puts "============= PASSOU O PRIMEIRO!"
+          
+
+          request_adjust = IssueStatus.find_or_initialize_by(:name => l(:default_issue_status_request_adjustment))
+          request_adjust.update(
+            :is_closed => false, 
+            :position => 8
+          )
+
+          approve = IssueStatus.find_or_initialize_by(:name => l(:default_issue_status_approve))
+          approve.update(
+            :is_closed => false, 
+            :position => 9
+          )
+
+          develop_work_plan = IssueStatus.find_or_initialize_by(:name => l(:default_issue_status_develop_work_plan))
+          develop_work_plan.update(
+            :is_closed => false, 
+            :position => 10
+          )
+
+          approve_work_plan = IssueStatus.find_or_initialize_by(:name => l(:default_issue_status_approve_work_plan))
+          approve_work_plan.update(
+            :is_closed => false, 
+            :position => 11
+          )
+
+          generate_work_order = IssueStatus.find_or_initialize_by(:name => l(:default_issue_status_generate_work_order))
+          generate_work_order.update(
+            :is_closed => false, 
+            :position => 12
+          )
+
+          allocate_professionals = IssueStatus.find_or_initialize_by(:name => l(:default_issue_status_allocate_professionals))
+          allocate_professionals.update(
+            :is_closed => false, 
+            :position => 13
+          )
+
+          delivered = IssueStatus.find_or_initialize_by(:name => l(:default_issue_status_delivered))
+          delivered.update(
+            :is_closed => false, 
+            :position => 14
+          )
+
+          accepted = IssueStatus.find_or_initialize_by(:name => l(:default_issue_status_accepted))
+          accepted.update(
+            :is_closed => false, 
+            :position => 15
+          )
           
           puts "============= NOVO STATUS CRIADOS"
 
           # Trackers
-          demand = Tracker.create!(
-            :name => l(:default_tracker_demand), 
+          demand = Tracker.find_or_initialize_by(:name => l(:default_tracker_demand))
+          demand.update(
             :default_status_id => new.id, 
             :is_in_roadmap => false, 
             :position => 1,
@@ -103,26 +167,26 @@ module RedmineGercont
             ]
           )
 
-          story = Tracker.create!(
-            :name => l(:default_tracker_story), 
-            :default_status_id => new.id, 
-            :is_in_roadmap => true, 
-            :position => 2,
-            :core_fields => [
-              "assigned_to_id", 
-              "fixed_version_id", 
-              "parent_issue_id", 
-              "start_date", 
-              "due_date", 
-              "estimated_hours", 
-              "done_ratio", 
-              "description", 
-              "priority_id"
-            ]
-          )
+          story = Tracker.find_or_initialize_by(:name => l(:default_tracker_story)) 
+            story.update(
+              :default_status_id => new.id, 
+              :is_in_roadmap => true, 
+              :position => 2,
+              :core_fields => [
+                "assigned_to_id", 
+                "fixed_version_id", 
+                "parent_issue_id", 
+                "start_date", 
+                "due_date", 
+                "estimated_hours", 
+                "done_ratio", 
+                "description", 
+                "priority_id"
+              ]
+            )
 
-          task = Tracker.create!(
-            :name => l(:default_tracker_task), 
+          task = Tracker.find_or_initialize_by(:name => l(:default_tracker_task))
+          task.update(
             :default_status_id => new.id, 
             :is_in_roadmap => false, 
             :position => 3,
@@ -139,9 +203,8 @@ module RedmineGercont
 
           puts "============= TRACKERS CRIADOS"
           # Roles
-          # Role.transaction do
-            contract_admin = Role.create!(
-              :name => l(:default_role_contract_admin),
+            contract_admin = Role.find_or_initialize_by(:name => l(:default_role_contract_admin))
+            contract_admin.update(
               :position => 4,
               :assignable => false,
               :permissions => [
@@ -178,8 +241,9 @@ module RedmineGercont
               }
             )
 
-            contract_manager = Role.create!(
-              :name => l(:default_role_contract_manager),
+
+            contract_manager = Role.find_or_initialize_by(:name => l(:default_role_contract_manager))
+            contract_manager.update(
               :position => 5,
               :assignable => true,
               :permissions => [
@@ -209,8 +273,9 @@ module RedmineGercont
               }
             )
 
-            technical_inspector = Role.create!(
-              :name => l(:default_role_technical_inspector),
+
+            technical_inspector = Role.find_or_initialize_by(:name => l(:default_role_technical_inspector))
+            technical_inspector.update(
               :position => 6,
               :assignable => true,
               :permissions => [
@@ -239,10 +304,11 @@ module RedmineGercont
                   "delete_issues"=>[]
                 }
               }
-            )
+          )
 
-            administrative_inspector = Role.create!(
-              :name => l(:default_role_administrative_inspector),
+
+            administrative_inspector = Role.find_or_initialize_by(:name => l(:default_role_administrative_inspector))
+            administrative_inspector.update(
               :position => 7,
               :assignable => true,
               :permissions => [
@@ -266,10 +332,11 @@ module RedmineGercont
                   "delete_issues"=>[]
                 }
               }
-            )
+          )
 
-            requester = Role.create!(
-              :name => l(:default_role_requester),
+
+            requester = Role.find_or_initialize_by(:name => l(:default_role_requester))
+            requester.update(
               :position => 8,
               :assignable => true,
               :permissions => [
@@ -304,8 +371,10 @@ module RedmineGercont
               }
             )
 
-            agent = Role.create!(
-              :name => l(:default_role_agent),
+
+
+            agent = Role.find_or_initialize_by(:name => l(:default_role_agent))
+            agent.update(
               :position => 9,
               :assignable => false,
               :permissions => [
@@ -333,8 +402,9 @@ module RedmineGercont
               }
             )
 
-            product_owner = Role.create!(
-              :name => l(:default_role_product_owner),
+
+            product_owner = Role.find_or_initialize_by(:name => l(:default_role_product_owner))
+            product_owner.update(
               :position => 10,
               :assignable => true,
               :permissions => [
@@ -369,9 +439,11 @@ module RedmineGercont
                 }
               }
             )
+            
 
-            scrum_master = Role.create!(
-              :name => l(:default_role_scrum_master),
+
+            scrum_master = Role.find_or_initialize_by(:name => l(:default_role_scrum_master))
+            scrum_master.update(
               :position => 11,
               :assignable => true,
               :permissions => [
@@ -410,10 +482,11 @@ module RedmineGercont
                   "delete_issues"=>[]
                 }
               }
-            )
+          )
 
-            scrum_team = Role.create!(
-              :name => l(:default_role_scrum_team),
+
+            scrum_team = Role.find_or_initialize_by(:name => l(:default_role_scrum_team))
+            scrum_team.update(
               :position => 12,
               :assignable => true,
               :permissions => [
@@ -446,7 +519,7 @@ module RedmineGercont
                   "delete_issues"=>[]
                 }
               }
-            )
+          )
 
             agent.update(managed_role_ids: [agent.id, scrum_master.id, scrum_team.id])
             scrum_master.update(managed_role_ids: [scrum_master.id, scrum_team.id])
@@ -459,9 +532,9 @@ module RedmineGercont
           # end
 
           # Custom fields
-          story_points = IssueCustomField.create!(
-            :field_format => 'list',
-            :name => l(:default_field_story_points),
+          story_points = IssueCustomField.find_or_initialize_by(:name => l(:default_field_story_points))
+          story_points.update(
+            :field_format => 'list',            
             :possible_values => ['1', '2', '3', '5', '8', '13','21'],
             :is_filter => 1,
             :visible => 1,
@@ -469,9 +542,9 @@ module RedmineGercont
             :is_for_all => 1
           )
 
-          blocked = IssueCustomField.create!(
+          blocked = IssueCustomField.find_or_initialize_by(:name => l(:default_field_blocked))
+          blocked.update(
             :field_format => 'bool',
-            :name => l(:default_field_blocked),
             :edit_tag_style => 'radio',
             :is_required => 1,
             :default_value => '0',
@@ -482,9 +555,9 @@ module RedmineGercont
           )
 
             
-          versions = IssueCustomField.create!(
+          versions = IssueCustomField.find_or_initialize_by(:name => l(:default_field_versions))
+          versions.update(
             :field_format => 'version',
-            :name => l(:default_field_versions),
             :edit_tag_style => 'check_box',
             :multiple => 1,
             # :is_required => 1,
@@ -494,48 +567,51 @@ module RedmineGercont
             :version_status => ["planning", "planned", "rejected"]
           )
 
-          type = ProjectCustomField.create!(
+          type = ProjectCustomField.find_or_initialize_by(:name => l(:default_field_project_type))
+          type.update(
             :field_format => 'enumeration',
-            :name => l(:default_field_project_type),
             :edit_tag_style => 'check_box',
             :multiple => 1,
             :visible => 1
           )
-          dev = CustomFieldEnumeration.create!(
-            :name => l(:default_field_project_type_development),
+          
+          dev = CustomFieldEnumeration.find_or_initialize_by(:name => l(:default_field_project_type_development))
+          dev.update(
             :custom_field => type
           )
-          mnt = CustomFieldEnumeration.create!(
-            :name => l(:default_field_project_type_maintenance),
+          
+          mnt = CustomFieldEnumeration.find_or_initialize_by(:name => l(:default_field_project_type_maintenance))
+          mnt.update(
             :custom_field => type
           )
+
           type.update(:default_value => mnt.id)
           
-          requester_unity = ProjectCustomField.create!(
+          requester_unity = ProjectCustomField.find_or_initialize_by(:name => l(:default_field_requester_unity))
+          requester_unity.update(
             :field_format => 'list',
-            :name => l(:default_field_requester_unity),
             :possible_values => ['first', 'second', 'third', 'and so on...'],
             :is_filter => 1,
             :visible => 1
           )
 
-          estimated_count = VersionCustomField.create!(
+          estimated_count = VersionCustomField.find_or_initialize_by(:name => l(:default_field_estimated_count))
+          estimated_count.update(
             :field_format => 'float',
-            :name => l(:default_field_estimated_count),
             :thousands_delimiter => 1,
             :visible => 1
           )
 
-          estimated_duration = VersionCustomField.create!(
+          estimated_duration = VersionCustomField.find_or_initialize_by(:name => l(:default_field_estimated_duration))
+          estimated_duration.update(
             :field_format => 'int',
-            :name => l(:default_field_estimated_duration),
             :thousands_delimiter => 1,
             :visible => 1
           )
 
-          estimated_cost = VersionCustomField.create!(
+          estimated_cost = VersionCustomField.find_or_initialize_by(:name => l(:default_field_estimated_cost))
+          estimated_cost.update(
             :field_format => 'float',
-            :name => l(:default_field_estimated_cost),
             :thousands_delimiter => 1,
             :visible => 1
           )
@@ -567,7 +643,8 @@ module RedmineGercont
             :field_for_version_cost => estimated_cost.id.to_s,
             :field_for_requested_versions => versions.id.to_s,
             :field_for_requester_unity => requester_unity.id.to_s,
-            :field_for_project_type => type.id.to_s
+            :field_for_project_type => type.id.to_s,
+            :core_settings_version => Redmine::Plugin.find(:redmine_gercont).version
           }.transform_keys(&:to_s)
           Setting.send :plugin_redmine_gercont=, gercont_settings 
 
@@ -628,12 +705,13 @@ module RedmineGercont
           #users
           user_names = ContractMember.role_options.map(&:name) + Item.profile_options.map(&:first)
 
+          puts "=================== USER_NAMES: #{user_names.inspect}"
+
           users = []
-              
           user_names.each do |name|
             login = generate_login(name)
-            user = User.create!(
-              :login => login,
+            user = User.find_or_initialize_by(:login => login)
+            user.update(
               :firstname => name.split.first.capitalize,
               :lastname => name.split[1..].join(' '),
               :mail => "#{login}@gercont.com"
@@ -648,7 +726,7 @@ module RedmineGercont
           puts "============= USUÁRIOS CRIADOS"
 
           # Fields visibility
-          trackers = [demand, story, task]
+          trackers = Tracker.all
           core_fields = trackers.map(&:core_fields).flatten.uniq
           custom_fields_id = trackers.map(&:custom_fields).flatten.map(&:id).uniq.sort
           
@@ -679,30 +757,36 @@ module RedmineGercont
 
           puts "============= CAMPOS BLOQUEADOS"
 
-          # Requester and Product Owner workflow for story
-          [requester, product_owner].each do |role|
-            WorkflowTransition.create!(
-              :tracker_id => story.id,:role => role,
-              :old_status_id => new.id,:new_status_id => rejected.id
-            )
-            WorkflowTransition.create!(
-              :tracker_id => story.id,:role => role,
-              :old_status_id => resolved.id,:new_status_id => feedback.id
-            )
-            WorkflowTransition.create!(
-              :tracker_id => story.id,:role => role,
-              :old_status_id => resolved.id,:new_status_id => closed.id
-            )
-          end
 
-            WorkflowTransition.create!(
-              :tracker_id => demand.id,:role => requester,
-              :old_status_id => new.id,:new_status_id => rejected.id
-            )
-            WorkflowTransition.create!(
-              :tracker_id => demand.id,:role => requester,
-              :old_status_id => new.id,:new_status_id => request_approval.id
-            )
+          # Requester and Product Owner workflow for story
+          WorkflowTransition.replace_transitions(
+            [story], 
+            [requester, product_owner], {
+            new.id => { 
+              rejected.id => { "always" => 1 }
+            },
+            resolved.id => {
+              feedback.id =>{ "always" => 1 },
+              closed.id =>{ "always" => 1 }
+            }
+          })
+
+
+
+          WorkflowTransition.replace_transitions([demand], [requester], {
+            new.id => {
+              rejected.id => { "always" => 1 },
+              request_approval.id => { "always" => 1 }
+            }
+          })
+
+
+          WorkflowTransition.replace_transitions([demand], [technical_inspector], {
+            request_approval.id => {
+              approve.id => { "always" => 1 },
+              request_adjust.id => { "always" => 1 }
+            }
+          })
 
           WorkflowPermission.replace_permissions(
             [demand],
@@ -746,8 +830,8 @@ module RedmineGercont
           puts "============= PERMISSÕES ATUALIZADAS"
 
           # Sample Project
-          project = Project.create!(
-            :name => l(:default_project_name),
+          project = Project.find_or_initialize_by(:name => l(:default_project_name))
+          project.update(
             :identifier => l(:default_project_name).downcase.gsub(" ", "_"),
             :is_public => false,
           )
@@ -758,9 +842,10 @@ module RedmineGercont
 
           project_users.each do |user|
               role = roles.find { |role| role.name == user.name } || scrum_team
-              project.members.create!(
-                :user => user,
-                :roles => [role],
+              register = Member.find_or_initialize_by(user_id: user.id)
+              register.update(
+                project_id: project.id,
+                role_ids: [role.id]
               )
           end
           puts "============= PROJETO EXEMPLO CRIADO"
@@ -777,8 +862,8 @@ module RedmineGercont
           puts "============= CUSTOM WORKFLOWS CRIADOS"
           
           # Queries
-          IssueQuery.create!(
-            :name => l(:default_query_project_backlog_issues),
+          pbi_query = IssueQuery.find_or_initialize_by(:name => l(:default_query_project_backlog_issues))
+          pbi_query.update(
             :filters =>
               {
                 'status_id' => {:operator => 'o', :values => ['']},
@@ -798,8 +883,8 @@ module RedmineGercont
             ]
           )
 
-          IssueQuery.create!(
-            :name => l(:default_query_project_demand_issues),
+          demand_query = IssueQuery.find_or_initialize_by(:name => l(:default_query_project_demand_issues))
+          demand_query.update(
             :filters =>
               {'tracker_id' => {:operator => '=', :values => [demand.id]}},
             :sort_criteria => [['id', 'desc']],
@@ -807,6 +892,7 @@ module RedmineGercont
           )
 
           puts "============= QUERIES CRIADAS"
+         
           true
         end
         

@@ -188,6 +188,7 @@ pt-BR:
   label_contract_list: Lista de Contratos
   label_contract_members: Membros do Contrato
   label_contracts: Contratos
+  label_core_settings_version: Versão das configurações nativas
   label_deadline: Prazo após abertura da OS
   label_daily_cost: Custo diário
   label_demand: Demanda

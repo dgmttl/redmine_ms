@@ -1,4 +1,4 @@
-<% if RedmineGercont::DefaultData::Loader::no_data? %>
+<% if RedmineGercont::DefaultData::Loader::no_data? || RedmineGercont::DefaultData::Loader::out_dated?%>
 <div class="nodata">
     <%= form_tag(url_for(controller: 'contracts', action: 'default_configuration'), method: :post) do %>
         <%= simple_format(l(:text_no_configuration_data)) %>
@@ -6,8 +6,8 @@
         <%= select_tag 'lang', options_for_select(lang_options_for_select(false), current_language.to_s) %>
         <%= submit_tag l(:text_load_default_configuration) %></p>
     <% end  %>
-  </div>
-  <% end %>
+</div>
+<% end %>
 
 
 <% if User.current.allowed_to_globally?(:manage_contract) %>
