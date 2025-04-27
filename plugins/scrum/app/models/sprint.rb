@@ -30,6 +30,11 @@ class Sprint < ActiveRecord::Base
     name
   end
 
+  def related_demand
+    return if is_product_backlog? && self.name == I18n.t(:defaul_pbl_project_name)
+    Issue.find(self.description.scan(/\d+/).last.to_i) 
+  end
+
   def is_product_backlog?
     self.is_product_backlog
   end

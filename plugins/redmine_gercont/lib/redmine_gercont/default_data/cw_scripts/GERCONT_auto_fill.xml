@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<hash>
+  <position type="integer">14</position>
+  <name>GERCONT_auto_fill</name>
+  <observable>issue</observable>
+  <id type="integer">16</id>
+  <before-save>if @issue.contracts_any?
+
+  unless @issue.is_demand?
+    @selected_sprint = @issue.sprint
+    if @issue.parent.present?
+      @issue.sprint = @issue.parent.sprint
+    else
+      @issue.sprint = @issue.product_backlog
+    end
+  end
+
+  puts "Issue fields filled-up" if selected_sprint_changed?
+end
+
+</before-save>
+  <created-at type="dateTime">2025-04-26T23:03:38Z</created-at>
+  <updated-at type="dateTime">2025-04-27T18:11:57Z</updated-at>
+  <description></description>
+  <string></string>
+  <integer type="integer">1</integer>
+  <after-save></after-save>
+  <is-for-all type="boolean">false</is-for-all>
+  <author>diogo.neiva@saude.gov.br</author>
+  <active type="boolean">true</active>
+  <shared-code nil="true"/>
+  <before-add nil="true"/>
+  <after-add nil="true"/>
+  <before-remove nil="true"/>
+  <after-remove nil="true"/>
+  <before-destroy></before-destroy>
+  <after-destroy></after-destroy>
+  <exported-at>2025-04-27T18:11:57Z</exported-at>
+  <plugin-version>3.0.0</plugin-version>
+  <ruby-version>3.3.7-p123</ruby-version>
+  <rails-version>7.2.2.1</rails-version>
+</hash>

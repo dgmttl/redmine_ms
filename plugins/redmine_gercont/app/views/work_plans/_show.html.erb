@@ -9,14 +9,14 @@
     <% if can_plan_work_plan? %>
         <%= 
             link_to(l(:label_demand_backlog), 
-            product_backlog_path(@work_plan.issue.product_backlog),
+            product_backlog_path(@work_plan.issue.demand_backlog),
             :class => 'icon icon-product-backlog') 
         %>
     <% end %>
 </div>
 
-<% if @work_plan.sprints.blank? %>
-    <p class="nodata"><%= l(:label_no_data) %></p>
+<% if @work_plan.sprints.blank? %>    
+     <div class="nodata"><%= l(:label_no_data) %></div>
 <% else %>
     <%= render 'work_plans/head' %>
     <h3><%= l(:label_sprint_plural) %></h3>

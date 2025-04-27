@@ -1,4 +1,4 @@
-<% if RedmineGercont::DefaultData::Loader::no_data? || RedmineGercont::DefaultData::Loader::out_dated?%>
+<% if RedmineGercont::DefaultData::Loader::out_dated?%>
 <div class="nodata">
     <%= form_tag(url_for(controller: 'contracts', action: 'default_configuration'), method: :post) do %>
         <%= simple_format(l(:text_no_configuration_data)) %>

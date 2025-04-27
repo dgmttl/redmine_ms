@@ -16,13 +16,11 @@
                     <td> Sprint <%= sprint[:index] %></td>
                     <td><%= sprint[:days] %> <%= l(:label_business_days)%></td>
                     <td>
-                    <!-- Renderiza links para versões -->
                     <%= sprint[:versions].map do |version| 
                         link_to version, version_path(version) 
                     end.join(", ").html_safe %>
                     </td>
                     <td>
-                    <!-- Renderiza links para PBIs -->
                     <%= sprint[:pbis].map do |pbi| 
                         link_to pbi.to_s[/#.*$/].strip, issue_path(pbi) 
                     end.join(", ").html_safe %>
@@ -34,14 +32,14 @@
 </div>
  
 
-<style>
+<!-- <style>
     input[readonly] {
       border: none; /* Remove a borda */
       background-color: transparent; /* Fundo transparente */
       color: inherit; /* Mantém a cor padrão */
       pointer-events: none; /* Impede interações do usuário */
     }
-  </style>
+  </style> -->
 
 
 

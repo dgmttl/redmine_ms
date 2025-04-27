@@ -21,30 +21,30 @@
 
     </div>
 
-    <% if can_plan_work_plan? %>
-        <%= button_to l(:button_ask_for_approval),
+    <%# if can_plan_work_plan? %>
+        <%#= button_to l(:button_ask_for_approval),
         ask_for_work_plan_approval_path(id: @work_plan.id),
         method: :post 
         %>
-    <% end %>
+    <%# end %>
     
-    <% if can_approve_work_plan? %>
-        <%= button_to l(:button_approve),
+    <%# if can_approve_work_plan? %>
+        <%#= button_to l(:button_approve),
             approve_work_plan_path(id: @work_plan.id),
             method: :post 
         %>
-        <%= button_to l(:button_reject),
+        <%#= button_to l(:button_reject),
             reject_work_plan_path(id: @work_plan.id),
             method: :post 
         %>
-    <% end %>
+    <%# end %>
     
-    <% if can_generate_work_order? %>
-        <%= button_to l(:button_generate_work_order),
+    <%# if can_generate_work_order? %>
+        <%#= button_to l(:button_generate_work_order),
             generate_work_order_path(issue_id: @issue.id, status: 'new'),
             method: :post 
         %>
-    <% end %>
+    <%# end %>
 
 </fieldset>
 

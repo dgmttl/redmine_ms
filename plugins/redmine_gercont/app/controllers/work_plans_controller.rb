@@ -21,13 +21,13 @@ class WorkPlansController < ApplicationController
     end
      
     def create
-        @work_plan = WorkPlan.new(work_plan_params)
-            if @work_plan.save
-            flash[:notice] = l(:notice_successful_create)
-            redirect_to project_work_plans_path(@project)
-        else
-            render :new
-        end
+      @work_plan = WorkPlan.new(work_plan_params)
+      if @work_plan.save
+        flash[:notice] = l(:notice_successful_create)
+        redirect_to project_work_plans_path(@project)
+      else
+        render :new
+      end
     end
 
     def edit
@@ -57,26 +57,29 @@ class WorkPlansController < ApplicationController
     def save_release_plan        
       require 'json'
       
-      # Parse os dados de sprints recebidos em JSON
       sprints = params[:sprints].map { |sprint| JSON.parse(sprint, symbolize_names: true) }
-    
-      # Processa os dados de sprints e acumula as versões
-      sprint_data = sprints.each_with_index.map do |sprint, index|
-        {
-          index: index + 1,
-          pbis: sprint[:pbis].map { |pbi| pbi[:id] },
-          versions: sprint[:pbis].map { |pbi| pbi[:fixed_version_id] }.uniq,
-          days: Setting.plugin_scrum['default_sprint_days'].to_i * (index + 1)
-        }
+      
+      if sprints.any? { |sprint| sprint[:pbis].any? { |pbi| pbi[:fixed_version_id].nil? } }
+        flash[:error] = l(:error_can_t_save_release_plan)
+        product_backlog_path(@work_plan.issue.demand_backlog)
+      else        
+        sprint_data = sprints.each_with_index.map do |sprint, index|
+          {
+            index: index + 1,
+            pbis: sprint[:pbis].map { |pbi| pbi[:id] },
+            versions: sprint[:pbis].map { |pbi| pbi[:fixed_version_id] }.uniq,
+            days: Setting.plugin_scrum['default_sprint_days'].to_i * (index + 1)
+          }
+        end
+
+        if @work_plan.update(sprints: sprint_data.to_json)
+          flash[:notice] = l(:notice_successful_update)
+          redirect_to issue_work_plan_path
+        else
+          render :edit
+        end
       end
 
-      # Salva os dados processados no work_plan
-      if @work_plan.update(sprints: sprint_data.to_json)
-        flash[:notice] = l(:notice_successful_update)
-        redirect_to issue_work_plan_path
-      else
-        render :edit
-      end
     end
 
     def ask_for_work_plan_approval

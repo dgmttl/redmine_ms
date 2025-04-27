@@ -1,9 +1,10 @@
 module WorkPlansHelper
 
     def demand_options
-        issues = @project.issues
-                         .where(tracker_id: Setting.plugin_redmine_gercont['demand_tracker_id'])
-                         .map { |issue| [issue.to_s, issue.id] }
+        issues = @project.issues.where(
+            tracker_id: Setting.plugin_redmine_gercont['demand_tracker_id']
+            ).map { |issue| [issue.to_s, issue.id] }
+            
         busy = WorkPlan.pluck(:issue_id)
       
         available = issues.reject { |_, issue_id| busy.include?(issue_id) }
@@ -14,7 +15,7 @@ module WorkPlansHelper
         end
       
         available
-      end
+    end
 
     def issue_work_plan_path        
         issue_path(@issue, :tab => 'work_plan')

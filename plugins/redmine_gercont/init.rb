@@ -3,14 +3,14 @@ Redmine::Plugin.register :redmine_gercont do
   author 'Diogo Mattioli Neiva'
   description 'Este é um plugin para gerenciamento de contratos de prestação de serviços.'
 
-  version '0.0.1'
+  version '0.1.0'
   url 'https://github.com/dgmttl/redmine_plugdev'
   author_url 'www.linkedin.com/in/diogo-mattioli-neiva-9a5b77b0'
 
 
-  settings :default => {
-    :core_settings_version => '0.0.0'
-  }, partial: 'settings/redmine_gercont'
+  # settings :default => {
+  #   :core_settings_version => '0.0.0'
+  # }, partial: 'settings/redmine_gercont'
 
 
   Dir[File.join(File.dirname(__FILE__), '/lib/redmine_gercont/patches/*.rb')].each { |file| require_dependency file }
@@ -24,7 +24,8 @@ Redmine::Plugin.register :redmine_gercont do
     permission :manage_assessment, {:assessments => [:new, :create, :edit, :update, :destroy]}
     permission :view_work_plans_menu, {:work_plans => [:index]}
     permission :view_work_plans, {:work_plans => [:show]}
-    permission :manage_work_plans, {:work_plans => [:new, :create, :edit, :update, :destroy, :save_release_plan]}
+    permission :manage_work_plans, {:work_plans => [:new, :create, :edit, :update, :destroy]}
+    permission :save_release_plan, {:work_plans => [:save_release_plan]}
     permission :view_work_orders_menu, {:work_orders => [:index]}
     permission :view_work_orders, {:work_orders => [:show]}
     permission :manage_work_orders, {:work_orders => [:new, :create, :edit, :update, :destroy]}
@@ -33,15 +34,12 @@ Redmine::Plugin.register :redmine_gercont do
     permission :manage_work_order_professionals, {:work_order_professionals => [:new, :create, :edit, :update, :destroy]}
     permission :approve_plan, {:versions => [:approve_plan]}
     permission :ask_for_plan_approval, {:versions => [:ask_for_plan_approval]}
-    permission :plan_work_plan, {:work_plans => [:ask_for_work_plan_approval], :work_plan_items => [:new, :create, :destroy]} 
+    permission :plan_work_plan, {:work_plans => [:update, :ask_for_work_plan_approval], :work_plan_items => [:new, :create, :destroy]} 
     permission :approve_work_plan, {:work_plans => [:approve_work_plan, :reject_work_plan]} 
     permission :generate_work_order, {:work_orders => [:generate_work_order]}
   end 
 
-
-
-
-
+  
   #Contract
   permission :view_contract, {
     :contracts => [:index]

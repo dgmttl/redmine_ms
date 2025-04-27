@@ -21,13 +21,18 @@ class ContractsController < ApplicationController
   def create
     @contract = Contract.new(contract_params)
     @added_projects = added_project_ids.present? ? Project.where(id: added_project_ids) : []
-    if @contract.save
+    
+    if @added_projects.any? && @contract.status == "active" && blocked_projects.any?
+      flash[:error] = l(:error_many_active_projects, projects: blocked_projects.map(&:name).join(", "))
+      render :new      
+    elsif @contract.save
         manage_project_modules
         manage_project_trackers
         manage_project_pbl
         manage_custom_workflows
         create_project_members_in_contract
         manage_contract_members_in_project
+        manage_versions
       create_national_holidays(@contract.terms_start, @contract.terms_end)
       flash[:notice] = l(:notice_successful_create)
       redirect_to contracts_path
@@ -50,32 +55,33 @@ class ContractsController < ApplicationController
 
   def update
     @contract_was = @contract.dup
-
     @added_projects = added_project_ids.present? ? Project.where(id: added_project_ids) : []
     
-    if contract_projects_changed?
-
-      @contract.assign_attributes(contract_params)
-
-      manage_contract_members_in_project
-      manage_project_modules
-      manage_project_trackers
-      manage_project_pbl
-      manage_custom_workflows
-      create_project_members_in_contract
-
-    end
-
-    if @contract.update(contract_params)
-      flash[:notice] = l(:notice_successful_update)
-      redirect_to contracts_path
+    if @added_projects.any? && @contract.status == "active" && blocked_projects.any?
+      flash[:error] = l(:error_many_active_contracts, projects: blocked_projects.map(&:name).join(", "))
+      render :new      
     else
-      @items = @contract.items
-      @slas = @contract.slas
-      @rules = @contract.rules.includes(:custom_workflow).order('custom_workflows.position')
-      @holidays = @contract.holidays.order(:date)
-      @contract_members = @contract.contract_members
-      render :edit
+    
+      if @contract.update(contract_params)
+        if contract_projects_changed?    
+          manage_contract_members_in_project
+          manage_project_modules
+          manage_project_trackers
+          manage_project_pbl
+          manage_custom_workflows
+          manage_versions
+          create_project_members_in_contract
+        end
+        flash[:notice] = l(:notice_successful_update)
+        redirect_to contracts_path
+      else
+        @items = @contract.items
+        @slas = @contract.slas
+        @rules = @contract.rules.includes(:custom_workflow).order('custom_workflows.position')
+        @holidays = @contract.holidays.order(:date)
+        @contract_members = @contract.contract_members
+        render :edit
+      end
     end
   end
 
@@ -140,12 +146,10 @@ class ContractsController < ApplicationController
       project.enabled_module_names = contract_modules
 
     end
-  end
-  
+  end  
 
   def manage_project_trackers
     return if @added_projects.blank?
-
  
     tracker_ids = contract_params[:tracker_ids]
     return if tracker_ids.blank?
@@ -180,19 +184,41 @@ class ContractsController < ApplicationController
         user: User.current,
         project: project,
         is_product_backlog: true,
-        name: l(:label_project_backlog),
-        description: l(:text_created_automaticaly),
+        name: l(:defaul_pbl_project_name),
+        description: l(:text_this_is_main_pbl),
         status: 'open',
         shared: '0'
       )
     end
   end
+
+  def manage_versions
+    return if @added_projects.blank?
+
+    @added_projects.each do |project|
+      next if project.versions.any?
+
+      Version.create(
+        name: l(:default_version_name),
+        status: 'planning'
+      )
+    end
+  end
+
+  def blocked_projects
+    blocked = []
+    @added_projects.each do |project|
+      if project.active_contracts.any?
+        blocked << project
+      end
+    end
+    blocked
+  end
+
   
 
   def create_project_members_in_contract
     return if @added_projects.blank?
-
-    
 
     @added_projects.each do |project|
       project.members.each do |member|
@@ -244,6 +270,7 @@ class ContractsController < ApplicationController
     end
   end
 
+
   def contract_params
     return {} unless params[:contract].present?
     params.require(:contract).permit(
@@ -260,5 +287,4 @@ class ContractsController < ApplicationController
       tracker_ids: []
     )
   end
-
 end
