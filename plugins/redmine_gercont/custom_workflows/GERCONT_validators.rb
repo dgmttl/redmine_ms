@@ -17,7 +17,7 @@ if @issue.contracts_any?
     end
     
     # Avoid approve demand
-    if @issue.status == IssueStatus.approve
+    if @issue.status == IssueStatus.approve && @user_roles.include?(Role.contract_manager)
         if @issue.active_contracts.count > 1
             raise RedmineCustomWorkflows::Errors::WorkflowError, l(:warning_cw_issue_demand_can_not_be_approved_many_open_contracts)
         elsif @issue.active_contracts.count == 0
@@ -39,14 +39,17 @@ if @issue.contracts_any?
         end
     end
 
-    # Avoid issue versions custom field missing issues
-    if @issue.is_demand? 
-        selected_versions = @issue.custom_field_value(CustomField.requested_versions.id)
-        if requested_versions_changed? && selected_versions.present?
-            versions = Version.find(selected_versions)
-            if versions.any? { |version| version.fixed_issues.blank? }
-                raise RedmineCustomWorkflows::Errors::WorkflowError, l(:warning_cw_tracker_missing_fixed_issues)
-            end
+    # Avoid change story and tasks
+    if @issue.parent.present? && (@issue.is_pbi? || @issue.is_task?)
+        permited = [
+            IssueStatus.plan_drafting, 
+            IssueStatus.service_in_progress, 
+            IssueStatus.request_work_plan_adjustment,
+            IssueStatus.new_status
+        ]
+        unless permited.include?(@issue.parent.status)
+            raise RedmineCustomWorkflows::Errors::WorkflowError, l(:warning_cw_issue_can_t_be_changed)
         end
+
     end
 end

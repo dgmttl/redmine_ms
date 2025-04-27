@@ -7,7 +7,6 @@
 @default_pbl = nil
 @requested = nil
 @aproved = nil
-@demand_backlog = nil
 @forward_issue = false
 @new_status = nil
 @new_role = nil

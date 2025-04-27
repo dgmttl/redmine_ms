@@ -2,6 +2,8 @@ if @issue.contracts_any?
 
   if @issue.is_demand?
     @selected_sprint = @issue.sprint
+    @issue.sprint = @issue.demand_backlog
+    
     if @issue.sprint.blank? && @issue.children?
         @issue.sprint = @issue.children.first.sprint
     end
@@ -34,29 +36,29 @@ end
 
 
 #################################AFTER SAVE###################
-if @stories_to_demand.present? && @issue.sprint.blank?
-  demand_backlog = create_demand_backlog
-  puts "Backlog created"
-else
-  demand_backlog = @issue.sprint
-end
-
-if @stories_to_demand.present?
-  @stories_to_demand.each do |story|
-    story.parent = @issue
-    story.sprint = demand_backlog
-    story.save!
-  end 
-  Version.where(id: @versions_in).update_all(status: 'requested')
-  puts "Issue children associated"
-end
-
-if @stories_out_demand.present?
-  Version.where(id: @versions_out).update_all(status: 'planning')
-  @stories_out_demand.each do |story|
-      story.parent_id = nil
-      story.sprint = @issue.product_backlog
-      story.save!
+if @issue.is_demand? 
+  if @stories_to_demand.present? && @issue.demand_backlog.nil?
+    @issue.sprint = create_demand_backlog
+    puts "Backlog created"
   end
-  puts "Issue children disassociated"
+
+  if @stories_to_demand.present?
+    @stories_to_demand.each do |story|
+      story.parent = @issue
+      story.sprint = @issue.demand_backlog
+      story.save!
+    end 
+    Version.where(id: @versions_in).update_all(status: 'requested')
+    puts "Issue children associated"
+  end
+
+  if @stories_out_demand.present?
+    Version.where(id: @versions_out).update_all(status: 'planning')
+    @stories_out_demand.each do |story|
+        story.parent_id = nil
+        story.sprint = @issue.product_backlog
+        story.save!
+    end
+    puts "Issue children disassociated"
+  end
 end

@@ -66,7 +66,7 @@ module RedmineGercont
           plan_drafting.save(validate: false)
 
           request_work_plan_approval = IssueStatus.find_or_initialize_by(name: l(:default_issue_status_request_work_plan_approval))
-          plan_drafting.save(validate: false)
+          request_work_plan_approval.save(validate: false)
 
           technical_plan_review = IssueStatus.find_or_initialize_by(name: l(:default_issue_status_technical_plan_review))
           technical_plan_review.save(validate: false)
@@ -76,6 +76,9 @@ module RedmineGercont
 
           managerial_plan_review = IssueStatus.find_or_initialize_by(name: l(:default_issue_status_managerial_plan_review))
           managerial_plan_review.save(validate: false)
+          
+          request_work_plan_adjustment  = IssueStatus.find_or_initialize_by(name: l(:default_issue_status_request_work_plan_adjustment))
+          request_work_plan_adjustment.save(validate: false)
 
           approve_work_plan = IssueStatus.find_or_initialize_by(:name => l(:default_issue_status_approve_work_plan))
           approve_work_plan.save(validate: false)
@@ -432,6 +435,7 @@ module RedmineGercont
                 :add_issue_notes, 
                 :edit_own_issue_notes, 
                 :view_checklists,
+                :plan_work_plan,
                 :save_release_plan,
                 :manage_sprints, 
                 :view_sprint_board, 
@@ -510,7 +514,8 @@ module RedmineGercont
 
 
           # Custom fields
-          story_points = IssueCustomField.find_or_initialize_by(:name => l(:default_field_story_points))
+          story_points = IssueCustomField.find_or_initialize_by(
+            :name => l(:default_field_story_points))
           story_points.update(
             :field_format => 'list',            
             :possible_values => ['1', '2', '3', '5', '8', '13','21'],
@@ -520,7 +525,8 @@ module RedmineGercont
             :is_for_all => 1
           )
 
-          blocked = IssueCustomField.find_or_initialize_by(:name => l(:default_field_blocked))
+          blocked = IssueCustomField.find_or_initialize_by(
+            :name => l(:default_field_blocked))
           blocked.update(
             :field_format => 'bool',
             :edit_tag_style => 'radio',
@@ -533,7 +539,8 @@ module RedmineGercont
           )
 
             
-          versions = IssueCustomField.find_or_initialize_by(:name => l(:default_field_versions))
+          versions = IssueCustomField.find_or_initialize_by(
+            :name => l(:default_field_versions))
           versions.update(
             :field_format => 'version',
             :edit_tag_style => 'check_box',
@@ -545,49 +552,262 @@ module RedmineGercont
             :version_status => ["planning", "planned", "rejected"]
           )
 
-          type = ProjectCustomField.find_or_initialize_by(:name => l(:default_field_project_type))
+          type = ProjectCustomField.find_or_initialize_by(
+            :name => l(:default_field_project_type))
           type.update(
             :field_format => 'enumeration',
             :edit_tag_style => 'check_box',
             :multiple => 1,
+            :is_filter => 1,
             :visible => 1
           )
           
           dev = CustomFieldEnumeration.find_or_initialize_by(:name => l(:default_field_project_type_development))
-          dev.update(
-            :custom_field => type
-          )
+          dev.update(:custom_field => type)
           
           mnt = CustomFieldEnumeration.find_or_initialize_by(:name => l(:default_field_project_type_maintenance))
-          mnt.update(
-            :custom_field => type
-          )
+          mnt.update(:custom_field => type)
 
           type.update(:default_value => mnt.id)
           
-          requester_unity = ProjectCustomField.find_or_initialize_by(:name => l(:default_field_requester_unity))
+          requester_unity = ProjectCustomField.find_or_initialize_by(
+            :name => l(:default_field_requester_unity))
           requester_unity.update(
             :field_format => 'list',
-            :possible_values => ['first', 'second', 'third', 'and so on...'],
+            :possible_values => [
+              "GM - CNS - Conselho Nacional de Saúde",
+              "GM - AECI - Assessoria Especial de Controle Interno",
+              "GM - AISA - Assessoria Especial de Assuntos Internacionais",
+              "GM - APSD - Assessoria de Participação Social e Diversidade",
+              "GM - ASCOM - Assessoria Especial de Comunicação Social",
+              "GM - ASPAR - Assessoria Especial de Assuntos Parlamentares e Federativos",
+              "GM - CONJUR - Consultoria Jurídica",
+              "GM - CORREG - Corregedoria",
+              "GM - DENASUS - Departamento Nacional de Auditoria do Sistema Único de Saúde",
+              "GM - GABINETE - Gabinete do Ministro",
+              "GM - OUVSUS - Ouvidoria-Geral do Sistema Único de Saúde",
+              "SAES - DAET - Departamento de Atenção Especializada e Temática",
+              "SAES - DAHU - Departamento de Atenção Hospitalar, Domiciliar e de Urgência",
+              "SAES - DCEBAS - Departamento de Certificação de Entidades Beneficentes de Assistência Social em Saúde",
+              "SAES - DESMAD - Departamento de Saúde Mental, Álcool e Outras Drogas",
+              "SAES - DGH - Departamento de Gestão Hospitalar no Estado do Rio de Janeiro",
+              "SAES - DRAC - Departamento de Regulação Assistencial e Controle",
+              "SAES - HOSPITAIS FEDERAIS",
+              "SAES - INC - Instituto Nacional de Cardiologia",
+              "SAES - INCA - Instituto Nacional de Câncer",
+              "SAES - INTO - Instituto Nacional de Traumatologia e Ortopedia",
+              "SAPS - DEPPROS - Departamento de Prevenção e Promoção da Saúde",
+              "SAPS - DESCO - Departamento de Estratégias e Políticas de Saúde Comunitária",
+              "SAPS - DGAPS - Departamento de Apoio à Gestão da Atenção Primária",
+              "SAPS - DGCI - Departamento de Gestão do Cuidado Integral",
+              "SE - DECOOP - Departamento de Cooperação Técnica e Desenvolvimento em Saúde",
+              "SE - DGIP - Departamento de Gestão Interfederativa e Participativa",
+              "SE - DJUD - Departamento de Gestão das Demandas em Judicialização na Saúde",
+              "SE - DLOG - Departamento de Logística em Saúde",
+              "SE - FNS - Diretoria-Executiva do Fundo Nacional de Saúde",
+              "SE - SAA - Subsecretaria de Assuntos Administrativos",
+              "SE - SPO - Subsecretaria de Planejamento e Orçamento",
+              "SECTICS - DAF - Departamento de Assistência Farmacêutica e Insumos Estratégicos",
+              "SECTICS - DECEIIS - Departamento do Complexo Econômico-Industrial da Saúde e de Inovação para o SUS",
+              "SECTICS - DECIT - Departamento de Ciência e Tecnologia",
+              "SECTICS - DESID - Departamento de Economia e Desenvolvimento em Saúde",
+              "SECTICS - DGITS - Departamento de Gestão e Incorporação de Tecnologias em Saúde",
+              "SEIDIGI - DATASUS - Departamento de Informação e Informática do Sistema Único de Saúde",
+              "SEIDIGI - DEMAS - Departamento de Monitoramento, Avaliação e Disseminação de Informações Estratégicas em Saúde",
+              "SEIDIGI - DESD - Departamento de Saúde Digital e Inovação",
+              "SESAI - DAPSI - Departamento de Atenção Primária à Saúde Indígena",
+              "SESAI - DEAMB - Departamento de Projetos e Determinantes Ambientais da Saúde Indígena",
+              "SESAI - DGESI - Departamento de Gestão da Saúde Indígena",
+              "SESAI - DSEI - Distritos Sanitários Especiais",
+              "SGTES - DEGERTS - Departamento de Gestão e Regulação do Trabalho em Saúde",
+              "SGTES - DEGES - Departamento de Gestão da Educação na Saúde",
+              "SVSA - CENP - Centro Nacional de Primatas",
+              "SVSA - DAENT - Departamento de Análise Epidemiológica e Vigilância de Doenças Não Transmissíveis",
+              "SVSA - DAEVS - Departamento de Ações Estratégicas de Epidemiologia e Vigilância em Saúde e Ambiente",
+              "SVSA - DATHI - Departamento de HIV/AIDS, Tuberculose, Hepatites Virais e Infecções Sexualmente Transmissíveis",
+              "SVSA - DEDT - Departamento de Doenças Transmissíveis",
+              "SVSA - DEMSP - Departamento de Emergências em Saúde Pública",
+              "SVSA - DPNI - Departamento do Programa Nacional de Imunizações",
+              "SVSA - DVSAT - Departamento de Vigilância em Saúde Ambiental e Saúde do Trabalhador",
+              "SVSA - IEC - Instituto Evandro Chagas"
+            ],
             :is_filter => 1,
+            :is_required => 1,
             :visible => 1
           )
 
-          estimated_count = VersionCustomField.find_or_initialize_by(:name => l(:default_field_estimated_count))
+          platform = ProjectCustomField.find_or_initialize_by(
+            :name => l(:default_field_platform))
+          platform.update(
+            :field_format => 'list',
+            :possible_values => [
+              'Mobile',
+              'Portal',
+              'Sistema',
+              'SOA'
+          ],
+          :is_filter => 1,
+          :is_required => 1,
+          :visible => 1
+          )
+
+          mainteiner = ProjectCustomField.find_or_initialize_by(
+            :name => l(:default_field_mainteiner))
+          mainteiner.update(
+            :field_format => 'list',
+            :possible_values => [
+              'DATASUS',
+              'Área negocial'
+            ],
+            :is_filter => 1,
+            :is_required => 1,
+            :visible => 1
+          )
+
+          operacional_sistem = ProjectCustomField.find_or_initialize_by(
+            :name => l(:default_field_operacional_sistem))
+          operacional_sistem.update(
+            :field_format => 'list',
+            :possible_values => [
+              '-',
+              'Windows Server 2008R2',
+              'Windows Server 2012',
+              'Red Hat Linux 6',
+              'Red Hat Linux 7'
+            ],
+            :is_filter => 1,
+            :is_required => 1,
+            :visible => 1
+          )
+
+          web_server = ProjectCustomField.find_or_initialize_by(
+            :name => l(:default_field_web_server))
+          web_server.update(
+            :field_format => 'list',
+            :possible_values => [
+              '-',
+              'PHP 5.6',
+              'Java Jboss EAP 6.4',
+              'Big IP F5',
+              'Nginx',
+              'Embutido no Spring Boot'
+            ],
+            :is_filter => 1,
+            :is_required => 1,
+            :visible => 1
+          )
+
+          sgbd = ProjectCustomField.find_or_initialize_by(
+            :name => l(:default_field_sgbd))
+          sgbd.update(
+            :field_format => 'list',
+            :possible_values => [
+              '-',
+              'Access',
+              'Firebird',
+              'MySQL 5',
+              'Oracle 11g',
+              'Oracle Data Integrator (ODI)',
+              'Oracle 12c',
+              'PostgreeSQL',
+              'SQL Server'
+            ],
+            :is_filter => 1,
+            :is_required => 1,
+            :visible => 1
+          )
+
+          programming_language = ProjectCustomField.find_or_initialize_by(
+            :name => l(:default_programming_language))
+          programming_language.update(
+            :field_format => 'list',
+            :possible_values => [
+              '-',
+              '.NET',
+              'AJAX',
+              'Angular',
+              'Apache Wicket',
+              'ASP',
+              'C',
+              'C#',
+              'C++',
+              'CLIPPER',
+              'ColdFusion',
+              'DELPHI',
+              'HTML',
+              'IBM Maximo',
+              'JAVA',
+              'JavaScript',
+              'JSF',
+              'MicroStrategy',
+              'PERL',
+              'PHP',
+              'PL-SQL(Oracle)',
+              'PowerBuilder',
+              'Primefaces',
+              'PYTHON',
+              'RichFaces',
+              'RUBY',
+              'Sharepoint',
+              'Spring',
+              'Sybase',
+              'Symfony',
+              'VB',
+              'Zend Framework 1.x'
+            ],
+            :is_filter => 1,
+            :is_required => 1,
+            :visible => 1
+          )
+
+          stg_environment = ProjectCustomField.find_or_initialize_by(
+            :name => l(:default_field_stg_environment))
+          stg_environment.update(
+            :field_format => 'link',
+            :description => l(:text_valid_url),
+            :visible => 1,
+            :regexp => "^(https?:\\/\\/)?([\\w\\-]+(\\.[\\w\\-]+)+)(:[0-9]{1,5})?(\\/[\\w\\-.,@?^=%&:/~+#]*)?$"
+          )
+
+          trn_environment = ProjectCustomField.find_or_initialize_by(
+            :name => l(:default_field_trn_environment))
+            trn_environment.update(
+            :field_format => 'link',
+            :description => l(:text_valid_url),
+            :visible => 1,
+            :regexp => "^(https?:\\/\\/)?([\\w\\-]+(\\.[\\w\\-]+)+)(:[0-9]{1,5})?(\\/[\\w\\-.,@?^=%&:/~+#]*)?$"
+          )
+
+          prd_environment = ProjectCustomField.find_or_initialize_by(
+            :name => l(:default_field_prd_environment))
+            prd_environment.update(
+            :field_format => 'link',
+            :description => l(:text_valid_url),
+            :visible => 1,
+            :regexp => "^(https?:\\/\\/)?([\\w\\-]+(\\.[\\w\\-]+)+)(:[0-9]{1,5})?(\\/[\\w\\-.,@?^=%&:/~+#]*)?$"
+          )
+
+
+
+
+          estimated_count = VersionCustomField.find_or_initialize_by(
+            :name => l(:default_field_estimated_count))
           estimated_count.update(
             :field_format => 'float',
             :thousands_delimiter => 1,
             :visible => 1
           )
 
-          estimated_duration = VersionCustomField.find_or_initialize_by(:name => l(:default_field_estimated_duration))
+          estimated_duration = VersionCustomField.find_or_initialize_by(
+            :name => l(:default_field_estimated_duration))
           estimated_duration.update(
             :field_format => 'int',
             :thousands_delimiter => 1,
             :visible => 1
           )
 
-          estimated_cost = VersionCustomField.find_or_initialize_by(:name => l(:default_field_estimated_cost))
+          estimated_cost = VersionCustomField.find_or_initialize_by(
+            :name => l(:default_field_estimated_cost))
           estimated_cost.update(
             :field_format => 'float',
             :thousands_delimiter => 1,
@@ -634,8 +854,8 @@ module RedmineGercont
             :simple_pbi_custom_field_id => '',
             :pbi_tracker_ids => [story.id].map(&:to_s),
             :task_tracker_ids => [task.id].map(&:to_s),
-            "tracker_#{story.id}_fields".to_sym => [ "description", "fixed_version" ],
-            "tracker_#{story.id}_custom_fields".to_sym => [ story_points, blocked ],
+            "tracker_#{story.id}_fields".to_sym => [ "description", "fixed_version_id" ],
+            "tracker_#{story.id}_custom_fields".to_sym => [ story_points.id.to_s, blocked.id.to_s ],
             "tracker_#{task.id}_fields".to_sym => [ "assigned_to_id", "category_id", "due_date", "done_ratio", "description" ],
             :auto_update_pbi_status => '0',
             :closed_pbi_status_id => '',
@@ -821,7 +1041,7 @@ module RedmineGercont
           WorkflowPermission.replace_permissions(
             [demand],
             [technical_inspector],
-            technical_review.to_s => { "assigned_to_id" => "" },
+            technical_review.id.to_s => { "assigned_to_id" => "" },
             request_adjust.id.to_s => { "assigned_to_id" => "" },
             approve.id.to_s => { "assigned_to_id" => "" }
           )
@@ -829,14 +1049,14 @@ module RedmineGercont
           WorkflowPermission.replace_permissions(
             [demand],
             [agent, scrum_master],
-            ready_for_workplan.to_s => { "assigned_to_id" => "" },
+            ready_for_workplan.id.to_s => { "assigned_to_id" => "" },
             develop_work_plan.id.to_s => { "assigned_to_id" => "" }
           )
 
           WorkflowPermission.replace_permissions(
             [demand],
             [scrum_master],
-            plan_drafting.to_s => { "assigned_to_id" => "" },
+            plan_drafting.id.to_s => { "assigned_to_id" => "" },
             request_work_plan_approval.id.to_s => { "assigned_to_id" => "" }
           )
 

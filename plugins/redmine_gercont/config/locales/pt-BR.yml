@@ -106,6 +106,17 @@ pt-BR:
   default_field_estimated_count: Contagem Estimada (PPF)
   default_field_estimated_duration: Prazo estimado (dias corridos)
   default_field_estimated_cost: Custo estimado (R$)
+  default_field_stg_environment: Homologação
+  default_field_trn_environment: Treinamento
+  default_field_prd_environment: Produção
+  default_field_platform: Plataforma
+  default_field_mainteiner: Mantenedor
+  default_field_operacional_sistem: Sistema Operacional
+  default_field_web_server: Servidor Web
+  default_field_sgbd: SGBD
+  default_programming_language: Linguagem de Programação
+
+
 
   default_issue_status_request_approval: Solicitar aprovação
   default_issue_status_technical_review: Em avaliação técnica
@@ -119,6 +130,7 @@ pt-BR:
   default_issue_status_technical_plan_review: Em avaliação técnica do Plano de Trabalho
   default_issue_status_business_plan_review: Em avaliação negocial do Plano de Trabalho
   default_issue_status_managerial_plan_review: Em avaliação gerencial do Plano de Trabalho
+  default_issue_status_request_work_plan_adjustment: Solicitar ajuste do Plano de Trabalho
   default_issue_status_approve_work_plan: Aprovar Plano de Trabalho
   default_issue_status_waiting_work_order: Aguardando Ordem de Serviço
   default_issue_status_generate_work_order: Gerar Ordem de Serviço
@@ -300,6 +312,7 @@ pt-BR:
   text_need_associate_stories_to_versions: A solicitação não pode prosseguir. Existem releases sem histórias associadas.
   text_need_create_items_first: Cadastre antes pelo menos um Item de Catálogo para prosseguir.
   text_productivity_target: 0,58 pontos de função por dia por desenvolvedor
+  text_valid_url: Informar uma URL válida.
 
   text_cw_notes_automatically_forwarded: Encaminhada automaticamente
 
@@ -325,7 +338,8 @@ pt-BR:
   warning_cw_issue_demand_can_not_be_approved_no_open_contracts: Este projeto não está associado à um contrato ativo e não pode prosseguir.
   warning_cw_issue_demand_can_not_request_work_approval_missing_sprints: Não foi possível prosseguir. É necessário planejar Sprints antes.
   warning_cw_issue_demand_can_not_request_work_approval_missing_items: Não foi possível prosseguir. É necessário planejar Perfis Profissionais antes.
-  
+  warning_cw_issue_can_t_be_changed: Não foi possível prosseguir. Este registro só poderá ser alterado com a Demanda em planejamento ou execução.
+
   error_terms_end_date: Deve ser pelo menos 3 meses maior que o início da vigência.
   error_many_active_contracts: Não foi possível prosseguir. Os projetos %{projects} estão associados à outro contrato ativo.
   error_can_t_save_release_plan: Não foi possível prosseguir. Existem Histórias sem uma Release associada.

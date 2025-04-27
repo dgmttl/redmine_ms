@@ -1,9 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <hash>
-  <position type="integer">4</position>
-  <name>GERCONT_validators</name>
-  <observable>issue</observable>
-  <id type="integer">19</id>
   <before-save>if @issue.contracts_any? 
     
     #Avoid change tracker
@@ -23,7 +19,7 @@
     end
     
     # Avoid approve demand
-    if @issue.status == IssueStatus.approve
+    if @issue.status == IssueStatus.approve &amp;&amp; @user_roles.include?(Role.contract_manager)
         if @issue.active_contracts.count &gt; 1
             raise RedmineCustomWorkflows::Errors::WorkflowError, l(:warning_cw_issue_demand_can_not_be_approved_many_open_contracts)
         elsif @issue.active_contracts.count == 0
@@ -45,24 +41,24 @@
         end
     end
 
-    # Avoid issue versions custom field missing issues
-    if @issue.is_demand? 
-        selected_versions = @issue.custom_field_value(CustomField.requested_versions.id)
-        if requested_versions_changed? &amp;&amp; selected_versions.present?
-            versions = Version.find(selected_versions)
-            if versions.any? { |version| version.fixed_issues.blank? }
-                raise RedmineCustomWorkflows::Errors::WorkflowError, l(:warning_cw_tracker_missing_fixed_issues)
-            end
+    # Avoid change story and tasks
+    if @issue.parent.present? &amp;&amp; (@issue.is_pbi? || @issue.is_task?)
+        permited = [
+            IssueStatus.plan_drafting, 
+            IssueStatus.service_in_progress, 
+            IssueStatus.request_work_plan_adjustment,
+            IssueStatus.new_status
+        ]
+        unless permited.include?(@issue.parent.status)
+            raise RedmineCustomWorkflows::Errors::WorkflowError, l(:warning_cw_issue_can_t_be_changed)
         end
+
     end
 end
 </before-save>
-  <created-at type="dateTime">2025-04-27T18:11:44Z</created-at>
-  <updated-at type="dateTime">2025-04-27T18:11:57Z</updated-at>
-  <description></description>
-  <string></string>
-  <integer type="integer">1</integer>
   <after-save></after-save>
+  <name>GERCONT_validators</name>
+  <description></description>
   <is-for-all type="boolean">false</is-for-all>
   <author>diogo.neiva@saude.gov.br</author>
   <active type="boolean">true</active>
@@ -73,7 +69,14 @@ end
   <after-remove nil="true"/>
   <before-destroy></before-destroy>
   <after-destroy></after-destroy>
-  <exported-at>2025-04-27T18:11:57Z</exported-at>
+  <observable>issue</observable>
+  <id type="integer">44</id>
+  <created-at type="dateTime">2025-04-27T18:11:44Z</created-at>
+  <updated-at type="dateTime">2025-04-27T23:31:18Z</updated-at>
+  <string></string>
+  <position type="integer">4</position>
+  <integer type="integer">1</integer>
+  <exported-at>2025-04-27T23:31:18Z</exported-at>
   <plugin-version>3.0.0</plugin-version>
   <ruby-version>3.3.7-p123</ruby-version>
   <rails-version>7.2.2.1</rails-version>

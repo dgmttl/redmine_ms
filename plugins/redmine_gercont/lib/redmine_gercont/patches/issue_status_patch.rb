@@ -52,6 +52,10 @@ module RedmineGercont
             find_by(name: I18n.t(:default_issue_status_managerial_plan_review))
           end
 
+          def self.request_work_plan_adjustment
+            find_by(name: I18n.t(:default_issue_status_request_work_plan_adjustment))
+          end
+
           def self.approve_work_plan
             find_by(name: I18n.t(:default_issue_status_approve_work_plan))
           end

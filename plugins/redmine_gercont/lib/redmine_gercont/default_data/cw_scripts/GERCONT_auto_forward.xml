@@ -1,15 +1,11 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <hash>
-  <position type="integer">15</position>
-  <name>GERCONT_auto_forward</name>
-  <observable>issue</observable>
-  <id type="integer">4</id>
   <before-save>if @issue.contracts_any?
 
   if @issue.is_demand?
 
     if @issue.status == IssueStatus.request_approval
-      @new_role_name = Role.technical_review.name
+      @new_role_name = Role.technical_inspector.name
       @new_status = IssueStatus.technical_review
       @new_assigned_to = set_assigned_to(Role.technical_inspector)
       @forward_issue = true
@@ -60,11 +56,6 @@
     puts "Issue prepared to forward" if @forward_issue
   end
 end</before-save>
-  <created-at type="dateTime">2025-04-24T23:35:49Z</created-at>
-  <updated-at type="dateTime">2025-04-27T18:11:56Z</updated-at>
-  <description></description>
-  <string></string>
-  <integer type="integer">1</integer>
   <after-save>if @forward_issue
 
   if @new_status.present?
@@ -80,6 +71,8 @@ end</before-save>
 
   puts "Issue forwarded"
 end</after-save>
+  <name>GERCONT_auto_forward</name>
+  <description></description>
   <is-for-all type="boolean">false</is-for-all>
   <author>diogo.neiva@saude.gov.br</author>
   <active type="boolean">true</active>
@@ -90,7 +83,14 @@ end</after-save>
   <after-remove nil="true"/>
   <before-destroy></before-destroy>
   <after-destroy></after-destroy>
-  <exported-at>2025-04-27T18:11:56Z</exported-at>
+  <observable>issue</observable>
+  <id type="integer">39</id>
+  <created-at type="dateTime">2025-04-24T23:35:49Z</created-at>
+  <updated-at type="dateTime">2025-04-27T23:28:48Z</updated-at>
+  <string></string>
+  <position type="integer">20</position>
+  <integer type="integer">1</integer>
+  <exported-at>2025-04-27T23:28:48Z</exported-at>
   <plugin-version>3.0.0</plugin-version>
   <ruby-version>3.3.7-p123</ruby-version>
   <rails-version>7.2.2.1</rails-version>

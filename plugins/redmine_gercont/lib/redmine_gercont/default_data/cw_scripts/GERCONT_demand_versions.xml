@@ -1,13 +1,11 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <hash>
-  <position type="integer">13</position>
-  <name>GERCONT_demand_versions</name>
-  <observable>issue</observable>
-  <id type="integer">5</id>
   <before-save>if @issue.contracts_any?
 
   if @issue.is_demand?
     @selected_sprint = @issue.sprint
+    @issue.sprint = @issue.demand_backlog
+    
     if @issue.sprint.blank? &amp;&amp; @issue.children?
         @issue.sprint = @issue.children.first.sprint
     end
@@ -37,38 +35,34 @@
     puts "Issue children out prepared" if @stories_out_demand.present?
   end
 end</before-save>
-  <created-at type="dateTime">2025-04-16T12:39:01Z</created-at>
-  <updated-at type="dateTime">2025-04-27T18:11:56Z</updated-at>
-  <description></description>
-  <string></string>
-  <integer type="integer">1</integer>
-  <after-save>if @stories_to_demand.present? &amp;&amp; @issue.sprint.blank?
-  demand_backlog = create_demand_backlog
-  puts "Backlog created"
-else
-  demand_backlog = @issue.sprint
-end
-
-if @stories_to_demand.present?
-  @stories_to_demand.each do |story|
-    story.parent = @issue
-    story.sprint = demand_backlog
-    story.save!
-  end 
-  Version.where(id: @versions_in).update_all(status: 'requested')
-  puts "Issue children associated"
-end
-
-if @stories_out_demand.present?
-  Version.where(id: @versions_out).update_all(status: 'planning')
-  @stories_out_demand.each do |story|
-      story.parent_id = nil
-      story.sprint = @issue.product_backlog
-      story.save!
+  <after-save>if @issue.is_demand? 
+  if @stories_to_demand.present? &amp;&amp; @issue.demand_backlog.nil?
+    @issue.sprint = create_demand_backlog
+    puts "Backlog created"
   end
-  puts "Issue children disassociated"
-end
-</after-save>
+
+  if @stories_to_demand.present?
+    @stories_to_demand.each do |story|
+      story.parent = @issue
+      story.sprint = @issue.demand_backlog
+      story.save!
+    end 
+    Version.where(id: @versions_in).update_all(status: 'requested')
+    puts "Issue children associated"
+  end
+
+  if @stories_out_demand.present?
+    Version.where(id: @versions_out).update_all(status: 'planning')
+    @stories_out_demand.each do |story|
+        story.parent_id = nil
+        story.sprint = @issue.product_backlog
+        story.save!
+    end
+    puts "Issue children disassociated"
+  end
+end</after-save>
+  <name>GERCONT_demand_versions</name>
+  <description></description>
   <is-for-all type="boolean">false</is-for-all>
   <author>diogo.neiva@saude.gov.br</author>
   <active type="boolean">true</active>
@@ -79,7 +73,14 @@ end
   <after-remove nil="true"/>
   <before-destroy></before-destroy>
   <after-destroy></after-destroy>
-  <exported-at>2025-04-27T18:11:56Z</exported-at>
+  <observable>issue</observable>
+  <id type="integer">41</id>
+  <created-at type="dateTime">2025-04-16T12:39:01Z</created-at>
+  <updated-at type="dateTime">2025-04-27T23:24:17Z</updated-at>
+  <string></string>
+  <position type="integer">16</position>
+  <integer type="integer">1</integer>
+  <exported-at>2025-04-27T23:24:17Z</exported-at>
   <plugin-version>3.0.0</plugin-version>
   <ruby-version>3.3.7-p123</ruby-version>
   <rails-version>7.2.2.1</rails-version>
