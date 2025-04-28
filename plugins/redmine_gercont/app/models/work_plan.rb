@@ -47,7 +47,7 @@ class WorkPlan < ApplicationRecord
     end
       
     def stories
-        issue.children.where(tracker_id: Setting.plugin_scrum['pbi_tracker_ids'].first.to_i)
+      sprints_objects.flat_map { |sprint| sprint[:pbis] }
     end
 
     def deadline
