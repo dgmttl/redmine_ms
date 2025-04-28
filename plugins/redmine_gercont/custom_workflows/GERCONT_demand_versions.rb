@@ -1,6 +1,6 @@
 if @issue.contracts_any?
 
-  if @issue.is_demand?
+  if @issue.demand?
     @selected_sprint = @issue.sprint
     @issue.sprint = @issue.demand_backlog
     
@@ -36,7 +36,7 @@ end
 
 
 #################################AFTER SAVE###################
-if @issue.is_demand? 
+if @issue.demand? 
   if @stories_to_demand.present? && @issue.demand_backlog.nil?
     @issue.sprint = create_demand_backlog
     puts "Backlog created"

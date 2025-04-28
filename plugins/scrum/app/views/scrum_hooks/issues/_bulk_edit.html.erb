@@ -1,5 +1,5 @@
 <%- if defined?(@project) and @project.scrum? -%>
-  <% if @project.contracts.empty? || User.current.admin?  || ((User.current.allowed_to?(:manage_sprints, @project) && @issues.any? { |issue| !issue.is_demand? })) %>
+  <% if @project.contracts.empty? || User.current.admin?  || ((User.current.allowed_to?(:manage_sprints, @project) && @issues.any? { |issue| !issue.demand? })) %>
     <% if @safe_attributes.include?("sprint_id") -%>
       <p>
         <label for="sprint_id"><%= @issues.any? { |issue| issue.sprint.is_product_backlog? } ? l(:label_backlog) : l(:label_sprint) %></label>

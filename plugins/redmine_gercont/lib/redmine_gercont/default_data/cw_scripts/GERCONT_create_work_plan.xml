@@ -2,7 +2,7 @@
 <hash>
   <before-save>if @issue.contracts_any?
 
-    if @issue.is_demand?
+    if @issue.demand?
         if @issue.status == IssueStatus.develop_work_plan
             if @issue.work_plan.blank?
                 create_work_plan
@@ -27,11 +27,11 @@ end</before-save>
   <observable>issue</observable>
   <id type="integer">40</id>
   <created-at type="dateTime">2025-04-25T15:14:43Z</created-at>
-  <updated-at type="dateTime">2025-04-27T22:48:20Z</updated-at>
+  <updated-at type="dateTime">2025-04-28T14:57:47Z</updated-at>
   <string></string>
   <position type="integer">15</position>
   <integer type="integer">1</integer>
-  <exported-at>2025-04-27T22:48:20Z</exported-at>
+  <exported-at>2025-04-28T15:02:05Z</exported-at>
   <plugin-version>3.0.0</plugin-version>
   <ruby-version>3.3.7-p123</ruby-version>
   <rails-version>7.2.2.1</rails-version>

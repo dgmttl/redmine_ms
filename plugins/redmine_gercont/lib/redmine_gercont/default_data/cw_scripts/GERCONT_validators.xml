@@ -9,12 +9,24 @@
 
     # Avoid create subtask
     if @issue.parent.present?
-        if @issue.is_story? &amp;&amp; !@issue.parent.is_demand?
+        if @issue.story? &amp;&amp; !@issue.parent.demand?
             raise RedmineCustomWorkflows::Errors::WorkflowError, l(:warning_cw_issue_story_can_not_be_created)
         end
 
-        if @issue.is_task? &amp;&amp; @issue.parent.is_story?
+        if @issue.task? &amp;&amp; !@issue.parent.demand?
             raise RedmineCustomWorkflows::Errors::WorkflowError, l(:warning_cw_issue_task_can_not_be_created)
+        end
+
+        if @issue.story?
+            parent_versions_ids = parent.custom_field_value(CustomField.requested_versions.id).map(&amp;:to_i)
+            puts "================= parent_versions_ids: #{parent_versions_ids}"
+            puts "================= @issue.fixed_version&amp;.id: #{@issue.fixed_version&amp;.id}"
+           
+            if @issue.fixed_version.nil? || !parent_versions_ids.include?(@issue.fixed_version.id)
+                parent_versions_names = Version.find(parent_versions_ids).map(&amp;:name).join(', ')
+                raise RedmineCustomWorkflows::Errors::WorkflowError, 
+                    l(:warning_cw_issue_story_can_not_be_created_missing_fixed_version, versions: parent_versions_names)
+            end
         end
     end
     
@@ -72,11 +84,11 @@ end
   <observable>issue</observable>
   <id type="integer">44</id>
   <created-at type="dateTime">2025-04-27T18:11:44Z</created-at>
-  <updated-at type="dateTime">2025-04-27T23:31:18Z</updated-at>
+  <updated-at type="dateTime">2025-04-28T22:20:01Z</updated-at>
   <string></string>
   <position type="integer">4</position>
   <integer type="integer">1</integer>
-  <exported-at>2025-04-27T23:31:18Z</exported-at>
+  <exported-at>2025-04-28T22:20:01Z</exported-at>
   <plugin-version>3.0.0</plugin-version>
   <ruby-version>3.3.7-p123</ruby-version>
   <rails-version>7.2.2.1</rails-version>

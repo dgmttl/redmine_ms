@@ -1,11 +1,17 @@
 if @issue.contracts_any?
 
-  unless @issue.is_demand?
+  unless @issue.demand?
     @selected_sprint = @issue.sprint
-    if @issue.parent.present?
-      @issue.sprint = @issue.parent.sprint
-    else
-      @issue.sprint = @issue.product_backlog
+    if @issue.fixed_version.present?
+      version = @issue.fixed_version
+      issue = version.fixed_issues&.first
+      @issue.parent = issue&.parent
+    
+      if @issue.parent.present?
+        @issue.sprint = @issue.parent.sprint
+      else
+        @issue.sprint = @issue.product_backlog
+      end
     end
   end
 

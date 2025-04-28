@@ -334,6 +334,7 @@ pt-BR:
   warning_cw_tracker_missing_non_functional_requisites: Não foi possível prosseguir. Indique um ou mais Requisitos não funcionais.
   warning_cw_issue_story_can_not_be_created: Uma História de Usuário só pode ter uma Demanda como Registro pai.
   warning_cw_issue_task_can_not_be_created: Uma Tarefa só pode ter uma História de Usuário como Registro pai.
+  warning_cw_issue_story_can_not_be_created_missing_fixed_version: "Não foi possível prosseguir. Selecione uma Release relacionada ao Registro pai: %{versions}"
   warning_cw_issue_demand_can_not_be_approved_many_open_contracts: Este projeto está associado a mais de um contrato ativo e não pode prosseguir.
   warning_cw_issue_demand_can_not_be_approved_no_open_contracts: Este projeto não está associado à um contrato ativo e não pode prosseguir.
   warning_cw_issue_demand_can_not_request_work_approval_missing_sprints: Não foi possível prosseguir. É necessário planejar Sprints antes.

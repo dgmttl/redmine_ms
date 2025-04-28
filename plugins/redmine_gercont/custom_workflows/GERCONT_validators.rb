@@ -7,12 +7,24 @@ if @issue.contracts_any?
 
     # Avoid create subtask
     if @issue.parent.present?
-        if @issue.is_story? && !@issue.parent.is_demand?
+        if @issue.story? && !@issue.parent.demand?
             raise RedmineCustomWorkflows::Errors::WorkflowError, l(:warning_cw_issue_story_can_not_be_created)
         end
 
-        if @issue.is_task? && @issue.parent.is_story?
+        if @issue.task? && !@issue.parent.demand?
             raise RedmineCustomWorkflows::Errors::WorkflowError, l(:warning_cw_issue_task_can_not_be_created)
+        end
+
+        if @issue.story?
+            parent_versions_ids = parent.custom_field_value(CustomField.requested_versions.id).map(&:to_i)
+            puts "================= parent_versions_ids: #{parent_versions_ids}"
+            puts "================= @issue.fixed_version&.id: #{@issue.fixed_version&.id}"
+           
+            if @issue.fixed_version.nil? || !parent_versions_ids.include?(@issue.fixed_version.id)
+                parent_versions_names = Version.find(parent_versions_ids).map(&:name).join(', ')
+                raise RedmineCustomWorkflows::Errors::WorkflowError, 
+                    l(:warning_cw_issue_story_can_not_be_created_missing_fixed_version, versions: parent_versions_names)
+            end
         end
     end
     

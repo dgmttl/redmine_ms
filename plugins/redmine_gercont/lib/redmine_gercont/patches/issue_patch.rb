@@ -36,12 +36,16 @@ module RedmineGercont
             project.active_contracts
           end
 
-          def is_demand?
-            self.tracker_id == Setting.plugin_redmine_gercont['demand_tracker_id'].to_i
+          def demand?
+            tracker == Tracker.demand
           end
 
-          def is_story?
-            self.tracker_id == Setting.plugin_scrum['pbi_tracker_ids'].first.to_i
+          def story?
+            tracker == Tracker.story
+          end
+
+          def task?
+            tracker == Tracker.task
           end
 
         end

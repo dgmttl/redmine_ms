@@ -1,5 +1,5 @@
 <%- if defined?(@project) and !(@project.nil?) and @project.scrum? %>
-  <% if @project.contracts.empty? || User.current.admin?  || ((User.current.allowed_to?(:manage_sprints, @project) && @issues.any? { |issue| !issue.is_demand? })) %>
+  <% if @project.contracts.empty? || User.current.admin?  || ((User.current.allowed_to?(:manage_sprints, @project) && @issues.any? { |issue| !issue.demand? })) %>
     <%- issue_ids = @issues.collect{ |issue| issue.id } -%>
     <li class="folder">
       <a href="#" class="submenu"><%= @issues.any? { |issue| issue.sprint.is_product_backlog? } ? l(:label_backlog) : l(:label_sprint) %></a>

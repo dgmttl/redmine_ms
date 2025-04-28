@@ -418,8 +418,6 @@ module RedmineGercont
                 }
               }
             )
-            
-
 
             scrum_master = Role.find_or_initialize_by(:name => l(:default_role_scrum_master))
             scrum_master.update(
@@ -1095,6 +1093,19 @@ module RedmineGercont
             }
           )
 
+          WorkflowPermission.replace_permissions(
+            [story, task],
+            [scrum_master, scrum_team],
+            new.id.to_s => { 
+              "tracker_id" => "", 
+              "subject" => "",
+              "assigned_to_id" => "",
+              "description" => "", 
+              "parent_issue_id" => "required",
+              "priority_id" => "",
+              "description" => ""
+            }
+          )
           puts "============= Workflow permissions done."
 
           # Sample Project
@@ -1121,12 +1132,21 @@ module RedmineGercont
           # Custom Workflows
           CustomWorkflow.all.map(&:destroy) if CustomWorkflow.all.any?
           files = Dir.glob(File.join(Rails.root, 'plugins', 'redmine_gercont', 'lib', 'redmine_gercont', 'default_data', 'cw_scripts', '*.xml'))
+          workflows = []
           files.each do |file|
             workflow = CustomWorkflow.import_from_xml(File.read(file))
             workflow.string=''
             workflow.save
+            workflows << workflow
           end
 
+          projects = Project.all
+          projects.each do |project|
+            next if project.contracts.blank?
+            
+            project.custom_workflows = workflows
+            project.save
+          end
           puts "============= CustomWorkflows done."
           
           # Queries

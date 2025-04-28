@@ -3,12 +3,12 @@
   <div class="splitcontent">
     <div class="splitcontentleft">
       <%- selected = @issue.sprint ? @issue.sprint.id.to_s : nil -%>
-      <% if @project.contracts.empty? || User.current.admin? || ((User.current.allowed_to?(:manage_sprints, @project) && !@issue.is_demand?)) %>
+      <% if @project.contracts.empty? || User.current.admin? %>
         <p>
           <%= form.select :sprint_id,
                           options_from_collection_for_select(assignable_sprints, 'id', 'name', selected),
                           :include_blank => true,
-                          :label => @issue.sprint.is_product_backlog? ? l(:label_backlog) : l(:label_sprint)
+                          :label => !@issue.sprint&.is_product_backlog? ? l(:label_sprint) : l(:label_backlog)
           %>
         </p>
       <% else %>

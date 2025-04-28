@@ -1,6 +1,6 @@
 if @issue.contracts_any?
 
-  if @issue.is_demand?
+  if @issue.demand?
 
     if @issue.status == IssueStatus.request_approval
       @new_role_name = Role.technical_inspector.name
