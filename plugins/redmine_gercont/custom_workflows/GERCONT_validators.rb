@@ -46,24 +46,10 @@ if @issue.contracts_any?
         elsif @issue.work_plan.work_plan_items.blank?
             raise RedmineCustomWorkflows::Errors::WorkflowError, l(:warning_cw_issue_demand_can_not_request_work_approval_missing_items)
         elsif @issue.work_plan.sprints.present?
-
-            work_plan_sprints = JSON.parse(@issue.work_plan.sprints)
-
-            work_plan_items_sprints = @issue.work_plan.work_plan_items&.flat_map do |item|
-                JSON.parse(item.sprints)
-            end
-            work_plan_items_sprints ||= []
-
-            work_plan_items_indexes = work_plan_items_sprints.map(&:to_i) # Strings para inteiros
-            work_plan_sprints_indexes = work_plan_sprints.map { |sprint| sprint['index'] }
-
-            common_indexes = work_plan_items_indexes & work_plan_sprints_indexes
-            missing_indexes = work_plan_sprints_indexes - work_plan_items_indexes
-            if missing_indexes.present?
+            if missing_any_sprint?
                 raise RedmineCustomWorkflows::Errors::WorkflowError, l(:warning_cw_issue_demand_can_not_request_work_approval_missing_items_in_all_sprints)
             end
         end
-        
     end
 
     # Avoid change story and tasks

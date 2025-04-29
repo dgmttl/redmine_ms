@@ -64,5 +64,21 @@ end
 
 def selected_sprint_changed?
     @selected_sprint != @issue.sprint
-  end
+end
 
+def missing_any_sprint?
+    work_plan_sprints = JSON.parse(@issue.work_plan.sprints)
+
+    work_plan_items_sprints = @issue.work_plan.work_plan_items&.flat_map do |item|
+        JSON.parse(item.sprints)
+    end
+    work_plan_items_sprints ||= []
+
+    work_plan_items_indexes = work_plan_items_sprints.map(&:to_i)
+    work_plan_sprints_indexes = work_plan_sprints.map { |sprint| sprint['index'] }
+
+    common_indexes = work_plan_items_indexes & work_plan_sprints_indexes
+    missing_indexes = work_plan_sprints_indexes - work_plan_items_indexes
+
+    missing_indexes.present? ? true : false
+end
