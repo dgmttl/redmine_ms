@@ -1,8 +1,3 @@
-<% pbi_tracker_id = Setting.plugin_scrum['pbi_tracker_ids']&.first.to_i %>
-<% demand_tracker_id = Setting.plugin_redmine_gercont['demand_tracker_id'] %>
-
-
-
 <% content_for :header_tags do %>
   <%= javascripts_for_quote_reply_include_tag %>
 <% end %>
@@ -119,15 +114,24 @@ end %>
 <%= call_hook(:view_issues_show_description_bottom, :issue => @issue) %>
 
 <% if !@issue.leaf? || User.current.allowed_to?(:manage_subtasks, @project) %>
+  <% if @issue.contracts_any? %>
+    <% if @issue.tracker == Tracker.story || @issue.tracker == Tracker.demand %>
+      <hr />
+      <div id="issue_tree">
+        <%= render :partial => 'subtasks' %>
+      </div>
+    <% end %>
+  <% else %>
     <hr />
     <div id="issue_tree">
       <%= render :partial => 'subtasks' %>
     </div>
+  <% end %>
 <% end %>
 
 <% if ( @relations.present? || User.current.allowed_to?(:manage_issue_relations, @project) ) %>
-  <% if @issue.project.contracts.any? %>
-    <% if @issue.tracker_id == pbi_tracker_id%>
+  <% if @issue.contracts_any? %>
+    <% if @issue.tracker == Tracker.story %>
       <hr />
       <div id="relations">
       <%= render :partial => 'relations' %>
