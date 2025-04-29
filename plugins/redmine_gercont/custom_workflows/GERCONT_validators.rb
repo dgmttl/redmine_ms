@@ -17,9 +17,6 @@ if @issue.contracts_any?
 
         if @issue.story?
             parent_versions_ids = parent.custom_field_value(CustomField.requested_versions.id).map(&:to_i)
-            puts "================= parent_versions_ids: #{parent_versions_ids}"
-            puts "================= @issue.fixed_version&.id: #{@issue.fixed_version&.id}"
-           
             if @issue.fixed_version.nil? || !parent_versions_ids.include?(@issue.fixed_version.id)
                 parent_versions_names = Version.find(parent_versions_ids).map(&:name).join(', ')
                 raise RedmineCustomWorkflows::Errors::WorkflowError, 
@@ -46,9 +43,27 @@ if @issue.contracts_any?
     if @issue.status == IssueStatus.request_work_plan_approval
         if @issue.work_plan.sprints.blank?
             raise RedmineCustomWorkflows::Errors::WorkflowError, l(:warning_cw_issue_demand_can_not_request_work_approval_missing_sprints)
-        elsif @issue.work_plan.items.blank?
+        elsif @issue.work_plan.work_plan_items.blank?
             raise RedmineCustomWorkflows::Errors::WorkflowError, l(:warning_cw_issue_demand_can_not_request_work_approval_missing_items)
+        elsif @issue.work_plan.sprints.present?
+
+            work_plan_sprints = JSON.parse(@issue.work_plan.sprints)
+
+            work_plan_items_sprints = @issue.work_plan.work_plan_items&.flat_map do |item|
+                JSON.parse(item.sprints)
+            end
+            work_plan_items_sprints ||= []
+
+            work_plan_items_indexes = work_plan_items_sprints.map(&:to_i) # Strings para inteiros
+            work_plan_sprints_indexes = work_plan_sprints.map { |sprint| sprint['index'] }
+
+            common_indexes = work_plan_items_indexes & work_plan_sprints_indexes
+            missing_indexes = work_plan_sprints_indexes - work_plan_items_indexes
+            if missing_indexes.present?
+                raise RedmineCustomWorkflows::Errors::WorkflowError, l(:warning_cw_issue_demand_can_not_request_work_approval_missing_items_in_all_sprints)
+            end
         end
+        
     end
 
     # Avoid change story and tasks

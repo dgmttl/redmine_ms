@@ -12,11 +12,13 @@
                     <%= f.submit l(:button_update) if can_plan_work_plan? %>
                 </p>
             <% end %>
+            <p><strong><%= l(:label_editor) %>: </strong><%= @work_plan.updated_by.name %></p>
         </div>
         <div class="splitcontentright">
             <p><strong><%= l(:label_sprint_plural) %>: </strong><%= @work_plan.available_sprints.count %></p>
             <p><strong><%= l(:label_work_plan_items) %>: </strong><%= @work_plan.work_plan_items.count %></p>
             <p><strong><%= l(:label_story_plural) %>: </strong><%= @work_plan.stories.count %></p>
+            <p><strong><%= l(:field_contractor) %>: </strong><%= @work_plan.project.contract.contractor %></p>
         </div>
 
     </div>
@@ -47,17 +49,17 @@
     <%# end %>
 
 </fieldset>
-
+<br><br>
 
 
 <style>
     input[readonly] {
-      border: none; /* Remove a borda */
-      background-color: transparent; /* Fundo transparente */
-      color: inherit; /* Mantém a cor padrão */
-      pointer-events: none; /* Impede interações do usuário */
+      border: none; 
+      background-color: transparent;
+      color: inherit;
+      pointer-events: none;
     }
-  </style>
+</style>
 
 
 

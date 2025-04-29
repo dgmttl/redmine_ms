@@ -40,7 +40,8 @@ end
 def create_work_plan
     WorkPlan.create(
         issue_id: @issue.id,
-        status: 'planning'
+        status: 'planning',
+        updated_by: @issue.assigned_to
     )
 end
 

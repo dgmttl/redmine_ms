@@ -6,6 +6,7 @@ class CreateWorkPlans < ActiveRecord::Migration[7.2]
       t.text :sprints
       t.integer :days_allocation, default: 7
       t.text :baseline
+      t.integer :updated_by_id
       
       t.timestamps
     end

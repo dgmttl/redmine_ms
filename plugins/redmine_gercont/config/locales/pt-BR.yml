@@ -220,6 +220,7 @@ pt-BR:
   label_contract_members: Membros do Contrato
   label_contracts: Contratos
   label_core_settings_version: Versão das configurações nativas
+  label_corp: Contratada
   label_deadline: Prazo após abertura da OS
   label_daily_cost: Custo diário
   label_demand: Demanda
@@ -227,6 +228,7 @@ pt-BR:
   label_edit_assessment: Editar Questionário
   label_edit_sla_event: Editar NMS
   label_edit_work_plan: Editar Plano de Trabalho
+  label_editor: Responsável
   label_estimated_calendar_days: Dias corridos estimados
   label_estimated_count: Contagem estimada
   label_estimated_duration: Prazo estimado
@@ -260,7 +262,6 @@ pt-BR:
   label_non_functional_requirements: Requisitos não funcionais
   label_not_registred: Não registrado
   label_resume: Resumo
-  # label_product_backlog: Backlog do produto
   label_project_members: Membros dos Projetos
   label_requester: Requisitante
   label_requester_area: Área Requisitante
@@ -311,8 +312,10 @@ pt-BR:
   text_code_area: Insira o seu código aqui.
   text_need_associate_stories_to_versions: A solicitação não pode prosseguir. Existem releases sem histórias associadas.
   text_need_create_items_first: Cadastre antes pelo menos um Item de Catálogo para prosseguir.
+  text_not_available: Não disponível
   text_productivity_target: 0,58 pontos de função por dia por desenvolvedor
   text_valid_url: Informar uma URL válida.
+
 
   text_cw_notes_automatically_forwarded: Encaminhada automaticamente
 
@@ -340,7 +343,7 @@ pt-BR:
   warning_cw_issue_demand_can_not_request_work_approval_missing_sprints: Não foi possível prosseguir. É necessário planejar Sprints antes.
   warning_cw_issue_demand_can_not_request_work_approval_missing_items: Não foi possível prosseguir. É necessário planejar Perfis Profissionais antes.
   warning_cw_issue_can_t_be_changed: Não foi possível prosseguir. Este registro só poderá ser alterado com a Demanda em planejamento ou execução.
-
+  warning_cw_issue_demand_can_not_request_work_approval_missing_items_in_all_sprints: Não foi possível prosseguir. Existem sprints sem profissionais alocados.
   error_terms_end_date: Deve ser pelo menos 3 meses maior que o início da vigência.
   error_many_active_contracts: Não foi possível prosseguir. Os projetos %{projects} estão associados à outro contrato ativo.
   error_can_t_save_release_plan: Não foi possível prosseguir. Existem Histórias sem uma Release associada.

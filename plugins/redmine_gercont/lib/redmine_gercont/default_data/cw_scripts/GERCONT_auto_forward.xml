@@ -40,7 +40,10 @@
       @new_role_name = Role.scrum_master.name
       @new_assigned_to = set_assigned_to(Role.scrum_master)
       @new_status = IssueStatus.plan_drafting
-      @forward_issue = true    
+      @forward_issue = true
+      workplan = WorkPlan.find_by(issue_id: @issue.id)
+      workplan.update(updated_by_id: @new_assigned_to.id)
+       
     end
 
     if @issue.status == IssueStatus.request_work_plan_approval
@@ -86,11 +89,11 @@ end</after-save>
   <observable>issue</observable>
   <id type="integer">39</id>
   <created-at type="dateTime">2025-04-24T23:35:49Z</created-at>
-  <updated-at type="dateTime">2025-04-28T15:01:55Z</updated-at>
+  <updated-at type="dateTime">2025-04-29T02:38:12Z</updated-at>
   <string></string>
   <position type="integer">20</position>
   <integer type="integer">1</integer>
-  <exported-at>2025-04-28T15:01:55Z</exported-at>
+  <exported-at>2025-04-29T02:38:12Z</exported-at>
   <plugin-version>3.0.0</plugin-version>
   <ruby-version>3.3.7-p123</ruby-version>
   <rails-version>7.2.2.1</rails-version>

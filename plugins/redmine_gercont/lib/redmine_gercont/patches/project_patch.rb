@@ -15,6 +15,10 @@ module RedmineGercont
             contracts.select { |contract| contract.status == 'active' } if contracts.present?
           end
 
+          def contract
+            active_contracts&.first
+          end
+          
         end
       end
     end

@@ -49,7 +49,8 @@ end
 def create_work_plan
     WorkPlan.create(
         issue_id: @issue.id,
-        status: 'planning'
+        status: 'planning',
+        updated_by: @issue.assigned_to
     )
 end
 
@@ -84,11 +85,11 @@ def selected_sprint_changed?
   <observable>shared</observable>
   <id type="integer">42</id>
   <created-at type="dateTime">2025-04-13T17:13:53Z</created-at>
-  <updated-at type="dateTime">2025-04-28T15:01:14Z</updated-at>
+  <updated-at type="dateTime">2025-04-29T01:38:13Z</updated-at>
   <string></string>
   <position type="integer">2</position>
   <integer type="integer">1</integer>
-  <exported-at>2025-04-28T15:01:14Z</exported-at>
+  <exported-at>2025-04-29T01:38:13Z</exported-at>
   <plugin-version>3.0.0</plugin-version>
   <ruby-version>3.3.7-p123</ruby-version>
   <rails-version>7.2.2.1</rails-version>

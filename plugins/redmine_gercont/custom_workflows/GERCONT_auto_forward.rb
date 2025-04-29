@@ -38,7 +38,10 @@ if @issue.contracts_any?
       @new_role_name = Role.scrum_master.name
       @new_assigned_to = set_assigned_to(Role.scrum_master)
       @new_status = IssueStatus.plan_drafting
-      @forward_issue = true    
+      @forward_issue = true
+      workplan = WorkPlan.find_by(issue_id: @issue.id)
+      workplan.update(updated_by_id: @new_assigned_to.id)
+       
     end
 
     if @issue.status == IssueStatus.request_work_plan_approval

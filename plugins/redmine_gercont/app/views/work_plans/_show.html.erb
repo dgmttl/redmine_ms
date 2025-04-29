@@ -5,7 +5,10 @@
     <%= l("statuses.work_plan.#{@work_plan.status}") %>
 </span>
 
-<div class="contextual scrum-menu">
+<%= render 'work_plans/head' %>
+
+<h3><%= l(:label_sprint_plural) %></h3>
+<div class="contextual">
     <% if can_plan_work_plan? %>
         <%= 
             link_to(l(:label_demand_backlog), 
@@ -14,12 +17,9 @@
         %>
     <% end %>
 </div>
-
-<% if @work_plan.sprints.blank? %>    
-     <div class="nodata"><%= l(:label_no_data) %></div>
-<% else %>
-    <%= render 'work_plans/head' %>
-    <h3><%= l(:label_sprint_plural) %></h3>
+<br><br>
+  
+<% if @work_plan.sprints.present? %>     
     <%= render 'work_plans/sprints' %>
 
     <% if can_plan_work_plan? %>
@@ -31,9 +31,15 @@
             %>
         </div>    
     <% end %>
-    <h3><%= l(:label_work_plan_items) %></h3>
 
-    <%= render 'work_plan_items/index' if @work_plan.work_plan_items.any? %>
+    <h3><%= l(:label_work_plan_items) %></h3>
+    <% if @work_plan.work_plan_items.blank? %>
+        <div class="nodata"><%= l(:label_no_data) %></div>
+    <% else %>  
+        <%= render 'work_plan_items/index'  %>
+    <% end %>
+<% else %>
+    <div class="nodata"><%= l(:label_no_data) %></div>
 <% end %>
 
 
