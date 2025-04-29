@@ -22,7 +22,6 @@ class WorkPlansController < ApplicationController
      
     def create
       @work_plan = WorkPlan.new(work_plan_params)
-      @work_plan.updated_by = User.current
       if @work_plan.save
         flash[:notice] = l(:notice_successful_create)
         redirect_to project_work_plans_path(@project)
@@ -35,7 +34,6 @@ class WorkPlansController < ApplicationController
     end
 
     def update
-      @work_plan.updated_by = User.current
       if @work_plan.update(work_plan_params)
         flash[:notice] = l(:notice_successful_update)
         # Redireciona de volta para onde foi chamado ou para um fallback
@@ -73,7 +71,7 @@ class WorkPlansController < ApplicationController
           }
         end
 
-        if @work_plan.update(sprints: sprint_data.to_json)
+        if @work_plan.update(sprints: sprint_data.to_json, updated_by_id: User.current.id)
           flash[:notice] = l(:notice_successful_update)
           redirect_to issue_work_plan_path
         else
