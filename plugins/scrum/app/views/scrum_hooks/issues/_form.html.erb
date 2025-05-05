@@ -7,7 +7,9 @@
         <p>
           <%= form.select :sprint_id,
                           options_from_collection_for_select(assignable_sprints, 'id', 'name', selected),
-                          :include_blank => true %>
+                          :include_blank => true,
+                          :label => !@issue.sprint&.is_product_backlog? ? l(:label_sprint) : l(:label_backlog)
+          %>
         </p>
       <% else %>
         <%= hidden_field_tag 'issue[sprint_id]', selected %>

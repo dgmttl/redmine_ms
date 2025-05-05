@@ -142,6 +142,10 @@ class ScrumController < ApplicationController
       @pbi.set_on_top if @top
       @pbi.sprint = @sprint
       update_attributes(@pbi, params)
+      @pbi.parent = @sprint.related_demand
+      puts "============== CREATE PBI: @pbi: #{@sprint.inspect}"
+      puts "============== CREATE PBI: @product_backlog: #{@sprint.inspect}"
+      puts "============== CREATE PBI: @related_demand: #{@sprint.related_demand}"
       @pbi.save!
     rescue Exception => @exception
       logger.error("Exception: #{@exception.inspect}")

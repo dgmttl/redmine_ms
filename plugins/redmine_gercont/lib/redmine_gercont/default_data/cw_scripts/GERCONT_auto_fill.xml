@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<hash>
+  <before-save>if @issue.contracts_any?
+
+  unless @issue.demand?
+    @selected_sprint = @issue.sprint
+    if @issue.fixed_version.present?
+      version = @issue.fixed_version
+      issue = version.fixed_issues&amp;.first
+      @issue.parent = issue&amp;.parent
+    
+      if @issue.parent.present?
+        @issue.sprint = @issue.parent.sprint
+      else
+        @issue.sprint = @issue.product_backlog
+      end
+    end
+  end
+
+  puts "Issue fields filled-up" if selected_sprint_changed?
+end
+
+</before-save>
+  <after-save></after-save>
+  <name>GERCONT_auto_fill</name>
+  <description></description>
+  <is-for-all type="boolean">false</is-for-all>
+  <author>diogo.neiva@saude.gov.br</author>
+  <active type="boolean">true</active>
+  <shared-code nil="true"/>
+  <before-add nil="true"/>
+  <after-add nil="true"/>
+  <before-remove nil="true"/>
+  <after-remove nil="true"/>
+  <before-destroy></before-destroy>
+  <after-destroy></after-destroy>
+  <observable>issue</observable>
+  <id type="integer">38</id>
+  <created-at type="dateTime">2025-04-26T23:03:38Z</created-at>
+  <updated-at type="dateTime">2025-04-28T14:55:43Z</updated-at>
+  <string></string>
+  <position type="integer">19</position>
+  <integer type="integer">1</integer>
+  <exported-at>2025-04-28T15:01:32Z</exported-at>
+  <plugin-version>3.0.0</plugin-version>
+  <ruby-version>3.3.7-p123</ruby-version>
+  <rails-version>7.2.2.1</rails-version>
+</hash>

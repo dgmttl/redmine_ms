@@ -2,7 +2,7 @@ class WorkPlan < ApplicationRecord
     self.table_name = 'contract_work_plans'
 
     belongs_to :issue
-    # has_one :contract, through: :issue
+    belongs_to :updated_by, :class_name => 'User'
     has_one :project, through: :issue
     has_one :work_order, through: :issue
     has_many :work_plan_items
@@ -47,11 +47,11 @@ class WorkPlan < ApplicationRecord
     end
       
     def stories
-        issue.children.where(tracker_id: Setting.plugin_scrum['pbi_tracker_ids'].first.to_i)
+      sprints_objects.flat_map { |sprint| sprint[:pbis] } || []
     end
 
     def deadline
-        sprints_objects.last[:days]
+      sprints_objects.last&.dig(:days) || 0
     end
 
     def generate_baseline
@@ -75,8 +75,7 @@ class WorkPlan < ApplicationRecord
         
         # Serializa tudo como JSON
     end
-    
-    
+       
 
     def load_baseline
         return unless self.baseline.present?

@@ -50,6 +50,7 @@ class WorkflowsController < ApplicationController
           transition_by_rule.reject! {|rule, transition| transition == 'no_change'}
         end
       end
+      
       WorkflowTransition.replace_transitions(@trackers, @roles, transitions)
       flash[:notice] = l(:notice_successful_update)
     end

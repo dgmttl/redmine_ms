@@ -5,8 +5,30 @@ module RedmineGercont
         base.class_eval do
 
           helper :work_plans
-
+          alias_method :original_new, :new
           alias_method :original_show, :show
+
+          def new
+            if @issue.contracts_any?
+              parent_issue_id = params[:issue][:parent_issue_id]
+
+              puts "Parent Issue ID: #{parent_issue_id}"
+
+
+              if parent_issue_id.present?
+                parent =  Issue.find(parent_issue_id)
+                if parent.demand?
+                  @issue.tracker = Tracker.story
+                elsif parent.story?
+                  @issue.tracker = Tracker.task
+                end
+                @issue.parent = parent
+                puts "===================@issue: #{@issue.inspect}"
+              end
+            end
+            original_new
+          end
+
           def show
             if @project.contracts.any?
               @assessments = @issue&.assessments || []

@@ -1,5 +1,5 @@
 <div class="contextual">
-  <%= link_to_new_subtask(@issue) if User.current.allowed_to?(:manage_subtasks, @project) %>
+  <%= link_to_new_subtask(@issue) if can_plan_work_plan? %>
 </div>
 
 <p>

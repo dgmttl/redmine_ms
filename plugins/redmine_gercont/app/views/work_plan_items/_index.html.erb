@@ -1,5 +1,5 @@
 <% if @work_plan_items.any? %>
-
+    <br><br>
     <div id="content">
         <table class="list issues sort-by" id="itensTable">
             <thead>
@@ -14,7 +14,7 @@
                     <th> <%= l(:label_daily_cost) %> </th>
                     <th> <%= l(:label_total) %> </th>
                         <% if User.current.allowed_to?(:manage_work_plans, @project) %>
-                        <th></th>
+                        <th> </th>
                     <% end %>
                 </tr>
             </thead>
@@ -32,13 +32,13 @@
                     <td><%= number_to_currency(work_plan_item.item.daily_cost) %></td>                    
                     <td><%= number_to_currency(work_plan_item.total) %></td>
                     <% if can_plan_work_plan? %>
-                        <td>
-                            <%= link_to l(:button_delete), 
-                                work_plan_item_path(work_plan_item), 
-                                method: :delete, 
-                                class: 'icon icon-del'
-                            %>
-                        </td>
+                    <td>
+                        <%= link_to l(:button_delete),
+                            work_plan_item_path(work_plan_item), 
+                            method: :delete, 
+                            class: 'icon icon-del' 
+                        %>
+                    </td>
                     <% end %>
                 </tr>
                 <% i += 1 %>

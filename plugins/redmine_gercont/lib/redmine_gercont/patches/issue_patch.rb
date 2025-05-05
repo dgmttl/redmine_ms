@@ -16,17 +16,36 @@ module RedmineGercont
           def assignable_versions
             original_assignable_versions
             unless project.contracts.empty?
-              @assignable_versions = project.versions.planning + project.versions.rejected
+              @assignable_versions = project.versions.planning + project.versions.rejected + project.versions.requested
             end
           end
 
           def product_backlog
-            project.product_backlogs.find { |backlog| backlog.name == self.to_s.split(':')[0] } ||
             project.product_backlogs.first
+          end
+
+          def demand_backlog
+            project.product_backlogs.find { |backlog| backlog.name == self.to_s.split(':')[0] }
           end
 
           def contracts_any?
             project.contracts.any?
+          end
+
+          def active_contracts
+            project.active_contracts
+          end
+
+          def demand?
+            tracker == Tracker.demand
+          end
+
+          def story?
+            tracker == Tracker.story
+          end
+
+          def task?
+            tracker == Tracker.task
           end
 
         end
