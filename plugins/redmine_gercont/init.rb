@@ -3,7 +3,7 @@ Redmine::Plugin.register :redmine_gercont do
   author 'Diogo Mattioli Neiva'
   description 'Este é um plugin para gerenciamento de contratos de prestação de serviços.'
 
-  version '0.1.0'
+  version '0.2.0'
   url 'https://github.com/dgmttl/redmine_plugdev'
   author_url 'www.linkedin.com/in/diogo-mattioli-neiva-9a5b77b0'
 
