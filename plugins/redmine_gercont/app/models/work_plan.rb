@@ -75,8 +75,7 @@ class WorkPlan < ApplicationRecord
         
         # Serializa tudo como JSON
     end
-    
-    
+       
 
     def load_baseline
         return unless self.baseline.present?

@@ -5,6 +5,20 @@ if @issue.contracts_any?
         raise RedmineCustomWorkflows::Errors::WorkflowError, l(:warning_cw_tracker_can_not_be_changed)
     end
 
+    # Avoid change story and tasks
+    if @issue.parent.present? && (@issue.is_pbi? || @issue.is_task?)
+        permited = [
+            IssueStatus.plan_drafting, 
+            IssueStatus.service_in_progress, 
+            IssueStatus.request_work_plan_adjustment,
+            IssueStatus.new_status
+        ]
+        unless permited.include?(@issue.parent.status)
+            raise RedmineCustomWorkflows::Errors::WorkflowError, l(:warning_cw_issue_can_t_be_changed)
+        end
+
+    end
+
     # Avoid create subtask
     if @issue.parent.present?
         if @issue.story? && !@issue.parent.demand?
@@ -52,17 +66,5 @@ if @issue.contracts_any?
         end
     end
 
-    # Avoid change story and tasks
-    if @issue.parent.present? && (@issue.is_pbi? || @issue.is_task?)
-        permited = [
-            IssueStatus.plan_drafting, 
-            IssueStatus.service_in_progress, 
-            IssueStatus.request_work_plan_adjustment,
-            IssueStatus.new_status
-        ]
-        unless permited.include?(@issue.parent.status)
-            raise RedmineCustomWorkflows::Errors::WorkflowError, l(:warning_cw_issue_can_t_be_changed)
-        end
-
-    end
+    
 end
