@@ -59,7 +59,7 @@ module RedmineGercont
 
           def render_descendants_tree(issue)
               unless @issue.contracts_any?
-                original_render_descendants_tree
+                original_render_descendants_tree(issue)
               else
                 manage_relations = can_plan_work_plan?
                 s = +'<table class="list issues odd-even">'
