@@ -123,15 +123,15 @@ class WorkPlansController < ApplicationController
 
   def find_work_plan 
       @work_plan = WorkPlan.find(params[:id])
-      if @work_plan&.baseline.present?
-        baseline_data = @work_plan.load_baseline
-        @work_plan = baseline_data[:work_plan]
-        @sprints_objects = baseline_data[:sprints_objects]
-        @work_plan_items = baseline_data[:work_plan_items]
-      else
-        @sprints_objects = @work_plan&.sprints_objects
-        @work_plan_items = @work_plan&.work_plan_items || []
-      end
+      # if @work_plan&.baseline.present?
+      #   baseline_data = @work_plan.load_baseline
+      #   @work_plan = baseline_data[:work_plan]
+      #   @sprints_objects = baseline_data[:sprints_objects]
+      #   @work_plan_items = baseline_data[:work_plan_items]
+      # else
+      #   @sprints_objects = @work_plan&.sprints_objects
+      #   @work_plan_items = @work_plan&.work_plan_items || []
+      # end
       @issue = @work_plan&.issue
   end
 

@@ -206,9 +206,10 @@ class ContractsController < ApplicationController
   end
 
   def blocked_projects
+    return [] if @added_projects.blank?
     blocked = []
     @added_projects.each do |project|
-      if project.active_contracts.any?
+      if project.active_contracts&.any? { |contract| contract != @contract }
         blocked << project
       end
     end
@@ -276,7 +277,7 @@ class ContractsController < ApplicationController
     params.require(:contract).permit(
       :name, 
       :terms_reference,
-      :object_description,
+      :object,
       :user_id,
       :terms_start, 
       :terms_end, 

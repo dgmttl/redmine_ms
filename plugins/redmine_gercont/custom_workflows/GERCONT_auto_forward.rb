@@ -54,8 +54,64 @@ if @issue.contracts_any?
       @forward_issue = true
     end
 
-    puts "Issue prepared to forward" if @forward_issue
+    if @issue.status == IssueStatus.request_work_plan_adjustment
+      work_plan = @issue.work_plan
+      work_plan.status = 'planning'
+      work_plan.save!
+      @new_role_name = Role.scrum_master.name
+      @new_assigned_to = set_assigned_to(Role.scrum_master)
+      @issue.assigned_to == @new_assigned_to ? @forward_issue = false : @forward_issue = true
+    
+    end
+
+    if @issue.status == IssueStatus.approve_work_plan
+
+      if @user_roles.include?(Role.technical_inspector)
+        @new_role_name = Role.requester.name
+        @new_status = IssueStatus.business_plan_review
+        @new_assigned_to = set_assigned_to(Role.requester)
+        @forward_issue = true
+      
+      elsif @user_roles.include?(Role.requester)
+        @new_role_name = Role.contract_manager.name
+        @new_status = IssueStatus.managerial_plan_review
+        @new_assigned_to = set_assigned_to(Role.contract_manager)
+        @forward_issue = true
+            
+      elsif @user_roles.include?(Role.contract_manager)
+        work_plan = @issue.work_plan
+        work_plan.status = 'approved'
+        work_plan.save!
+        @new_role_name = Role.contract_manager.name
+        @new_status = IssueStatus.waiting_work_order
+        @new_assigned_to = set_assigned_to(Role.contract_manager)  
+        @forward_issue = true     
+      
+      end
+    end
+
+    if @issue.status == IssueStatus.generate_work_order
+      
+      # 1. generate work plan baseline
+      work_plan = @issue.work_plan
+      work_plan.status = 'closed'
+      work_plan.generate_baseline    
+      work_plan.save
+
+     # 2. create work order
+      work_order = WorkOrder.new
+      work_order.issue = @issue
+      work_order.status = 'new'
+      work_order.static_data = work_order.fill_static_data
+      work_order.save
+
+      @new_role_name = Role.scrum_master.name
+      @new_status = IssueStatus.staff_allocation
+      @new_assigned_to = set_assigned_to(Role.scrum_master)  
+      @forward_issue = true    
+    end
   end
+  puts "Issue prepared to forward" if @forward_issue
 end
 
 
