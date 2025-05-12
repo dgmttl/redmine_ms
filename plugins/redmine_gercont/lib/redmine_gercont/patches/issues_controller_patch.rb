@@ -10,12 +10,10 @@ module RedmineGercont
 
           def new
             if @issue.contracts_any?
-              parent_issue_id = params[:issue][:parent_issue_id]
-
-              puts "Parent Issue ID: #{parent_issue_id}"
-
+              parent_issue_id = params.dig(:issue, :parent_issue_id)
 
               if parent_issue_id.present?
+                puts "Parent Issue ID: #{parent_issue_id}"
                 parent =  Issue.find(parent_issue_id)
                 if parent.demand?
                   @issue.tracker = Tracker.story

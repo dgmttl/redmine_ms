@@ -46,27 +46,28 @@ class WorkPlanItem < ApplicationRecord
       holidays = contract_holidays_within_period
       max_calendar_days = 0
       
-      (1..days_allocation).each do |allocation|
+      (0..days_allocation).each do |allocation|
         calendar_days = 0
         counted_work_days = 0
-    
+   
         while counted_work_days < work_days
+          current_date = Holiday.next_work_day + allocation + calendar_days
           calendar_days += 1
-          current_date = Date.today + allocation + calendar_days
-    
           unless current_date.saturday? || current_date.sunday? || holidays.include?(current_date)
             counted_work_days += 1
           end
     
-          # Se o último dia útil for uma sexta-feira, incluir sábado, domingo e feriados
           if counted_work_days == work_days && current_date.friday?
-            calendar_days += 1 while current_date.saturday? || current_date.sunday? || holidays.include?(current_date += 1)
+            current_date += 1
+            while   current_date.saturday? || current_date.sunday? || holidays.include?(current_date)
+              calendar_days += 1
+              current_date += 1
+            end
           end
         end
     
         max_calendar_days = [max_calendar_days, calendar_days].max
       end
-    
       max_calendar_days
     end
 
