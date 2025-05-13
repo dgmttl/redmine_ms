@@ -35,35 +35,6 @@
     puts "Issue children out prepared" if @stories_out_demand.present?
   end
 end
-
-
-#################################AFTER SAVE###################
-if @issue.demand? 
-  if @stories_to_demand.present? &amp;&amp; @issue.demand_backlog.nil?
-    @issue.sprint = create_demand_backlog
-    puts "Backlog created"
-  end
-
-  if @stories_to_demand.present?
-    @stories_to_demand.each do |story|
-      story.parent = @issue
-      story.sprint = @issue.demand_backlog
-      story.save!
-    end 
-    Version.where(id: @versions_in).update_all(status: 'requested')
-    puts "Issue children associated"
-  end
-
-  if @stories_out_demand.present?
-    Version.where(id: @versions_out).update_all(status: 'planning')
-    @stories_out_demand.each do |story|
-        story.parent_id = nil
-        story.sprint = @issue.product_backlog
-        story.save!
-    end
-    puts "Issue children disassociated"
-  end
-end
 </before-save>
   <after-save>if @issue.demand? 
   if @stories_to_demand.present? &amp;&amp; @issue.demand_backlog.nil?
@@ -107,11 +78,11 @@ end
   <observable>issue</observable>
   <id type="integer">41</id>
   <created-at type="dateTime">2025-04-16T12:39:01Z</created-at>
-  <updated-at type="dateTime">2025-04-28T22:03:48Z</updated-at>
+  <updated-at type="dateTime">2025-05-13T00:24:13Z</updated-at>
   <string></string>
   <position type="integer">16</position>
   <integer type="integer">1</integer>
-  <exported-at>2025-04-28T22:03:48Z</exported-at>
+  <exported-at>2025-05-13T00:24:13Z</exported-at>
   <plugin-version>3.0.0</plugin-version>
   <ruby-version>3.3.7-p123</ruby-version>
   <rails-version>7.2.2.1</rails-version>

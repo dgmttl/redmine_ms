@@ -8,10 +8,12 @@ if @issue.contracts_any?
     # Avoid change story and tasks
     if @issue.parent.present? && (@issue.is_pbi? || @issue.is_task?)
         permited = [
+            IssueStatus.new_status,
+            IssueStatus.request_approval,
             IssueStatus.plan_drafting, 
             IssueStatus.service_in_progress, 
             IssueStatus.request_work_plan_adjustment,
-            IssueStatus.new_status
+            
         ]
         unless permited.include?(@issue.parent.status)
             raise RedmineCustomWorkflows::Errors::WorkflowError, l(:warning_cw_issue_can_t_be_changed)
@@ -48,10 +50,22 @@ if @issue.contracts_any?
         end
     end
 
-    # Avoid missing non funcional requisites
-    if @issue.status == IssueStatus.request_approval && @issue.checklists.blank?
-        raise RedmineCustomWorkflows::Errors::WorkflowError, l(:warning_cw_tracker_missing_non_functional_requisites)
+    
+    if @issue.status == IssueStatus.request_approval 
+       
+       # Avoid missing non funcional requisites
+        if @issue.checklists.blank?
+            raise RedmineCustomWorkflows::Errors::WorkflowError, l(:warning_cw_tracker_missing_non_functional_requisites)
+        end
+
+        # Avoid versions missing issues
+        if @issue.custom_field
+            raise RedmineCustomWorkflows::Errors::WorkflowError, l(:warning_cw_tracker_missing_non_functional_requisites)
+        end
+
     end
+
+    
 
     # Avoid request work plan approval
     if @issue.status == IssueStatus.request_work_plan_approval

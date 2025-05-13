@@ -1,4 +1,4 @@
-<% disabled = @issue.status.name != l(:default_issue_status_new) %>
+<% disabled = [IssueStatus.new_status, IssueStatus.request_approval].include?(@issue.status) %>
 
 <span class="checklist-item <%= new_or_show(f) %> <%= 'checklist-section' if f.object.is_section %> existing" id="<%= f.object.id %>">
   <% unless f.object.is_section %>
@@ -15,7 +15,7 @@
     </span>
   <% end %>
 
-  <% if @issue.status.name == l(:default_issue_status_new) %>
+  <% if [IssueStatus.new_status, IssueStatus.request_approval].include?(@issue.status) %>
     <span class="checklist-edit checklist-new checklist-edit-box">
       <%= text_field_tag nil, f.object.subject, class: 'edit-box' %>
       <%= f.hidden_field :subject, class: 'checklist-subject-hidden' %>

@@ -329,7 +329,6 @@ pt-BR:
   warning_need_contract: Solicite ao administrador cadastrar ao menos um contrato.
   warning_need_sla: Solicite ao administrador cadastrar ao menos um NMS do tipo IPP.
 
-  warning_cw_issue_demand_can_not_be_created: Não é possível criar uma Demanda. É necessário criar Releases antes.
   warning_cw_tracker_can_not_be_changed: o Tipo não pode ser alterado.
   warning_cw_relation_must_be_open_story: "Não pode ser associado à %{tracker_name}. Selecione uma História de Usuário do mesmo backlog."
   warning_cw_tracker_missing_fixed_issues: Não foi possível prosseguir. Uma ou mais Release selecionada não contém Histórias associadas.

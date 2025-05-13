@@ -1043,14 +1043,14 @@ module RedmineGercont
             },
             request_approval.id.to_s => {
               "subject" => "",
-              "description" => "", 
+              "description" => "required", 
               "assigned_to_id" => "",
               "priority_id" => "",
               versions.id.to_s => "required"
             },
             request_adjust.id.to_s => {
               "subject" => "",
-              "description" => "", 
+              "description" => "required", 
               "assigned_to_id" => "",
               "priority_id" => "",
               versions.id.to_s => "required"
