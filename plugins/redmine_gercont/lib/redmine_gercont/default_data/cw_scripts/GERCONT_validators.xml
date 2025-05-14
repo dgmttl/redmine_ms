@@ -1,5 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <hash>
+  <active type="boolean">true</active>
+  <name>GERCONT_validators</name>
+  <observable>issue</observable>
+  <id type="integer">44</id>
   <before-save>if @issue.contracts_any? 
     
     #Avoid change tracker
@@ -7,24 +11,27 @@
         raise RedmineCustomWorkflows::Errors::WorkflowError, l(:warning_cw_tracker_can_not_be_changed)
     end
 
-    # Avoid change story and tasks
-    if @issue.parent.present? &amp;&amp; (@issue.is_pbi? || @issue.is_task?)
-        permited = [
-            IssueStatus.new_status,
-            IssueStatus.request_approval,
-            IssueStatus.plan_drafting, 
-            IssueStatus.service_in_progress, 
-            IssueStatus.request_work_plan_adjustment,
-            
-        ]
-        unless permited.include?(@issue.parent.status)
-            raise RedmineCustomWorkflows::Errors::WorkflowError, l(:warning_cw_issue_can_t_be_changed)
+    
+    
+
+    
+    if @issue.parent.present?
+        
+        # Avoid change story and tasks
+        if (@issue.is_pbi? || @issue.is_task?)
+            permited = [
+                IssueStatus.new_status,
+                IssueStatus.request_approval,
+                IssueStatus.plan_drafting, 
+                IssueStatus.service_in_progress, 
+                IssueStatus.request_work_plan_adjustment
+            ]
+            unless permited.include?(@issue.parent.status)
+                raise RedmineCustomWorkflows::Errors::WorkflowError, l(:warning_cw_issue_can_t_be_changed)
+            end
         end
 
-    end
-
-    # Avoid create subtask
-    if @issue.parent.present?
+        # Avoid create subtask
         if @issue.story? &amp;&amp; !@issue.parent.demand?
             raise RedmineCustomWorkflows::Errors::WorkflowError, l(:warning_cw_issue_story_can_not_be_created)
         end
@@ -52,9 +59,22 @@
         end
     end
 
-    # Avoid missing non funcional requisites
-    if @issue.status == IssueStatus.request_approval &amp;&amp; @issue.checklists.blank?
-        raise RedmineCustomWorkflows::Errors::WorkflowError, l(:warning_cw_tracker_missing_non_functional_requisites)
+    if @issue.status == IssueStatus.request_approval 
+       
+       # Avoid missing non funcional requisites
+        if @issue.checklists.blank?
+            raise RedmineCustomWorkflows::Errors::WorkflowError, l(:warning_cw_tracker_missing_non_functional_requisites)
+        end
+
+        # Avoid versions missing issues
+        selected_versions = @issue.custom_field_value(CustomField.requested_versions.id)
+
+        if @issue.tracker == Tracker.demand
+            versions = Version.find(selected_versions)
+            if versions.any? { |version| version.fixed_issues.blank? }
+                raise RedmineCustomWorkflows::Errors::WorkflowError, l(:warning_cw_tracker_missing_fixed_issues)
+            end
+        end
     end
 
     # Avoid request work plan approval
@@ -70,15 +90,17 @@
         end
     end
 
-    
 end
 </before-save>
-  <after-save></after-save>
-  <name>GERCONT_validators</name>
+  <created-at type="dateTime">2025-04-27T18:11:44Z</created-at>
+  <updated-at type="dateTime">2025-05-14T19:12:33Z</updated-at>
   <description></description>
+  <string></string>
+  <position type="integer">4</position>
+  <integer type="integer">1</integer>
+  <after-save></after-save>
   <is-for-all type="boolean">false</is-for-all>
   <author>diogo.neiva@saude.gov.br</author>
-  <active type="boolean">true</active>
   <shared-code nil="true"/>
   <before-add nil="true"/>
   <after-add nil="true"/>
@@ -86,14 +108,7 @@ end
   <after-remove nil="true"/>
   <before-destroy></before-destroy>
   <after-destroy></after-destroy>
-  <observable>issue</observable>
-  <id type="integer">44</id>
-  <created-at type="dateTime">2025-04-27T18:11:44Z</created-at>
-  <updated-at type="dateTime">2025-05-13T00:16:32Z</updated-at>
-  <string></string>
-  <position type="integer">4</position>
-  <integer type="integer">1</integer>
-  <exported-at>2025-05-13T00:16:32Z</exported-at>
+  <exported-at>2025-05-14T19:12:33Z</exported-at>
   <plugin-version>3.0.0</plugin-version>
   <ruby-version>3.3.7-p123</ruby-version>
   <rails-version>7.2.2.1</rails-version>

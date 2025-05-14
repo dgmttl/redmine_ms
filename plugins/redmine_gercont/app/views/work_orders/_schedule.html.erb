@@ -1,0 +1,27 @@
+<div id="content">
+    <table class="list issues sort-by" id="sprintsTable">
+        <thead>
+            <tr>
+                <th> <%= l(:field_name) %> </th>
+                <th> <%= l(:label_version) %> </th>
+                <th> <%= l(:label_story_plural) %> </th>
+                <th> <%= l(:label_start_by) %> </th>
+                <th> <%= l(:label_finish_by) %> </th>
+            </tr>
+        </thead>
+        <tbody>
+            <% @work_order.static_data[:schedule].each do |sprint| %>
+                <tr>
+                    <td>Sprint <%= sprint[:id] %></td>
+                    <td><%= sprint[:version]%></td>
+                    <td><%= sprint[:stories]%></td>
+                    <td><%= I18n.l(sprint[:start_by].to_date) %></td>
+                    <td><%= I18n.l(sprint[:finish_by].to_date) %></td>
+                </tr>
+            <% end %>
+        </tbody>
+    </table>
+</div>
+
+
+

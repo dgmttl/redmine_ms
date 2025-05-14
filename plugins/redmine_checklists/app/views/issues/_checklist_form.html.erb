@@ -1,4 +1,7 @@
-<% if User.current.allowed_to?(:edit_checklists, @project, :global => true) && @issue.tracker_id == Setting.plugin_redmine_gercont['demand_tracker_id'].to_i%>
+<% if User.current.allowed_to?(:edit_checklists, @project, :global => true) && 
+  @issue.tracker == Tracker.demand &&
+  [IssueStatus.new_status, IssueStatus.request_approval].include?(@issue.status) 
+%>
   <div class="tabular">
     <p id="checklist_form">
       <label><%=l(:label_non_functional_requirements)%></label>

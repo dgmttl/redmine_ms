@@ -16,6 +16,21 @@ class Holiday < ActiveRecord::Base
         next_work_day
     end
 
+    def self.next_work_day_after(date)
+        next_work_day = date
+      
+        loop do
+          next_work_day += 1
+          break unless next_work_day.saturday? || next_work_day.sunday? || Holiday.exists?(date: next_work_day)
+        end
+      
+        next_work_day
+    end
+
+    def self.holidays_between(start_date, end_date)
+        Holiday.where('date >= ? AND date <= ?', start_date, end_date).pluck(:date)
+    end
+
     def self.calendar_days(work_days, start_date)
         holidays = Holiday.where('date >= ?', start_date).pluck(:date)
         calendar_days = 0

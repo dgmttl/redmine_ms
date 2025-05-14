@@ -97,7 +97,7 @@
       # 1. generate work plan baseline
       work_plan = @issue.work_plan
       work_plan.status = 'closed'
-      work_plan.generate_baseline      
+      work_plan.generate_baseline    
       work_plan.save
 
      # 2. create work order
@@ -105,11 +105,9 @@
       work_order.issue = @issue
       work_order.status = 'new'
       work_order.static_data = work_order.fill_static_data
-      puts "=============== work_order: #{work_order.inspect}"
+      work_order.discount = 0
+      work_order.total = work_plan.total - work_order.discount
       work_order.save
-      puts "=============== after save - work_order: #{work_order.inspect}"
-      # work_order.update(static_data: work_order.fill_static_data)
-      puts "=============== after update - work_order: #{work_order.inspect}"
 
       @new_role_name = Role.scrum_master.name
       @new_status = IssueStatus.staff_allocation
@@ -125,7 +123,7 @@ end</before-save>
     @issue.update_columns(status_id: @new_status.id)
   end
 
-  if @new_assigned_to.present?
+  if @new_assigned_to != @issue.assigned_to
     @issue.update_columns(assigned_to_id: @new_assigned_to.id)
     self.custom_workflow_messages[:warning] = l(:warning_cw_issue_assigned_to_updated_to, role_name: @new_role_name)
   end
@@ -149,11 +147,11 @@ end</after-save>
   <observable>issue</observable>
   <id type="integer">39</id>
   <created-at type="dateTime">2025-04-24T23:35:49Z</created-at>
-  <updated-at type="dateTime">2025-05-09T13:25:21Z</updated-at>
+  <updated-at type="dateTime">2025-05-14T14:08:10Z</updated-at>
   <string></string>
   <position type="integer">20</position>
   <integer type="integer">1</integer>
-  <exported-at>2025-05-09T13:25:21Z</exported-at>
+  <exported-at>2025-05-14T14:08:10Z</exported-at>
   <plugin-version>3.0.0</plugin-version>
   <ruby-version>3.3.7-p123</ruby-version>
   <rails-version>7.2.2.1</rails-version>

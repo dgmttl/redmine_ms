@@ -10,31 +10,29 @@
       <%= textilizable(f.object, :subject).gsub(/<\/?(p|h\d+|li|ul|hr \/)>/, '').strip.html_safe %>
     </span>
   <% else %>
-    <span class="checklist-show checklist-subject <%= done_css(f) %>" disabled="<%= disabled %>">
-      <%= "#{f.object.position + 1}. #{textilizable(f.object, :subject).gsub(/<\/?(p|h\d+|li|ul|hr \/)>/, '').strip}".html_safe %>
-    </span>
+      <span class="checklist-show checklist-subject <%= done_css(f) %>" disabled="<%= disabled %>">
+        <%= "#{textilizable(f.object, :subject).gsub(/<\/?(p|h\d+|li|ul|hr \/)>/, '').strip}".html_safe %>
+      </span>
   <% end %>
 
-  <% if [IssueStatus.new_status, IssueStatus.request_approval].include?(@issue.status) %>
-    <span class="checklist-edit checklist-new checklist-edit-box">
-      <%= text_field_tag nil, f.object.subject, class: 'edit-box' %>
-      <%= f.hidden_field :subject, class: 'checklist-subject-hidden' %>
-      
-    </span>
+  <span class="checklist-edit checklist-new checklist-edit-box">
+    <%= text_field_tag nil, f.object.subject, class: 'edit-box' %>
+    <%= f.hidden_field :subject, class: 'checklist-subject-hidden' %>
+    
+  </span>
 
-    <span class="checklist-edit-only checklist-edit-save-button"><%= submit_tag l(:button_save), type: 'button', class: 'item item-save small' %> </span>
-    <span class="checklist-edit-only checklist-edit-reset-button"><% concat l(:button_cancel) %> </span>
-    <span class="checklist-show-only checklist-remove"><%= link_to_remove_checklist_fields sprite_icon('del', ''), f, class: 'icon icon-del' %></span>
+  <span class="checklist-edit-only checklist-edit-save-button"><%= submit_tag l(:button_save), type: 'button', class: 'item item-save small' %> </span>
+  <span class="checklist-edit-only checklist-edit-reset-button"><% concat l(:button_cancel) %> </span>
+  <span class="checklist-show-only checklist-remove"><%= link_to_remove_checklist_fields sprite_icon('del', ''), f, class: 'icon icon-del' %></span>
 
-  
-    <%= f.hidden_field :position, class: 'checklist-item-position' %>
-    <%= f.hidden_field :is_section, class: 'checklist-item-is_section' %>
-    <%= f.hidden_field :id, class: 'checklist-item-id' %>
 
-    <span class="icon icon-add checklist-new-only save-new-by-button">
-      <%= sprite_icon('add') %>
-    </span>
-  <% end %>
+  <%= f.hidden_field :position, class: 'checklist-item-position' %>
+  <%= f.hidden_field :is_section, class: 'checklist-item-is_section' %>
+  <%= f.hidden_field :id, class: 'checklist-item-id' %>
+
+  <span class="icon icon-add checklist-new-only save-new-by-button">
+    <%= sprite_icon('add') %>
+  </span>
 
  <br>
 </span>

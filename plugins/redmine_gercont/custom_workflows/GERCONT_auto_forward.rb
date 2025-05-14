@@ -103,6 +103,8 @@ if @issue.contracts_any?
       work_order.issue = @issue
       work_order.status = 'new'
       work_order.static_data = work_order.fill_static_data
+      work_order.discount = 0
+      work_order.total = work_plan.total - work_order.discount
       work_order.save
 
       @new_role_name = Role.scrum_master.name
@@ -122,7 +124,7 @@ if @forward_issue
     @issue.update_columns(status_id: @new_status.id)
   end
 
-  if @new_assigned_to.present?
+  if @new_assigned_to != @issue.assigned_to
     @issue.update_columns(assigned_to_id: @new_assigned_to.id)
     self.custom_workflow_messages[:warning] = l(:warning_cw_issue_assigned_to_updated_to, role_name: @new_role_name)
   end

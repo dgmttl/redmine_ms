@@ -10,7 +10,7 @@
     <legend><strong>1. <%= l(:label_identification).upcase %></strong></legend>
     <div class="splitcontent">
         <div class="splitcontenttop">
-            <p><h3><strong><%= l(:label_work_order_number) %>: </strong><%= @work_order.id %></h3></p>
+            <h3><strong><%= l(:label_work_order_number) %>: </strong><%= @work_order.id %></h3>
         </div>
 
         <div class="splitcontentleft">
@@ -63,9 +63,90 @@
     <legend><strong>4. <%= l(:label_work_plan_items).upcase %></strong></legend>
     <div class="splitcontent">
         <div class="splitcontenttop">
-            <% @work_plan_items = @work_order.work_plan.work_plan_items %>
             <p><%= render 'work_plan_items/index' %></p>
+            <p style="text-align: right;"><strong><%= l(:label_nominal_value) %></strong> <%= number_to_currency(@work_order.static_data[:nominal_value]) %></p>
         </div>
     </div>
 </fieldset>
-<br>        
+<br>
+<fieldset>
+    <legend><strong>5. <%= l(:label_performance_target).upcase %></strong></legend>
+    <div class="splitcontent">
+        <div class="splitcontenttop">
+            <%= l(:text_productivity_target) %>
+        </div>
+    </div>
+</fieldset>
+<br>
+<fieldset>
+    <legend><strong>6. <%= l(:label_allocation_period).upcase %></strong></legend>
+    <div class="splitcontent">
+        <div class="splitcontenttop">
+            <%= I18n.l(@work_order.static_data[:days_allocation][:start_date].to_date) %> a <%= I18n.l(@work_order.static_data[:days_allocation][:end_date].to_date) %> - <%= @work_order.static_data[:days_allocation][:calendar_days] %> <%= l(:label_calendar_days) %>
+        </div>
+    </div>
+</fieldset>
+<br>
+<fieldset>
+    <legend><strong>7. <%= l(:label_schedule_products_deadlines).upcase %></strong></legend>
+    <div class="splitcontent">
+        <div class="splitcontenttop">
+            <p> <%= render 'work_orders/schedule' %></p>
+            <p style="text-align: right;"><strong><%= l(:label_work_order_deadline) %></strong> <%= I18n.l(@work_order.static_data[:deadline].to_date) %></p>
+        </div>
+    </div>
+</fieldset>
+<br>
+<fieldset>
+    <legend><strong>8. <%= l(:label_obligatory_non_functional_requirements).upcase %></strong></legend>
+    <div class="splitcontent">
+        <div class="splitcontenttop">
+            <% @work_order.static_data[:non_funcional_requirements].each do |item| %>
+                <p><%= item[:subject] %></p>
+            <% end %>
+        </div>
+    </div>
+</fieldset>
+<br>
+<fieldset>
+    <legend><strong>9. <%= l(:label_authorization_signatures).upcase %></strong></legend>
+    <div class="splitcontent">
+        <div class="splitcontenttop">
+            <%= l(:text_authorization_signatures) %>
+            <p style="text-align: right;">
+                <%= l(:label_location) %>, <%= I18n.l(Date.parse(@work_order.static_data[:identification][:issue_date]), format: :long) %>
+            </p>
+            <br><br>
+            <p style="text-align: center; width: 30ch; border-top: 2px solid black; margin: auto;">
+                <%= @work_order.static_data[:requester_area][:requester] %>
+                <p style="text-align: center;"><%= l(:default_role_requester) %></p>
+            </p>
+            <br><br>
+            <p style="text-align: center; width: 30ch; border-top: 2px solid black; margin: auto;">
+                <%= @work_order.static_data[:contract_manager] %>
+                <p style="text-align: center;"><%= l(:default_role_contract_manager) %></p>
+            </p>
+        </div>
+    </div>
+</fieldset>
+<br>
+<fieldset>
+    <legend><strong>10. <%= l(:label_value_review).upcase %></strong></legend>
+    <div class="splitcontent">
+        <div class="splitcontenttop">
+                <p><%= @work_order.notes.presence || l(:text_not_available_notes) %></p>
+                <p style="text-align: right;"> <strong><%= l(:label_discounts) %></strong> <%= number_to_currency(@work_order.discount) %></p>
+                <p style="text-align: right;"> <strong><%= l(:field_total) %></strong> <%= number_to_currency(@work_order.total) %></p>
+        </div>
+    </div>
+</fieldset>
+<br>
+<fieldset>
+    <legend><strong>11. <%= l(:label_receipt_terms).upcase %></strong></legend>
+    <div class="splitcontent">
+        <div class="splitcontenttop">
+            <br><br><br><br>
+        </div>
+    </div>
+</fieldset>
+<br>

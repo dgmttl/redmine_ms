@@ -8,15 +8,15 @@
 <%= render 'work_plans/head' %>
 
 <h3><%= l(:label_sprint_plural) %></h3>
-<div class="contextual">
-    <% if can_plan_work_plan? %>
+<% if can_plan_work_plan? %>
+    <div class="contextual">
         <%= 
             link_to(l(:label_demand_backlog), 
             product_backlog_path(@work_plan.issue.demand_backlog),
             :class => 'icon icon-product-backlog') 
         %>
-    <% end %>
-</div>
+    </div>
+<% end %>
   
 <% if @work_plan.sprints.present? %> 
     <%= render 'work_plans/sprints' %>
@@ -36,7 +36,8 @@
     
     <% if @work_plan.work_plan_items.blank? %>
         <div class="nodata"><%= l(:label_no_data) %></div>
-    <% else %>  
+    <% else %>
+        <br><br>
         <%= render 'work_plan_items/index'  %>
     <% end %>
 <% else %>

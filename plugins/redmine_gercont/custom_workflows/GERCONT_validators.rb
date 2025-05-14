@@ -5,24 +5,27 @@ if @issue.contracts_any?
         raise RedmineCustomWorkflows::Errors::WorkflowError, l(:warning_cw_tracker_can_not_be_changed)
     end
 
-    # Avoid change story and tasks
-    if @issue.parent.present? && (@issue.is_pbi? || @issue.is_task?)
-        permited = [
-            IssueStatus.new_status,
-            IssueStatus.request_approval,
-            IssueStatus.plan_drafting, 
-            IssueStatus.service_in_progress, 
-            IssueStatus.request_work_plan_adjustment,
-            
-        ]
-        unless permited.include?(@issue.parent.status)
-            raise RedmineCustomWorkflows::Errors::WorkflowError, l(:warning_cw_issue_can_t_be_changed)
+    
+    
+
+    
+    if @issue.parent.present?
+        
+        # Avoid change story and tasks
+        if (@issue.is_pbi? || @issue.is_task?)
+            permited = [
+                IssueStatus.new_status,
+                IssueStatus.request_approval,
+                IssueStatus.plan_drafting, 
+                IssueStatus.service_in_progress, 
+                IssueStatus.request_work_plan_adjustment
+            ]
+            unless permited.include?(@issue.parent.status)
+                raise RedmineCustomWorkflows::Errors::WorkflowError, l(:warning_cw_issue_can_t_be_changed)
+            end
         end
 
-    end
-
-    # Avoid create subtask
-    if @issue.parent.present?
+        # Avoid create subtask
         if @issue.story? && !@issue.parent.demand?
             raise RedmineCustomWorkflows::Errors::WorkflowError, l(:warning_cw_issue_story_can_not_be_created)
         end
@@ -50,7 +53,6 @@ if @issue.contracts_any?
         end
     end
 
-    
     if @issue.status == IssueStatus.request_approval 
        
        # Avoid missing non funcional requisites
@@ -59,13 +61,15 @@ if @issue.contracts_any?
         end
 
         # Avoid versions missing issues
-        if @issue.custom_field
-            raise RedmineCustomWorkflows::Errors::WorkflowError, l(:warning_cw_tracker_missing_non_functional_requisites)
+        selected_versions = @issue.custom_field_value(CustomField.requested_versions.id)
+
+        if @issue.tracker == Tracker.demand
+            versions = Version.find(selected_versions)
+            if versions.any? { |version| version.fixed_issues.blank? }
+                raise RedmineCustomWorkflows::Errors::WorkflowError, l(:warning_cw_tracker_missing_fixed_issues)
+            end
         end
-
     end
-
-    
 
     # Avoid request work plan approval
     if @issue.status == IssueStatus.request_work_plan_approval
@@ -80,5 +84,4 @@ if @issue.contracts_any?
         end
     end
 
-    
 end

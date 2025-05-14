@@ -38,7 +38,6 @@ module RedmineGercont
               @sprints_objects = @work_plan&.sprints_objects
               @work_plan_items = @work_plan&.work_plan_items || []
 
-
               @work_plan_item = WorkPlanItem.new
               @work_order = @issue&.work_order
               @work_order_professionals = @issue.work_order_professionals ||= []
