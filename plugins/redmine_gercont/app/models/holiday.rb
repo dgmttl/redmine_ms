@@ -33,7 +33,7 @@ class Holiday < ActiveRecord::Base
 
     def self.calendar_days(work_days, start_date)
         holidays = Holiday.where('date >= ?', start_date).pluck(:date)
-        calendar_days = 0
+        calendar_days = 1
         counted_work_days = 0
         
         while counted_work_days < work_days

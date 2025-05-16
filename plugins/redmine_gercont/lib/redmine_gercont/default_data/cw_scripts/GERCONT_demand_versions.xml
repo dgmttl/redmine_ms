@@ -45,7 +45,7 @@ end
   if @stories_to_demand.present?
     @stories_to_demand.each do |story|
       story.parent = @issue
-      story.sprint = @issue.demand_backlog
+      story.sprint = @issue.sprint
       story.save!
     end 
     Version.where(id: @versions_in).update_all(status: 'requested')
@@ -61,8 +61,7 @@ end
     end
     puts "Issue children disassociated"
   end
-end
-</after-save>
+end</after-save>
   <name>GERCONT_demand_versions</name>
   <description></description>
   <is-for-all type="boolean">false</is-for-all>
@@ -78,11 +77,11 @@ end
   <observable>issue</observable>
   <id type="integer">41</id>
   <created-at type="dateTime">2025-04-16T12:39:01Z</created-at>
-  <updated-at type="dateTime">2025-05-13T00:24:13Z</updated-at>
+  <updated-at type="dateTime">2025-05-16T18:13:11Z</updated-at>
   <string></string>
   <position type="integer">16</position>
   <integer type="integer">1</integer>
-  <exported-at>2025-05-13T00:24:13Z</exported-at>
+  <exported-at>2025-05-16T18:13:11Z</exported-at>
   <plugin-version>3.0.0</plugin-version>
   <ruby-version>3.3.7-p123</ruby-version>
   <rails-version>7.2.2.1</rails-version>

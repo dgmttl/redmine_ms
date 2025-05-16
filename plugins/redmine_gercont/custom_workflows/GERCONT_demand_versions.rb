@@ -43,7 +43,7 @@ if @issue.demand?
   if @stories_to_demand.present?
     @stories_to_demand.each do |story|
       story.parent = @issue
-      story.sprint = @issue.demand_backlog
+      story.sprint = @issue.sprint
       story.save!
     end 
     Version.where(id: @versions_in).update_all(status: 'requested')

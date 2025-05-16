@@ -78,7 +78,7 @@ class WorkOrdersController < ApplicationController
                 is_product_backlog: 'false',
                 project: @issue.project,
                 sprint_start_date: start_date,
-                sprint_end_date: start_date + Holiday.calendar_days((Setting.plugin_scrum['default_sprint_days'].to_i - 1), start_date),
+                sprint_end_date: start_date + Holiday.calendar_days((Setting.plugin_scrum['default_sprint_days'].to_i), start_date),
                 user: User.current
             )
             sprint.save!

@@ -43,7 +43,7 @@ class WorkOrder < ApplicationRecord
 
     def fill_static_data
       work_plan = self.work_plan.load_baseline
-      start_by = Holiday.next_work_day + (work_plan.days_allocation - 1)
+      start_by = Holiday.next_work_day + work_plan.days_allocation
       finish_by = start_by + 1
 
       {
@@ -68,11 +68,11 @@ class WorkOrder < ApplicationRecord
         productivity_target: l(:text_productivity_target),
         days_allocation: { 
           start_date: Holiday.next_work_day,
-          end_date: Holiday.next_work_day + work_plan.days_allocation - 1,
+          end_date: Holiday.next_work_day + work_plan.days_allocation,
           calendar_days: work_plan.days_allocation
         },
         schedule: self.work_plan.sprints_objects.map do |sprint|
-          finish_by = start_by + Holiday.calendar_days(Scrum::Setting.default_sprint_days.to_i, start_by) - 1
+          finish_by = start_by + Holiday.calendar_days(Scrum::Setting.default_sprint_days.to_i, start_by) 
 
           sprint_data = {
             id: sprint[:index],
