@@ -92,29 +92,29 @@ module RedmineGercont
           staff_allocation = IssueStatus.find_or_initialize_by(:name => l(:default_issue_status_staff_allocation))
           staff_allocation.save(validate: false)
 
-          allocate_professionals = IssueStatus.find_or_initialize_by(:name => l(:default_issue_status_allocate_professionals))
-          allocate_professionals.save(validate: false)
+          # allocate_professionals = IssueStatus.find_or_initialize_by(:name => l(:default_issue_status_allocate_professionals))
+          # allocate_professionals.save(validate: false)
 
-          ready_to_start = IssueStatus.find_or_initialize_by(:name => l(:default_issue_status_ready_to_start))
-          ready_to_start.save(validate: false)
+          # ready_to_start = IssueStatus.find_or_initialize_by(:name => l(:default_issue_status_ready_to_start))
+          # ready_to_start.save(validate: false)
 
-          service_in_progress = IssueStatus.find_or_initialize_by(:name => l(:default_issue_status_service_in_progress))
-          service_in_progress.save(validate: false)
+          # service_in_progress = IssueStatus.find_or_initialize_by(:name => l(:default_issue_status_service_in_progress))
+          # service_in_progress.save(validate: false)
 
-          service_suspended = IssueStatus.find_or_initialize_by(:name => l(:default_issue_status_service_suspended))
-          service_suspended.save(validate: false)
+          # service_suspended = IssueStatus.find_or_initialize_by(:name => l(:default_issue_status_service_suspended))
+          # service_suspended.save(validate: false)
 
-          technical_service_review = IssueStatus.find_or_initialize_by(:name => l(:default_issue_status_technical_service_review))
-          technical_service_review.save(validate: false)
+          # technical_service_review = IssueStatus.find_or_initialize_by(:name => l(:default_issue_status_technical_service_review))
+          # technical_service_review.save(validate: false)
 
-          business_service_review = IssueStatus.find_or_initialize_by(:name => l(:default_issue_status_business_service_review))
-          business_service_review.save(validate: false)
+          # business_service_review = IssueStatus.find_or_initialize_by(:name => l(:default_issue_status_business_service_review))
+          # business_service_review.save(validate: false)
 
-          managerial_service_review = IssueStatus.find_or_initialize_by(:name => l(:default_issue_status_managerial_service_review))
-          managerial_service_review.save(validate: false)
+          # managerial_service_review = IssueStatus.find_or_initialize_by(:name => l(:default_issue_status_managerial_service_review))
+          # managerial_service_review.save(validate: false)
 
-          accept_service = IssueStatus.find_or_initialize_by(:name => l(:default_issue_status_accept_service))
-          accept_service.save(validate: false)
+          # accept_service = IssueStatus.find_or_initialize_by(:name => l(:default_issue_status_accept_service))
+          # accept_service.save(validate: false)
           
           puts "============= New statuses done."
 
@@ -590,7 +590,7 @@ module RedmineGercont
               "SAES - DESMAD - Departamento de Saúde Mental, Álcool e Outras Drogas",
               "SAES - DGH - Departamento de Gestão Hospitalar no Estado do Rio de Janeiro",
               "SAES - DRAC - Departamento de Regulação Assistencial e Controle",
-              "SAES - HOSPITAIS FEDERAIS",
+              "SAES - Hospitais Federais",
               "SAES - INC - Instituto Nacional de Cardiologia",
               "SAES - INCA - Instituto Nacional de Câncer",
               "SAES - INTO - Instituto Nacional de Traumatologia e Ortopedia",
@@ -690,6 +690,7 @@ module RedmineGercont
               'Nginx',
               'Embutido no Spring Boot'
             ],
+            :multiple => 1,
             :is_filter => 1,
             :is_required => 1,
             :visible => 1
@@ -710,6 +711,7 @@ module RedmineGercont
               'PostgreeSQL',
               'SQL Server'
             ],
+            :multiple => 1,
             :is_filter => 1,
             :is_required => 1,
             :visible => 1
@@ -753,6 +755,7 @@ module RedmineGercont
               'VB',
               'Zend Framework 1.x'
             ],
+            :multiple => 1,
             :is_filter => 1,
             :is_required => 1,
             :visible => 1
@@ -956,7 +959,11 @@ module RedmineGercont
             request_adjust.id => {
               rejected.id => { "always" => true },
               request_approval.id => { "always" => true }
-            }
+            },
+            business_plan_review.id => {
+              request_work_plan_adjustment.id => { "always" => true },
+              approve_work_plan.id => { "always" => true }
+          }
           })
           
           WorkflowTransition.replace_transitions(
@@ -965,6 +972,10 @@ module RedmineGercont
             technical_review.id => {
               approve.id => { "always" => true },
               request_adjust.id => { "always" => true }
+            },
+            technical_plan_review.id => {
+              approve_work_plan.id => { "always" => true },
+              request_work_plan_adjustment.id => { "always" => true }
             }
           })
 
@@ -981,6 +992,9 @@ module RedmineGercont
             [scrum_master], {
             plan_drafting.id => {
               request_work_plan_approval.id => { "always" => true }
+            },
+            request_work_plan_adjustment.id => {
+              request_work_plan_approval.id => { "always" => true }
             }
           })
 
@@ -991,6 +1005,13 @@ module RedmineGercont
               approve.id => { "always" => true },
               request_adjust.id => { "always" => true },
               rejected.id => { "always" => true}
+            },
+            managerial_plan_review.id => {
+              approve_work_plan.id => { "always" => true },
+              request_work_plan_adjustment.id => { "always" => true }
+            },
+            waiting_work_order.id => {
+              generate_work_order.id => { "always" => true }
             }
           })
 
@@ -1022,17 +1043,26 @@ module RedmineGercont
             },
             request_approval.id.to_s => {
               "subject" => "",
-              "description" => "", 
+              "description" => "required", 
               "assigned_to_id" => "",
               "priority_id" => "",
               versions.id.to_s => "required"
             },
             request_adjust.id.to_s => {
               "subject" => "",
-              "description" => "", 
+              "description" => "required", 
               "assigned_to_id" => "",
               "priority_id" => "",
               versions.id.to_s => "required"
+            },
+            business_plan_review.id.to_s => {
+              "assigned_to_id" => ""
+            },
+            approve_work_plan.id.to_s => {
+              "assigned_to_id" => ""
+            },
+            request_work_plan_adjustment.id.to_s => {
+              "assigned_to_id" => ""
             }
           )
 
@@ -1041,7 +1071,10 @@ module RedmineGercont
             [technical_inspector],
             technical_review.id.to_s => { "assigned_to_id" => "" },
             request_adjust.id.to_s => { "assigned_to_id" => "" },
-            approve.id.to_s => { "assigned_to_id" => "" }
+            approve.id.to_s => { "assigned_to_id" => "" },
+            technical_plan_review.id.to_s => { "assigned_to_id" => "" },
+            approve_work_plan.id.to_s => { "assigned_to_id" => "" },
+            request_work_plan_adjustment.id.to_s => { "assigned_to_id" => "" }
           )
 
           WorkflowPermission.replace_permissions(
@@ -1055,7 +1088,8 @@ module RedmineGercont
             [demand],
             [scrum_master],
             plan_drafting.id.to_s => { "assigned_to_id" => "" },
-            request_work_plan_approval.id.to_s => { "assigned_to_id" => "" }
+            request_work_plan_approval.id.to_s => { "assigned_to_id" => "" },
+            request_work_plan_adjustment.id.to_s => { "assigned_to_id" => "" }
           )
 
           WorkflowPermission.replace_permissions(
@@ -1063,7 +1097,12 @@ module RedmineGercont
             [contract_manager],
             managerial_review.id.to_s => { "assigned_to_id" => "" },
             request_adjust.id.to_s => { "assigned_to_id" => "" },
-            approve.id.to_s => { "assigned_to_id" => "" }
+            approve.id.to_s => { "assigned_to_id" => "" },
+            managerial_plan_review.id.to_s => { "assigned_to_id" => "" },
+            approve_work_plan.id.to_s => { "assigned_to_id" => "" },
+            request_work_plan_adjustment.id.to_s => { "assigned_to_id" => "" },
+            waiting_work_order.id.to_s => { "assigned_to_id" => "" },
+            generate_work_order.id.to_s => { "assigned_to_id" => "" }
           )
 
           WorkflowPermission.replace_permissions(

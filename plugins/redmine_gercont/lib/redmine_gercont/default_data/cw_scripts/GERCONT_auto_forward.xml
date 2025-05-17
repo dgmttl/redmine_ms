@@ -56,8 +56,66 @@
       @forward_issue = true
     end
 
-    puts "Issue prepared to forward" if @forward_issue
+    if @issue.status == IssueStatus.request_work_plan_adjustment
+      work_plan = @issue.work_plan
+      work_plan.status = 'planning'
+      work_plan.save!
+      @new_role_name = Role.scrum_master.name
+      @new_assigned_to = set_assigned_to(Role.scrum_master)
+      @issue.assigned_to == @new_assigned_to ? @forward_issue = false : @forward_issue = true
+    
+    end
+
+    if @issue.status == IssueStatus.approve_work_plan
+
+      if @user_roles.include?(Role.technical_inspector)
+        @new_role_name = Role.requester.name
+        @new_status = IssueStatus.business_plan_review
+        @new_assigned_to = set_assigned_to(Role.requester)
+        @forward_issue = true
+      
+      elsif @user_roles.include?(Role.requester)
+        @new_role_name = Role.contract_manager.name
+        @new_status = IssueStatus.managerial_plan_review
+        @new_assigned_to = set_assigned_to(Role.contract_manager)
+        @forward_issue = true
+            
+      elsif @user_roles.include?(Role.contract_manager)
+        work_plan = @issue.work_plan
+        work_plan.status = 'approved'
+        work_plan.save!
+        @new_role_name = Role.contract_manager.name
+        @new_status = IssueStatus.waiting_work_order
+        @new_assigned_to = set_assigned_to(Role.contract_manager)  
+        @forward_issue = true     
+      
+      end
+    end
+
+    if @issue.status == IssueStatus.generate_work_order
+      
+      # 1. generate work plan baseline
+      work_plan = @issue.work_plan
+      work_plan.status = 'closed'
+      work_plan.generate_baseline    
+      work_plan.save
+
+     # 2. create work order
+      work_order = WorkOrder.new
+      work_order.issue = @issue
+      work_order.status = 'new'
+      work_order.static_data = work_order.fill_static_data
+      work_order.discount = 0
+      work_order.total = work_plan.total - work_order.discount
+      work_order.save
+
+      @new_role_name = Role.scrum_master.name
+      @new_status = IssueStatus.staff_allocation
+      @new_assigned_to = set_assigned_to(Role.scrum_master)  
+      @forward_issue = true    
+    end
   end
+  puts "Issue prepared to forward" if @forward_issue
 end</before-save>
   <after-save>if @forward_issue
 
@@ -65,7 +123,7 @@ end</before-save>
     @issue.update_columns(status_id: @new_status.id)
   end
 
-  if @new_assigned_to.present?
+  if @new_assigned_to != @issue.assigned_to
     @issue.update_columns(assigned_to_id: @new_assigned_to.id)
     self.custom_workflow_messages[:warning] = l(:warning_cw_issue_assigned_to_updated_to, role_name: @new_role_name)
   end
@@ -89,11 +147,11 @@ end</after-save>
   <observable>issue</observable>
   <id type="integer">39</id>
   <created-at type="dateTime">2025-04-24T23:35:49Z</created-at>
-  <updated-at type="dateTime">2025-04-29T02:38:12Z</updated-at>
+  <updated-at type="dateTime">2025-05-14T14:08:10Z</updated-at>
   <string></string>
   <position type="integer">20</position>
   <integer type="integer">1</integer>
-  <exported-at>2025-04-29T02:38:12Z</exported-at>
+  <exported-at>2025-05-14T14:08:10Z</exported-at>
   <plugin-version>3.0.0</plugin-version>
   <ruby-version>3.3.7-p123</ruby-version>
   <rails-version>7.2.2.1</rails-version>

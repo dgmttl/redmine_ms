@@ -10,8 +10,6 @@ if @issue.contracts_any?
 
     if (@issue.status_changed? && @issue.status == IssueStatus.request_approval) || requested_versions_changed?
 
-      field_for_requested_versions = CustomField.find(Setting.plugin_redmine_gercont["field_for_requested_versions"].to_i)
-      
       @versions_in = requested_versions_is(CustomField.requested_versions) - requested_versions_was(CustomField.requested_versions)
       @versions_out = requested_versions_was(CustomField.requested_versions) - requested_versions_is(CustomField.requested_versions)
 
@@ -45,7 +43,7 @@ if @issue.demand?
   if @stories_to_demand.present?
     @stories_to_demand.each do |story|
       story.parent = @issue
-      story.sprint = @issue.demand_backlog
+      story.sprint = @issue.sprint
       story.save!
     end 
     Version.where(id: @versions_in).update_all(status: 'requested')

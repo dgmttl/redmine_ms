@@ -15,7 +15,8 @@
 	border: 1px solid #d18a1f;
 }
 .badge-status-approved,
-.badge-status-partially_approved {
+.badge-status-partially_approved,
+.badge-status-new {
 	color: #1fd13d;
 	border: 1px solid #1fd13d;
 }

@@ -42,51 +42,56 @@ class WorkOrder < ApplicationRecord
     end
 
     def fill_static_data
-        work_plan = work_plan.load_baseline
-       { 
-            identification: { 
-                contract_number: contract.name,
-                issue_date: Holiday.next_work_day,
-                object: contract.object,
-                contractor: contract.contractor,
-                cnpj: contract.cnpj,
-                agent: contract.agent.user.name,
-                terms_start: contract.terms_start,
-                terms_end: contract.terms_end
-            },
+      work_plan = self.work_plan.load_baseline
+      start_by = Holiday.next_work_day + work_plan.days_allocation
+      finish_by = start_by + 1
 
-            requester_area: {
-                unity: project.custom_field_value(Setting.plugin_redmine_gercont['field_for_requester_unity'].to_i),
-                requester: issue.author.name,
-                requester_email: issue.author.mail
-            },
-            
-            objective: issue.description,
-            work_order_items: work_plan.work_plan_items,            
-            productivity_target: l(:text_productivity_target),
-            days_allocation: { 
-                start_date: Holiday.next_work_day,
-                end_date: Holiday.next_work_day + work_plan.days_allocation,
-                calendar_days: work_plan.days_allocation
-            },
-            schedule: sprints.each do |sprint, version|
-                {
-                  version: version,
-                  start_date: sprints.map { |sprint| sprint.start_date }.min, 
-                  end_date: sprints.map { |sprint| sprint.end_date }.max, 
-                  sprints: sprints.map do |sprint|
-                    {
-                      id: sprint.id,
-                      start_date: sprint.start_date,
-                      end_date: sprint.end_date,
-                      stories: sprint.pbis.map(&:subject).join(', ')
-                    }
-                  end
-                }
-            end,
-            non_funcional_requirements: issue.custom_field_value(Setting.plugin_redmine_gercont['field_for_non_funcional_requirements'].to_i),
-            }
+      {
+        identification: {
+          contract_number: contract.name,
+          issue_date: Date.today,
+          object: contract.object,
+          contractor: contract.contractor,
+          cnpj: contract.cnpj,
+          agent: contract.agent.user.name,
+          terms_start: contract.terms_start,
+          terms_end: contract.terms_end
+        },
+        requester_area: {
+          unity: project.custom_field_value(CustomField.requester_unity.id),
+          requester: issue.author.name,
+          requester_email: issue.author.mail
+        },
+        objective: issue.description,
+        work_order_items: work_plan.work_plan_items,
+        nominal_value: work_plan.total,
+        productivity_target: l(:text_productivity_target),
+        days_allocation: { 
+          start_date: Holiday.next_work_day,
+          end_date: Holiday.next_work_day + work_plan.days_allocation,
+          calendar_days: work_plan.days_allocation
+        },
+        schedule: self.work_plan.sprints_objects.map do |sprint|
+          finish_by = start_by + Holiday.calendar_days(Scrum::Setting.default_sprint_days.to_i, start_by) 
+
+          sprint_data = {
+            id: sprint[:index],
+            version: sprint[:versions].map(&:name).join(', '),
+            stories: sprint[:pbis].map(&:subject).join(', '),
+            start_by: start_by,
+            finish_by: finish_by
+          }
+
+          start_by = Holiday.next_work_day_after(finish_by)
+          sprint_data
+        end,
+        deadline: finish_by,
+        non_funcional_requirements: self.issue.checklists,
+        contract_manager: User.current.name
+      }
     end
 
-
+    def self.sla_events
+      self.sla_events.where.not(status: 'closed')
+    end
 end

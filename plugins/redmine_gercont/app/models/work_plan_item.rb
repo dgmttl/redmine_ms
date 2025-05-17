@@ -23,7 +23,7 @@ class WorkPlanItem < ApplicationRecord
       
     def calendar_days(work_days, start_date)
       holidays = contract_holidays_within_period
-      calendar_days = 0
+      calendar_days = 1
       counted_work_days = 0
     
       while counted_work_days < work_days
@@ -49,14 +49,18 @@ class WorkPlanItem < ApplicationRecord
       (0..days_allocation).each do |allocation|
         calendar_days = 0
         counted_work_days = 0
+        i = 0
    
         while counted_work_days < work_days
-          current_date = Holiday.next_work_day + allocation + calendar_days
-          calendar_days += 1
+          current_date = Date.today + allocation + i
+          next_work_day = Holiday.next_work_day_after(current_date -1 ) if i == 0
+          calendar_days += 1 if current_date >= next_work_day
+          i += 1
+          
           unless current_date.saturday? || current_date.sunday? || holidays.include?(current_date)
             counted_work_days += 1
           end
-    
+          
           if counted_work_days == work_days && current_date.friday?
             current_date += 1
             while   current_date.saturday? || current_date.sunday? || holidays.include?(current_date)
@@ -64,9 +68,9 @@ class WorkPlanItem < ApplicationRecord
               current_date += 1
             end
           end
+          max_calendar_days = [max_calendar_days, calendar_days].max
+
         end
-    
-        max_calendar_days = [max_calendar_days, calendar_days].max
       end
       max_calendar_days
     end

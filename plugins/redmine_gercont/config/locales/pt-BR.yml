@@ -180,6 +180,7 @@ pt-BR:
   field_date: Data
   field_days_allocation: Dias corridos para alocação de profissionais
   field_description: Descrição
+  field_discount: Desconto
   field_frequency: Periodicidade
   field_issue: Ordem de Serviço
   field_item: Item
@@ -189,6 +190,7 @@ pt-BR:
   field_quantity: Quantidade
   field_rationale: Memória de cálculo/Justificativa
   field_requester_unity: Unidade Requisitante
+  label_schedule_products_deadlines: Cronograma, produtos e prazos
   field_shared_by: Compartilhado por
   field_sla: Indicador
   field_sla_event_work_order: Ordem de Serviço
@@ -197,16 +199,19 @@ pt-BR:
   field_terms_end: Fim da vigência
   field_terms_reference: Termo de Referência
   field_terms_start: Início da vigência
+  field_total: "Total:"
   field_unit_measure: Unidade de Medida
   field_unit_value: Valor Unitário
   field_user_assesse: Profisional Avaliado
 
   label_active_contracts: Contratos ativos
+  label_allocation_period: Período de alocação
   label_approve_plan: Aprovar plano
   label_assesse: Avaliado
   label_assessment: Questionário
   label_assessments: Questionários
   label_assessment_description: Questionário de Avaliação Individual do Perfil Profissional (IPP)
+  label_authorization_signatures: Assinatura e encaminhamento da demanda
   label_backlog: Backlog
   label_business_days: dias úteis
   label_calendar_days: dias corridos
@@ -225,6 +230,7 @@ pt-BR:
   label_daily_cost: Custo diário
   label_demand: Demanda
   label_demand_backlog: Backlog da Demanda
+  label_discounts: "Descontos:"
   label_edit_assessment: Editar Questionário
   label_edit_sla_event: Editar NMS
   label_edit_work_plan: Editar Plano de Trabalho
@@ -242,11 +248,15 @@ pt-BR:
   label_field_for_version_cost: Campo customizado para custo estimado
   label_field_for_version_count: Campo customizado para contagem estimada
   label_field_for_version_duration: Campo customizado para prazo estimado
+  label_finish_by: Término até
   label_holidays: Feriados
   label_identification: Identificação
   label_issue_date: Data de emissão
   label_item: Item
+  label_location: Brasília - DF
   label_measured_value: Pontuação
+  label_nominal_value: "Valor nominal:"
+  label_performance_target: Meta de Produtividade
   label_plans: Planejamentos
   label_new_assessment: Novo Questionário
   label_new_catalog_item: Novo Item de Catálogo
@@ -260,9 +270,11 @@ pt-BR:
   label_new_work_plan: Novo Plano de Trabalho
   label_new_work_plan_item: Novo perfil profissional
   label_non_functional_requirements: Requisitos não funcionais
+  label_obligatory_non_functional_requirements: Requisitos não funcionais obrigatórios
   label_not_registred: Não registrado
   label_resume: Resumo
   label_project_members: Membros dos Projetos
+  label_receipt_terms: Termos de Recebimento
   label_requester: Requisitante
   label_requester_area: Área Requisitante
   label_role_for_administrative_inspector: Papel para Fiscal Administrativo
@@ -280,14 +292,17 @@ pt-BR:
   label_sla_short: NMS
   label_sla_with_assessments: NMS com Questionários
   label_slas: Níveis Mínimos de Serviço
+  label_start_by: Início até
   label_statuses_for_edit_assessment: Estados para editar questionários
   label_statuses_for_save_release_plan: Estados para salvar plano de trabalho
   label_story_plural: Histórias
   label_tracker_for_demand: Tipo de Registro para Demanda
+  label_value_review: Revisão de valores
   label_view: Visualisar
   label_week_day: Dia da semana
   label_work_order: Ordem de Serviço
   label_work_orders: Ordens de Serviço
+  label_work_order_deadline: Data de entrega
   label_work_order_number: Número da OS
   label_work_order_objective: Objetivo da Ordem de Serviço
   label_work_order_professionals: Profissionais Alocados
@@ -307,7 +322,7 @@ pt-BR:
 
   notice_select_at_least_one_version: Selecione ao menos uma versão para prosseguir.
 
-  
+  text_authorization_signatures: Autoriza-se a execução dos serviços correspondentes à presente OS, no período e nos quantitativos acima identificados.
   text_this_is_main_pbl: Este é o backlog princpipal do projeto.
   text_code_area: Insira o seu código aqui.
   text_need_associate_stories_to_versions: A solicitação não pode prosseguir. Existem releases sem histórias associadas.
@@ -315,6 +330,7 @@ pt-BR:
   text_not_available: Não disponível
   text_productivity_target: 0,58 pontos de função por dia por desenvolvedor
   text_valid_url: Informar uma URL válida.
+  text_not_available_notes: Sem observações
 
 
   text_cw_notes_automatically_forwarded: Encaminhada automaticamente
@@ -329,7 +345,6 @@ pt-BR:
   warning_need_contract: Solicite ao administrador cadastrar ao menos um contrato.
   warning_need_sla: Solicite ao administrador cadastrar ao menos um NMS do tipo IPP.
 
-  warning_cw_issue_demand_can_not_be_created: Não é possível criar uma Demanda. É necessário criar Releases antes.
   warning_cw_tracker_can_not_be_changed: o Tipo não pode ser alterado.
   warning_cw_relation_must_be_open_story: "Não pode ser associado à %{tracker_name}. Selecione uma História de Usuário do mesmo backlog."
   warning_cw_tracker_missing_fixed_issues: Não foi possível prosseguir. Uma ou mais Release selecionada não contém Histórias associadas.
@@ -344,6 +359,7 @@ pt-BR:
   warning_cw_issue_demand_can_not_request_work_approval_missing_items: Não foi possível prosseguir. É necessário planejar Perfis Profissionais antes.
   warning_cw_issue_can_t_be_changed: Não foi possível prosseguir. Este registro só poderá ser alterado com a Demanda em planejamento ou execução.
   warning_cw_issue_demand_can_not_request_work_approval_missing_items_in_all_sprints: Não foi possível prosseguir. Existem sprints sem profissionais alocados.
+  warning_cw_issue_demand_can_not_generate_work_order_missing_requester_unity: Não foi possível prosseguir. É necessário informar a Unidade Requisitante do projeto.
   error_terms_end_date: Deve ser pelo menos 3 meses maior que o início da vigência.
   error_many_active_contracts: Não foi possível prosseguir. Os projetos %{projects} estão associados à outro contrato ativo.
   error_can_t_save_release_plan: Não foi possível prosseguir. Existem Histórias sem uma Release associada.

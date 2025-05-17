@@ -27,6 +27,11 @@ module RedmineGercont
           def self.blocked_story
             find_by(id: Setting.plugin_scrum["blocked_custom_field_id"].to_i)
           end
+
+          def self.requester_unity
+            find_by(id: Setting.plugin_redmine_gercont["field_for_requester_unity"].to_i)
+          end
+
         end
       end
     end
