@@ -630,7 +630,7 @@ module RedmineGercont
               "SVSA - IEC - Instituto Evandro Chagas"
             ],
             :is_filter => 1,
-            :is_required => 1,
+            # :is_required => 1,
             :visible => 1
           )
 
@@ -645,7 +645,7 @@ module RedmineGercont
               'SOA'
           ],
           :is_filter => 1,
-          :is_required => 1,
+          # :is_required => 1,
           :visible => 1
           )
 
@@ -658,7 +658,7 @@ module RedmineGercont
               'Área negocial'
             ],
             :is_filter => 1,
-            :is_required => 1,
+            # :is_required => 1,
             :visible => 1
           )
 
@@ -674,7 +674,7 @@ module RedmineGercont
               'Red Hat Linux 7'
             ],
             :is_filter => 1,
-            :is_required => 1,
+            # :is_required => 1,
             :visible => 1
           )
 
@@ -692,7 +692,7 @@ module RedmineGercont
             ],
             :multiple => 1,
             :is_filter => 1,
-            :is_required => 1,
+            # :is_required => 1,
             :visible => 1
           )
 
@@ -713,7 +713,7 @@ module RedmineGercont
             ],
             :multiple => 1,
             :is_filter => 1,
-            :is_required => 1,
+            # :is_required => 1,
             :visible => 1
           )
 
@@ -757,7 +757,7 @@ module RedmineGercont
             ],
             :multiple => 1,
             :is_filter => 1,
-            :is_required => 1,
+            # :is_required => 1,
             :visible => 1
           )
 
@@ -767,7 +767,7 @@ module RedmineGercont
             :field_format => 'link',
             :description => l(:text_valid_url),
             :visible => 1,
-            :regexp => "^(https?:\\/\\/)?([\\w\\-]+(\\.[\\w\\-]+)+)(:[0-9]{1,5})?(\\/[\\w\\-.,@?^=%&:/~+#]*)?$"
+            # :regexp => "^(https?:\\/\\/)?([\\w\\-]+(\\.[\\w\\-]+)+)(:[0-9]{1,5})?(\\/[\\w\\-.,@?^=%&:/~+#]*)?$"
           )
 
           trn_environment = ProjectCustomField.find_or_initialize_by(
@@ -787,9 +787,6 @@ module RedmineGercont
             :visible => 1,
             :regexp => "^(https?:\\/\\/)?([\\w\\-]+(\\.[\\w\\-]+)+)(:[0-9]{1,5})?(\\/[\\w\\-.,@?^=%&:/~+#]*)?$"
           )
-
-
-
 
           estimated_count = VersionCustomField.find_or_initialize_by(
             :name => l(:default_field_estimated_count))
@@ -836,7 +833,7 @@ module RedmineGercont
             :role_for_contract_admin => contract_admin.id.to_s,
             :role_for_requester => requester.id.to_s,
             :roles_for_assessment => [scrum_team.id].map(&:to_s),     
-            :statuses_for_edit_assessment => [technical_service_review.id].map(&:to_s),    
+            :statuses_for_edit_assessment => [plan_drafting.id].map(&:to_s),    
             :field_for_version_count => estimated_count.id.to_s,
             :field_for_version_duration => estimated_duration.id.to_s,        
             :field_for_version_cost => estimated_cost.id.to_s,
@@ -1151,7 +1148,7 @@ module RedmineGercont
           project = Project.find_or_initialize_by(:name => l(:default_project_name))
           project.update(
             :identifier => l(:default_project_name).downcase.gsub(" ", "_"),
-            :is_public => false,
+            :is_public => false
           )
 
           non_project_roles = ContractMember.role_options

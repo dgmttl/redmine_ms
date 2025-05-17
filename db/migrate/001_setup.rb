@@ -113,7 +113,7 @@ class Setup < ActiveRecord::Migration[4.2]
     add_index "issue_histories", ["issue_id"], :name => "issue_histories_issue_id"
 
     create_table "issue_statuses", :force => true do |t|
-      t.column "name", :string, :limit => 30, :default => "", :null => false
+      t.column "name", :string, :limit => 60, :default => "", :null => false
       t.column "is_closed", :boolean, :default => false, :null => false
       t.column "is_default", :boolean, :default => false, :null => false
       t.column "html_color", :string, :limit => 6, :default => "FFFFFF", :null => false
