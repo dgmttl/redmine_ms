@@ -5,8 +5,7 @@ class Holiday < ActiveRecord::Base
     
 
     def self.next_work_day
-        today = Date.today
-        next_work_day = today
+        next_work_day = Date.today
       
         loop do
           next_work_day += 1

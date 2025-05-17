@@ -92,29 +92,29 @@ module RedmineGercont
           staff_allocation = IssueStatus.find_or_initialize_by(:name => l(:default_issue_status_staff_allocation))
           staff_allocation.save(validate: false)
 
-          allocate_professionals = IssueStatus.find_or_initialize_by(:name => l(:default_issue_status_allocate_professionals))
-          allocate_professionals.save(validate: false)
+          # allocate_professionals = IssueStatus.find_or_initialize_by(:name => l(:default_issue_status_allocate_professionals))
+          # allocate_professionals.save(validate: false)
 
-          ready_to_start = IssueStatus.find_or_initialize_by(:name => l(:default_issue_status_ready_to_start))
-          ready_to_start.save(validate: false)
+          # ready_to_start = IssueStatus.find_or_initialize_by(:name => l(:default_issue_status_ready_to_start))
+          # ready_to_start.save(validate: false)
 
-          service_in_progress = IssueStatus.find_or_initialize_by(:name => l(:default_issue_status_service_in_progress))
-          service_in_progress.save(validate: false)
+          # service_in_progress = IssueStatus.find_or_initialize_by(:name => l(:default_issue_status_service_in_progress))
+          # service_in_progress.save(validate: false)
 
-          service_suspended = IssueStatus.find_or_initialize_by(:name => l(:default_issue_status_service_suspended))
-          service_suspended.save(validate: false)
+          # service_suspended = IssueStatus.find_or_initialize_by(:name => l(:default_issue_status_service_suspended))
+          # service_suspended.save(validate: false)
 
-          technical_service_review = IssueStatus.find_or_initialize_by(:name => l(:default_issue_status_technical_service_review))
-          technical_service_review.save(validate: false)
+          # technical_service_review = IssueStatus.find_or_initialize_by(:name => l(:default_issue_status_technical_service_review))
+          # technical_service_review.save(validate: false)
 
-          business_service_review = IssueStatus.find_or_initialize_by(:name => l(:default_issue_status_business_service_review))
-          business_service_review.save(validate: false)
+          # business_service_review = IssueStatus.find_or_initialize_by(:name => l(:default_issue_status_business_service_review))
+          # business_service_review.save(validate: false)
 
-          managerial_service_review = IssueStatus.find_or_initialize_by(:name => l(:default_issue_status_managerial_service_review))
-          managerial_service_review.save(validate: false)
+          # managerial_service_review = IssueStatus.find_or_initialize_by(:name => l(:default_issue_status_managerial_service_review))
+          # managerial_service_review.save(validate: false)
 
-          accept_service = IssueStatus.find_or_initialize_by(:name => l(:default_issue_status_accept_service))
-          accept_service.save(validate: false)
+          # accept_service = IssueStatus.find_or_initialize_by(:name => l(:default_issue_status_accept_service))
+          # accept_service.save(validate: false)
           
           puts "============= New statuses done."
 
@@ -590,7 +590,7 @@ module RedmineGercont
               "SAES - DESMAD - Departamento de Saúde Mental, Álcool e Outras Drogas",
               "SAES - DGH - Departamento de Gestão Hospitalar no Estado do Rio de Janeiro",
               "SAES - DRAC - Departamento de Regulação Assistencial e Controle",
-              "SAES - HOSPITAIS FEDERAIS",
+              "SAES - Hospitais Federais",
               "SAES - INC - Instituto Nacional de Cardiologia",
               "SAES - INCA - Instituto Nacional de Câncer",
               "SAES - INTO - Instituto Nacional de Traumatologia e Ortopedia",

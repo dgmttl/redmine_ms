@@ -4,10 +4,6 @@ if @issue.contracts_any?
     if !new_record? && @issue.tracker_changed?
         raise RedmineCustomWorkflows::Errors::WorkflowError, l(:warning_cw_tracker_can_not_be_changed)
     end
-
-    
-    
-
     
     if @issue.parent.present?
         
@@ -81,6 +77,15 @@ if @issue.contracts_any?
             if missing_any_sprint?
                 raise RedmineCustomWorkflows::Errors::WorkflowError, l(:warning_cw_issue_demand_can_not_request_work_approval_missing_items_in_all_sprints)
             end
+        end
+    end
+
+    
+    if @issue.status == IssueStatus.generate_work_order
+
+        # Avoid generate work order missing fields
+        if @issue.project.custom_field_value(CustomField.requester_unity.id).blank?
+            raise RedmineCustomWorkflows::Errors::WorkflowError, l(:warning_cw_issue_demand_can_not_generate_work_order_missing_requester_unity)
         end
     end
 

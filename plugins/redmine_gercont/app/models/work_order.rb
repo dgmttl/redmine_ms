@@ -58,7 +58,7 @@ class WorkOrder < ApplicationRecord
           terms_end: contract.terms_end
         },
         requester_area: {
-          unity: project.custom_field_value(Setting.plugin_redmine_gercont['field_for_requester_unity'].to_i),
+          unity: project.custom_field_value(CustomField.requester_unity.id),
           requester: issue.author.name,
           requester_email: issue.author.mail
         },

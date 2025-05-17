@@ -359,6 +359,7 @@ pt-BR:
   warning_cw_issue_demand_can_not_request_work_approval_missing_items: Não foi possível prosseguir. É necessário planejar Perfis Profissionais antes.
   warning_cw_issue_can_t_be_changed: Não foi possível prosseguir. Este registro só poderá ser alterado com a Demanda em planejamento ou execução.
   warning_cw_issue_demand_can_not_request_work_approval_missing_items_in_all_sprints: Não foi possível prosseguir. Existem sprints sem profissionais alocados.
+  warning_cw_issue_demand_can_not_generate_work_order_missing_requester_unity: Não foi possível prosseguir. É necessário informar a Unidade Requisitante do projeto.
   error_terms_end_date: Deve ser pelo menos 3 meses maior que o início da vigência.
   error_many_active_contracts: Não foi possível prosseguir. Os projetos %{projects} estão associados à outro contrato ativo.
   error_can_t_save_release_plan: Não foi possível prosseguir. Existem Histórias sem uma Release associada.

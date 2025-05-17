@@ -1,19 +1,11 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <hash>
-  <active type="boolean">true</active>
-  <name>GERCONT_validators</name>
-  <observable>issue</observable>
-  <id type="integer">44</id>
   <before-save>if @issue.contracts_any? 
     
     #Avoid change tracker
     if !new_record? &amp;&amp; @issue.tracker_changed?
         raise RedmineCustomWorkflows::Errors::WorkflowError, l(:warning_cw_tracker_can_not_be_changed)
     end
-
-    
-    
-
     
     if @issue.parent.present?
         
@@ -90,17 +82,23 @@
         end
     end
 
+    
+    if @issue.status == IssueStatus.generate_work_order
+
+        # Avoid generate work order missing fields
+        if @issue.project.custom_field_value(CustomField.requester_unity.id).blank?
+            raise RedmineCustomWorkflows::Errors::WorkflowError, l(:warning_cw_issue_demand_can_not_generate_work_order_missing_requester_unity)
+        end
+    end
+
 end
 </before-save>
-  <created-at type="dateTime">2025-04-27T18:11:44Z</created-at>
-  <updated-at type="dateTime">2025-05-14T19:12:33Z</updated-at>
-  <description></description>
-  <string></string>
-  <position type="integer">4</position>
-  <integer type="integer">1</integer>
   <after-save></after-save>
+  <name>GERCONT_validators</name>
+  <description></description>
   <is-for-all type="boolean">false</is-for-all>
   <author>diogo.neiva@saude.gov.br</author>
+  <active type="boolean">true</active>
   <shared-code nil="true"/>
   <before-add nil="true"/>
   <after-add nil="true"/>
@@ -108,7 +106,14 @@ end
   <after-remove nil="true"/>
   <before-destroy></before-destroy>
   <after-destroy></after-destroy>
-  <exported-at>2025-05-14T19:12:33Z</exported-at>
+  <observable>issue</observable>
+  <id type="integer">52</id>
+  <created-at type="dateTime">2025-04-27T18:11:44Z</created-at>
+  <updated-at type="dateTime">2025-05-17T16:38:46Z</updated-at>
+  <string></string>
+  <position type="integer">4</position>
+  <integer type="integer">1</integer>
+  <exported-at>2025-05-17T16:38:46Z</exported-at>
   <plugin-version>3.0.0</plugin-version>
   <ruby-version>3.3.7-p123</ruby-version>
   <rails-version>7.2.2.1</rails-version>
