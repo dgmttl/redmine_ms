@@ -583,6 +583,7 @@ module RedmineGercont
               "GM - CORREG - Corregedoria",
               "GM - DENASUS - Departamento Nacional de Auditoria do Sistema Único de Saúde",
               "GM - GABINETE - Gabinete do Ministro",
+              "GM - GABINETE - Gabinete da Ministra",
               "GM - OUVSUS - Ouvidoria-Geral do Sistema Único de Saúde",
               "SAES - DAET - Departamento de Atenção Especializada e Temática",
               "SAES - DAHU - Departamento de Atenção Hospitalar, Domiciliar e de Urgência",
@@ -1138,8 +1139,7 @@ module RedmineGercont
               "assigned_to_id" => "",
               "description" => "", 
               "parent_issue_id" => "required",
-              "priority_id" => "",
-              "description" => ""
+              "priority_id" => ""
             }
           )
           puts "============= Workflow permissions done."

@@ -8,7 +8,7 @@
             <p><%= f.select :profile, options_for_select(Item.profile_options + [[I18n.t("profiles.#{@item.profile}"), @item.profile]], @item.profile), required: true, label: :field_profile %></p>
             <p><%= f.number_field :shared_by, required: true, min: 1, max: 10, value: @item.shared_by, label: :field_shared_by %></p>
             <p><%= f.text_field :unit_measure, :required => true, label: :field_unit_measure %></p>
-            <p><%= f.text_field :unit_value, required: true, pattern: '\d+(\,\d{1,2})?', inputmode: 'decimal', label: :field_unit_value %></p>
+            <p><%= f.number_field :unit_value, required: true, step: "0.01", placeholder: "0,00", label: :field_unit_value %></p>
         </fieldset>
         <%= submit_tag l(@item.new_record? ? :button_create : :button_save) %>
     <% end %>
