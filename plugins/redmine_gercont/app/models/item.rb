@@ -14,6 +14,7 @@ class Item < ActiveRecord::Base
     validates :unit_measure, presence: true
     validates :unit_value, presence: true
 
+    before_save :format_currency
 
     PROFILES = [
       'product owner',
@@ -37,17 +38,14 @@ class Item < ActiveRecord::Base
         
         available
     end
-      
-
-    # def self.percentage_options
-    #     return [] if shared_by.nil? || shared_by <= 0
-
-    #     step = 100.0 / shared_by
-    #     (1..shared_by).map { |i| "#{(step * i).round}%" }
-    # end
 
     def daily_cost
         (unit_value / 30).round(2)
+    end
+
+    private
+    def format_currency
+        self.unit_value = unit_value.to_s.tr(",", ".").to_f if unit_value.present?
     end
 
 end

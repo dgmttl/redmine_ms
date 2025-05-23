@@ -5,8 +5,8 @@ class CreateWorkOrders < ActiveRecord::Migration[7.2]
       t.text :static_data
       t.text :status
       t.text :notes
-      t.float :discount
-      t.float :total
+      t.integer :discount, precision: 10, scale: 2
+      t.integer :total, precision: 10, scale: 2
 
       t.timestamps
     end
